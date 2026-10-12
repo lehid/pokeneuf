@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "pnpm --filter @pokeneuf/web dev",
+    "data:build": "pnpm --filter @pokeneuf/data data:build",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",

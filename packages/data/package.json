@@ -6,13 +6,17 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run --passWithNoTests"
+    "data:build": "tsx src/cli.ts",
+    "crosscheck": "tsx src/crosscheck-cli.ts",
+    "test": "vitest run"
   },
   "dependencies": {
-    "@pokeneuf/core": "workspace:*"
+    "@pokeneuf/core": "workspace:*",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^22.17.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   }
