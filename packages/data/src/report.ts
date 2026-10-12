@@ -27,7 +27,23 @@ function count(pokedex: Pokedex, predicate: (p: Pokemon) => boolean): number {
   return pokedex.pokemon.filter(predicate).length;
 }
 
-export function formatReport(pokedex: Pokedex, warnings: string[] = []): string {
+function categoryLines(sizes: ReadonlyMap<string, number>): string[] {
+  if (sizes.size === 0) return [];
+  const sorted = [...sizes].sort(([, a], [, b]) => a - b);
+  const show = (entries: [string, number][]) => entries.map(([id, n]) => `${id} ${n}`).join(', ');
+  return [
+    `Categories: ${sizes.size}`,
+    `  smallest: ${show(sorted.slice(0, 3))}`,
+    `  largest:  ${show(sorted.slice(-3).reverse())}`,
+    '',
+  ];
+}
+
+export function formatReport(
+  pokedex: Pokedex,
+  warnings: string[] = [],
+  categorySizes: ReadonlyMap<string, number> = new Map(),
+): string {
   const { meta } = pokedex;
   const perGeneration = new Map<number, number>();
   for (const p of pokedex.pokemon) {
@@ -49,6 +65,7 @@ export function formatReport(pokedex: Pokedex, warnings: string[] = []): string 
     'Evolution:',
     `  final ${count(pokedex, (p) => p.evolution.isFinal)}, branched ${count(pokedex, (p) => p.evolution.branched)}, no line at all ${count(pokedex, (p) => p.evolution.isFinal && p.evolution.stage === 1)}`,
     '',
+    ...categoryLines(categorySizes),
     missing.length === 0
       ? 'Missing fields: none'
       : `Missing fields: ${missing.map(([field, n]) => `${field} (${n})`).join(', ')}`,
