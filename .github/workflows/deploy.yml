@@ -23,8 +23,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: pnpm
-      # Switch to `pnpm install --frozen-lockfile` once pnpm-lock.yaml is committed.
+      # Once pnpm-lock.yaml is committed: add `cache: pnpm` to setup-node and use `pnpm install --frozen-lockfile`.
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm --filter @pokeneuf/web build
         env:

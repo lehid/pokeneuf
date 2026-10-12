@@ -252,7 +252,7 @@ Limite : l'environnement où elle a été écrite n'avait pas accès au registre
 ```
 Phase 0.5. La phase 0 a été écrite sans pouvoir lancer `pnpm install`. Vérifie-la et répare-la :
 - `pnpm install`, puis `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`. Corrige tout ce qui casse (versions de dépendances, config ESLint, tsconfig, Vitest/jsdom), sans changer l'architecture ni les conventions de CLAUDE.md.
-- Commit `pnpm-lock.yaml`, puis passe les deux workflows (.github/workflows/ci.yml et deploy.yml) en `pnpm install --frozen-lockfile`.
+- Commit `pnpm-lock.yaml`, puis dans les deux workflows (.github/workflows/ci.yml et deploy.yml) : ajoute `cache: pnpm` à setup-node et passe en `pnpm install --frozen-lockfile`.
 - Vérifie que `VITE_BASE=/pokeneuf/ pnpm --filter @pokeneuf/web build` produit des chemins d'assets en /pokeneuf/.
 - `pnpm dev` : la page "PokéNeuf — bientôt" s'affiche.
 Critères : les 5 commandes passent en local et la CI est verte sur la PR.
