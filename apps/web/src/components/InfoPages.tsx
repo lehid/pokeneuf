@@ -74,7 +74,7 @@ function Section({
     >
       <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 p-3 font-bold [&::-webkit-details-marker]:hidden">
         <h3>{title}</h3>
-        <span aria-hidden="true" className="transition-transform group-open:rotate-90">
+        <span aria-hidden="true" className="group-open:rotate-90">
           ▸
         </span>
       </summary>
@@ -200,14 +200,13 @@ const LEGAL_LABEL = {
 } as const satisfies Record<LegalField, keyof typeof fr.legal.sections.publisher.labels>;
 
 function LegalValue({ field, value }: { field: LegalField; value: string | null }) {
-  const label = fr.legal.sections.publisher.labels[LEGAL_LABEL[field]];
   if (value !== null && value.trim() !== '') return <>{value}</>;
   return (
     <mark
       className="bg-lcd-danger px-1 font-bold text-lcd-panel"
       data-testid={`legal-todo-${field}`}
     >
-      {fr.legal.todoHint(label)}
+      {fr.legal.todo}
     </mark>
   );
 }
@@ -238,7 +237,7 @@ export function LegalPage({ legal = LEGAL }: { legal?: Record<LegalField, string
               <dd>
                 <a
                   href={ISSUES_URL}
-                  className="font-bold underline underline-offset-2"
+                  className="font-bold break-all underline underline-offset-2"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

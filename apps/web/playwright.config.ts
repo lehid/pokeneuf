@@ -16,6 +16,9 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'list',
   use: {
     baseURL: `http://localhost:${PORT}${BASE}`,
+    // The service worker (production build) would answer requests that tests mock or time-travel;
+    // `pwa.spec.ts` turns it back on.
+    serviceWorkers: 'block',
     trace: 'retain-on-failure',
     ...(executablePath ? { launchOptions: { executablePath } } : {}),
   },

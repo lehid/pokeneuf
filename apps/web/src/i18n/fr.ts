@@ -1,6 +1,8 @@
 /** All French UI strings. Never hard-code UI text in components. */
 export const fr = {
   tagline: 'Chaque jour, une grille 3×3 à remplir avec les bons Pokémon.',
+  ogTagline: 'Une grille 3×3 à remplir, chaque jour.',
+  ogDetails: 'Générations 1 à 4 · gratuit · sans pub',
   gridTitle: (n: number) => `Grille n° ${n}`,
   demoGrid: 'Grille de démonstration',
   gridDate: (isoDate: string) =>
@@ -270,7 +272,7 @@ export const fr = {
 
   legal: {
     title: 'Mentions légales',
-    todoHint: (what: string) => `À compléter : ${what}`,
+    todo: 'À compléter',
     sections: {
       publisher: {
         title: 'Éditeur du site',

@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { registerSW } from 'virtual:pwa-register';
 import { App } from './App';
 import './index.css';
 
@@ -11,3 +12,7 @@ createRoot(root).render(
     <App />
   </StrictMode>,
 );
+
+// The service worker only exists in a production build. It keeps the app shell available offline
+// and updates itself; the grids always come from the network (see `pwaOptions`).
+if (import.meta.env.PROD) registerSW({ immediate: true });

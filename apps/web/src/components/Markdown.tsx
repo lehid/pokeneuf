@@ -48,7 +48,7 @@ export function Markdown({
 }) {
   const blocks = useMemo(() => parseMarkdown(source), [source]);
   return (
-    <div className="flex flex-col gap-3 leading-relaxed">
+    <div className="flex flex-col gap-3 leading-relaxed break-words">
       {blocks.map((block, i) => {
         switch (block.type) {
           case 'heading':

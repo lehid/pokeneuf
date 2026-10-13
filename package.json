@@ -16,6 +16,7 @@
     "score:simulate": "pnpm --filter @pokeneuf/generator score:simulate",
     "build": "pnpm -r build",
     "e2e": "pnpm --filter @pokeneuf/web e2e",
+    "assets:build": "pnpm --filter @pokeneuf/web assets:build",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint . && prettier --check .",
