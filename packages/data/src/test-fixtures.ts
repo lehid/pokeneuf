@@ -117,7 +117,15 @@ export function fakeTables(species: FakeSpecies[], evolutions: FakeEvolution[] =
 }
 
 export function emptyManual(): ManualLists {
-  return { starters: [], fossils: [], pseudoLegendaries: [], mega: [], gmax: [], aliases: {} };
+  return {
+    starters: [],
+    fossils: [],
+    pseudoLegendaries: [],
+    mega: [],
+    gmax: [],
+    popular: [],
+    aliases: {},
+  };
 }
 
 export function buildOptions(overrides: Partial<BuildOptions> = {}): BuildOptions {

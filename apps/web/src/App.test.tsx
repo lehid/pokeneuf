@@ -1,10 +1,17 @@
-import { APP_NAME, findSolution } from '@pokeneuf/core';
+import {
+  APP_NAME,
+  findSolution,
+  rankScore,
+  scoreGame,
+  solutionsFor,
+  sortByPopularity,
+} from '@pokeneuf/core';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { App } from './App';
 import { act } from '@testing-library/react';
 import { vi } from 'vitest';
-import { demoGrid, memberships, pokemonById } from './data';
+import { demoGrid, memberships, pokedex, pokemonById, popularity } from './data';
 import { memoryStorage } from './storage';
 
 const solution = findSolution(demoGrid, memberships) ?? [];
@@ -81,7 +88,7 @@ describe('App', () => {
     expect(screen.getByText('Voulez-vous vraiment abandonner ?')).toBeTruthy();
     fireEvent.click(screen.getByText('Oui, abandonner'));
     expect(screen.getByTestId('end-dialog')).toBeTruthy();
-    expect(screen.getByTestId('score').textContent).toBe('0');
+    expect(screen.getByTestId('score').textContent).toBe('0/900');
     fireEvent.click(screen.getByTestId('see-solutions'));
     fireEvent.click(screen.getByTestId('cell-1-1'));
     expect(screen.getByTestId('solutions-dialog')).toBeTruthy();
@@ -201,5 +208,104 @@ describe('daily grid', () => {
     daily(noon(DAY), served({ [DAY]: demoGrid }), storage);
     await screen.findByTestId('board');
     expect(screen.getByTestId('cell-0-0').getAttribute('data-state')).toBe('empty');
+  });
+});
+
+describe('rarity, score, stats and sharing', () => {
+  const finishWon = () => {
+    for (const [cell, id] of solution.entries())
+      play(`cell-${Math.floor(cell / 3)}-${cell % 3}`, pokemonById(id).nameFr);
+  };
+
+  it('tags each found answer with its estimated rarity, and the header shows the score', () => {
+    start();
+    expect(screen.getByTestId('header-score').getAttribute('data-score')).toBe('0');
+    expect(screen.queryByTestId('legend')).toBeNull();
+    play('cell-0-0', pokemonById(solution[0] ?? 1).nameFr);
+    const expected = scoreGame(
+      {
+        gridId: 1,
+        cells: [solution[0] ?? 1, ...Array(8).fill(null)],
+        errors: 0,
+        status: 'playing',
+      },
+      demoGrid,
+      memberships,
+      popularity,
+    );
+    const tier = expected.cells[0]?.tier;
+    expect(screen.getByTestId('cell-0-0').getAttribute('data-tier')).toBe(tier);
+    expect(screen.getByTestId('header-score').getAttribute('data-score')).toBe(
+      String(expected.total),
+    );
+    expect(screen.getByTestId('legend').textContent).toContain('Rareté estimée');
+  });
+
+  it('shows the frozen score out of 900, the count and the rarest answer at the end', () => {
+    start();
+    finishWon();
+    const dialog = screen.getByTestId('end-dialog');
+    expect(within(dialog).getByText('Bravo, grille complète !')).toBeTruthy();
+    expect(within(dialog).getByText(/9\/9 trouvés/)).toBeTruthy();
+    expect(within(dialog).getByTestId('score').textContent).toMatch(/^\d+\/900$/);
+    expect(within(dialog).getByTestId('rarest').textContent).toContain('Réponse la plus rare');
+    expect(within(dialog).getByText('Rareté estimée')).toBeTruthy();
+  });
+
+  it('lists the solutions of a cell from the best known to the rarest, each with its tier', () => {
+    start();
+    fireEvent.click(screen.getByTestId('abandon'));
+    fireEvent.click(screen.getByText('Oui, abandonner'));
+    fireEvent.click(screen.getByTestId('see-solutions'));
+    fireEvent.click(screen.getByTestId('cell-1-1'));
+    const rows = within(screen.getByTestId('solutions-dialog')).getAllByRole('listitem');
+    const expected = sortByPopularity(solutionsFor(demoGrid, memberships, 4), popularity);
+    expect(rows).toHaveLength(expected.length);
+    expect(rows[0]?.textContent).toContain(pokemonById(expected[0] ?? 1).nameFr);
+    expect(rows.at(-1)?.textContent).toContain(pokemonById(expected.at(-1) ?? 1).nameFr);
+    expect(rows[0]?.querySelector('[data-tier]')?.getAttribute('data-tier')).toBe('common');
+    expect(rows.at(-1)?.querySelector('[data-tier]')?.getAttribute('data-tier')).toBe('veryRare');
+    const lastRank = rankScore(expected.at(-1) ?? 1, expected, popularity);
+    expect(lastRank).toBeGreaterThanOrEqual(0.75); // ties can keep the last one below exactly 1
+  });
+
+  it('opens the stats: games, win rate, average, best, streak and distribution', () => {
+    start();
+    finishWon();
+    fireEvent.click(screen.getByTestId('open-stats-end'));
+    const dialog = screen.getByTestId('stats-dialog');
+    expect(within(dialog).getByTestId('stat-Parties').textContent).toBe('1');
+    expect(within(dialog).getByTestId('stat-Victoires').textContent).toBe('100 %');
+    expect(within(dialog).getByTestId('stat-Série').textContent).toBe('1');
+    const bars = within(dialog).getByTestId('distribution').querySelectorAll('li');
+    expect(bars).toHaveLength(9);
+    expect([...bars].reduce((n, li) => n + Number(li.getAttribute('data-count')), 0)).toBe(1);
+  });
+
+  it('shows an empty stats dialog before any game', () => {
+    start();
+    fireEvent.click(screen.getByTestId('open-stats'));
+    expect(screen.getByText('Aucune partie terminée pour l’instant.')).toBeTruthy();
+  });
+
+  it('shares a spoiler-free text, copies it and confirms with a toast', async () => {
+    const writeText = vi.fn(async () => undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    Object.defineProperty(navigator, 'share', { value: undefined, configurable: true });
+    start();
+    finishWon();
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('share'));
+    });
+    expect(writeText).toHaveBeenCalledTimes(1);
+    const text = String((writeText.mock.calls as unknown as string[][])[0]?.[0]);
+    expect(text.split('\n')[0]).toMatch(new RegExp(`^${APP_NAME} #1 — \\d+/900 🔥 1$`));
+    expect(text.split('\n').slice(1, 4).join('')).toMatch(/^[🟩🟨🟧🟪]{9}$/u);
+    const lower = text.toLowerCase();
+    for (const p of pokedex.pokemon) {
+      expect(lower.includes(p.nameFr.toLowerCase()), p.nameFr).toBe(false);
+      expect(lower.includes(p.nameEn.toLowerCase()), p.nameEn).toBe(false);
+    }
+    expect((await screen.findByTestId('toast')).textContent).toContain('copié');
   });
 });

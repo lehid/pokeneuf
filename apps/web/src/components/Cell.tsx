@@ -10,13 +10,16 @@ import { pokemonById } from '../data';
 import { useGame } from '../GameContext';
 import { fr } from '../i18n/fr';
 import { formatNumber } from '../format';
+import { RarityChip } from './RarityChip';
 import { TypeBadge } from './TypeBadge';
+import { useScore } from '../hooks';
 
 export function Cell({ index }: { index: number }) {
   const grid = useGame((s) => s.grid);
   const game = useGame((s) => s.game);
   const lastGuess = useGame((s) => s.lastGuess);
   const selectCell = useGame((s) => s.selectCell);
+  const tier = useScore().cells[index]?.tier ?? null;
 
   const row = getCategory(grid.rows[Math.floor(index / 3)] ?? '').label.fr;
   const col = getCategory(grid.cols[index % 3] ?? '').label.fr;
@@ -41,10 +44,11 @@ export function Cell({ index }: { index: number }) {
         type="button"
         className={base}
         style={{ background: cellBackground(p.types), color: text }}
-        aria-label={fr.filledCell(p.nameFr, formatNumber(p.id), row, col)}
+        aria-label={`${fr.filledCell(p.nameFr, formatNumber(p.id), row, col)}${tier ? `, ${fr.cellRarity(fr.rarity[tier])}` : ''}`}
         data-testid={testId}
         data-state="filled"
         data-pokemon={p.id}
+        data-tier={tier ?? undefined}
         onClick={() => selectCell(index)}
       >
         <span
@@ -66,6 +70,7 @@ export function Cell({ index }: { index: number }) {
             <TypeBadge key={type} type={type} />
           ))}
         </span>
+        {tier !== null && <RarityChip tier={tier} compact />}
       </button>
     );
   }

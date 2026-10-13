@@ -6,16 +6,18 @@ import {
   gameKey,
   HISTORY_KEY,
   isOver,
+  scoreGame,
   newGame,
   parseHistory,
   parseSettings,
   parseStoredGame,
-  provisionalScore,
   serializeGame,
   serializeHistory,
   serializeSettings,
   SETTINGS_KEY,
   type GameState,
+  type HistoryEntry,
+  type Popularity,
   type Grid,
   type GuessResult,
   type Memberships,
@@ -24,12 +26,16 @@ import {
 import { createStore, type StoreApi } from 'zustand/vanilla';
 import type { KeyValueStorage } from './storage';
 
-export type Dialog = 'rules' | 'abandon' | 'end' | null;
+export type Dialog = 'rules' | 'abandon' | 'end' | 'stats' | null;
 
 export interface GameStore {
   grid: Grid;
   game: GameState;
   settings: Settings;
+  /** Finished daily games, for the stats and the streak. */
+  history: HistoryEntry[];
+  /** A short message shown for a moment ("copied"…). */
+  toast: { text: string; seq: number } | null;
   /** Cell whose guess sheet is open. */
   selectedCell: number | null;
   /** Cell whose full list of answers is shown (finished games only). */
@@ -46,6 +52,9 @@ export interface GameStore {
   openRules(): void;
   closeRules(hideNextTime: boolean): void;
   openEnd(): void;
+  openStats(): void;
+  showToast(text: string): void;
+  clearToast(): void;
   closeDialog(): void;
   closeSolutions(): void;
 }
@@ -53,6 +62,7 @@ export interface GameStore {
 export interface GameStoreDeps {
   grid: Grid;
   memberships: Memberships;
+  popularity: Popularity;
   storage: KeyValueStorage;
 }
 
@@ -63,6 +73,7 @@ function ensureDeviceId(storage: KeyValueStorage): void {
 export function createGameStore({
   grid,
   memberships,
+  popularity,
   storage,
 }: GameStoreDeps): StoreApi<GameStore> {
   ensureDeviceId(storage);
@@ -71,20 +82,22 @@ export function createGameStore({
   const game = saved ?? newGame(grid);
   const fresh = foundCount(game) === 0 && game.errors === 0;
 
+  let history = parseHistory(storage.get(HISTORY_KEY));
+
+  /** Saves the game; at its end, freezes the score into the history. */
   const save = (state: GameState): void => {
     storage.set(gameKey(grid.id), serializeGame(state));
-    if (state.status !== 'playing') {
-      storage.set(
-        HISTORY_KEY,
-        serializeHistory(parseHistory(storage.get(HISTORY_KEY)), {
-          gridId: grid.id,
-          status: state.status,
-          found: foundCount(state),
-          errors: state.errors,
-          score: provisionalScore(state),
-        }),
-      );
-    }
+    if (state.status === 'playing') return;
+    const entry: HistoryEntry = {
+      gridId: grid.id,
+      date: grid.date,
+      status: state.status,
+      found: foundCount(state),
+      errors: state.errors,
+      score: scoreGame(state, grid, memberships, popularity).total,
+    };
+    storage.set(HISTORY_KEY, serializeHistory(history, entry));
+    history = parseHistory(storage.get(HISTORY_KEY));
   };
 
   let seq = 0;
@@ -92,6 +105,8 @@ export function createGameStore({
     grid,
     game,
     settings,
+    history,
+    toast: null,
     selectedCell: null,
     solutionsCell: null,
     dialog: fresh && !settings.hideRules ? 'rules' : null,
@@ -113,6 +128,7 @@ export function createGameStore({
       set({
         game: state,
         selectedCell: null,
+        history,
         lastGuess: { cell: selectedCell, pokemonId, result, seq: ++seq },
         dialog: isOver(state) ? 'end' : get().dialog,
       });
@@ -124,7 +140,7 @@ export function createGameStore({
     confirmAbandon() {
       const state = abandon(get().game);
       save(state);
-      set({ game: state, selectedCell: null, dialog: 'end' });
+      set({ game: state, history, selectedCell: null, dialog: 'end' });
     },
 
     openRules: () => set({ dialog: 'rules' }),
@@ -137,6 +153,9 @@ export function createGameStore({
       set({ dialog: null });
     },
     openEnd: () => set({ dialog: 'end' }),
+    openStats: () => set({ dialog: 'stats' }),
+    showToast: (text) => set({ toast: { text, seq: ++seq } }),
+    clearToast: () => set({ toast: null }),
     closeDialog: () => set({ dialog: null }),
     closeSolutions: () => set({ solutionsCell: null }),
   }));

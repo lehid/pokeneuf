@@ -31,6 +31,8 @@ export interface ManualLists {
   pseudoLegendaries: number[];
   mega: number[];
   gmax: number[];
+  /** Most famous first: the order is the ranking inside the list (see `popularity.ts`). */
+  popular: number[];
   /** National Pokédex id → extra search spellings. */
   aliases: Record<number, string[]>;
 }
@@ -61,6 +63,7 @@ export async function loadManual(dir: string = MANUAL_DIR): Promise<ManualLists>
     pseudoLegendaries: await readIds('pseudoLegendaries', dir),
     mega: await readIds('mega', dir),
     gmax: await readIds('gmax', dir),
+    popular: await readIds('popular', dir),
     aliases: Object.fromEntries(
       Object.entries(aliases.data.aliases).map(([id, names]) => [Number(id), names]),
     ),

@@ -146,6 +146,12 @@ export interface Pokemon {
   heightDm: number;
   /** Weight in hectograms. */
   weightHg: number;
+  /**
+   * Estimated popularity in [0, 1] (ROADMAP §3.5): how likely a player is to think of this Pokémon
+   * first. A prior built by the data pipeline from generation, status and `popular.json`; the
+   * rarity of an answer is its rank by `pop` inside a cell.
+   */
+  pop: number;
   hasMega: boolean;
   hasGmax: boolean;
 }

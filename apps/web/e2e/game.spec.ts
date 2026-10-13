@@ -39,7 +39,7 @@ test.beforeEach(async ({ page }) => {
 test('won game: nine correct answers, end screen, solutions', async ({ page }) => {
   for (const [cell, id] of solution.entries()) await play(page, cell, name(id));
   await expect(page.getByTestId('end-dialog')).toBeVisible();
-  await expect(page.getByTestId('score')).toHaveText('1035');
+  await expect(page.getByTestId('score')).toHaveText(/^\d+\/900$/);
   await expect(page.getByTestId('lives')).toHaveAttribute('data-left', '3');
 
   await page.getByTestId('see-solutions').click();
@@ -60,7 +60,7 @@ test('lost game: three wrong answers end the game', async ({ page }) => {
   await play(page, 0, wrong.nameFr);
   await expect(page.getByTestId('end-dialog')).toBeVisible();
   await expect(page.getByTestId('lives')).toHaveAttribute('data-left', '0');
-  await expect(page.getByTestId('score')).toHaveText('0');
+  await expect(page.getByTestId('score')).toHaveText('0/900');
 });
 
 test('abandon asks for confirmation first', async ({ page }) => {
