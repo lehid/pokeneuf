@@ -24,14 +24,13 @@ const PREFIX: Record<CategoryFamily, string> = {
   color: 'color-',
   shape: 'shape-',
   size: 'size-',
-  ability: 'ability-',
   name: 'name-',
 };
 
 describe('registry', () => {
   it('has roughly 45-60 categories (ROADMAP §2.2: about 40-50)', () => {
     expect(CATEGORIES.length).toBeGreaterThanOrEqual(40);
-    expect(CATEGORIES.length).toBeLessThanOrEqual(65);
+    expect(CATEGORIES.length).toBeLessThanOrEqual(75);
   });
 
   it('has unique, kebab-case ids, prefixed by their family', () => {
@@ -181,8 +180,6 @@ describe('predicates', () => {
     expect(holds('stat-total-500', total(499))).toBe(false);
     expect(holds('stat-total-300', total(300))).toBe(true);
     expect(holds('stat-total-300', total(301))).toBe(false);
-    expect(holds('stat-hp-50', pokemon({ baseStats: { hp: 50 } }))).toBe(true);
-    expect(holds('stat-hp-50', pokemon({ baseStats: { hp: 51 } }))).toBe(false);
     expect(holds('stat-attack-100', pokemon({ baseStats: { attack: 100 } }))).toBe(true);
     expect(holds('stat-attack-100', pokemon({ baseStats: { attack: 99 } }))).toBe(false);
     expect(holds('stat-speed-100', pokemon({ baseStats: { speed: 100 } }))).toBe(true);
@@ -192,16 +189,10 @@ describe('predicates', () => {
   it('applies the size thresholds inclusively (decimetres and hectograms)', () => {
     expect(holds('size-height-2m', pokemon({ heightDm: 20 }))).toBe(true);
     expect(holds('size-height-2m', pokemon({ heightDm: 19 }))).toBe(false);
+    expect(holds('size-height-50cm', pokemon({ heightDm: 5 }))).toBe(true);
+    expect(holds('size-height-50cm', pokemon({ heightDm: 6 }))).toBe(false);
     expect(holds('size-weight-100kg', pokemon({ weightHg: 1000 }))).toBe(true);
     expect(holds('size-weight-100kg', pokemon({ weightHg: 999 }))).toBe(false);
-  });
-
-  it('counts hidden abilities too', () => {
-    const hidden = pokemon({
-      abilities: [{ slug: 'levitate', nameFr: 'Lévitation', isHidden: true }],
-    });
-    expect(holds('ability-levitate', hidden)).toBe(true);
-    expect(holds('ability-intimidate', hidden)).toBe(false);
   });
 
   it('ignores accents in the first letter of the name', () => {
@@ -209,6 +200,60 @@ describe('predicates', () => {
     expect(holds('name-starts-c', pokemon({ nameFr: 'Çedille' }))).toBe(true);
     expect(holds('name-starts-c', pokemon({ nameFr: 'Évoli' }))).toBe(false);
     expect(holds('name-starts-c', pokemon({ nameFr: 'Sulfura' }))).toBe(false);
+  });
+
+  it('reads the name by its letters only, accents ignored', () => {
+    const name = (id: string, nameFr: string) => holds(id, pokemon({ nameFr }));
+    // vowels are A E I O U: É counts, Y does not
+    expect(name('name-starts-vowel', 'Évoli')).toBe(true);
+    expect(name('name-starts-vowel', 'Aspicot')).toBe(true);
+    expect(name('name-starts-vowel', 'Yanma')).toBe(false);
+    expect(name('name-starts-vowel', 'M. Mime')).toBe(false);
+    expect(name('name-ends-a', 'Rattata')).toBe(true);
+    expect(name('name-ends-a', 'Nidoran♀')).toBe(false);
+    expect(name('name-long', 'Bulbizarre')).toBe(true); // 10 letters
+    expect(name('name-long', 'Salamèche')).toBe(false); // 9
+    expect(name('name-long', 'Mime Jr.')).toBe(false); // letters only
+    expect(name('name-has-k', 'Tortank')).toBe(true);
+    expect(name('name-has-k', 'Mewtwo')).toBe(false);
+    expect(name('name-has-y', 'Yanma')).toBe(true);
+    expect(name('name-has-x', 'Onix')).toBe(true);
+    expect(name('name-has-z', 'Porygon-Z')).toBe(true);
+    expect(name('name-has-z', 'Pikachu')).toBe(false);
+  });
+
+  it('matches OU, CH and double letters as written, not as pronounced', () => {
+    const name = (id: string, nameFr: string) => holds(id, pokemon({ nameFr }));
+    expect(name('name-has-ou', 'Roucool')).toBe(true);
+    expect(name('name-has-ou', 'Pikachu')).toBe(false);
+    expect(name('name-has-ch', 'Salamèche')).toBe(true);
+    expect(name('name-has-ch', 'Roucool')).toBe(false);
+    expect(name('name-double-letter', 'Rattata')).toBe(true);
+    expect(name('name-double-letter', 'Pikachu')).toBe(false);
+    expect(name('name-double-letter', 'Ho-Oh')).toBe(false); // the dash separates the two O
+    expect(name('name-double-letter', 'Mime Jr.')).toBe(false);
+  });
+
+  it('compares the first and last letters of the name, ignoring symbols', () => {
+    const name = (nameFr: string) => holds('name-same-ends', pokemon({ nameFr }));
+    expect(name('Abra')).toBe(true);
+    expect(name('Nidoran♀')).toBe(true); // N…n: the ♀ is not a letter
+    expect(name('Ho-Oh')).toBe(true);
+    expect(name('Électrode')).toBe(true); // accents ignored
+    expect(name('Pikachu')).toBe(false);
+  });
+
+  it('puts every name category in the name family, never crossed with another name', () => {
+    for (const c of CATEGORIES.filter((c) => c.id.startsWith('name-'))) {
+      expect(c.family, c.id).toBe('name');
+      expect(c.exclusiveWith, c.id).toContain('name');
+      expect(c.definition.fr, c.id).toContain('français uniquement');
+    }
+  });
+
+  it('counts the third stage of an evolution line', () => {
+    expect(holds('evo-stage-3', pokemon({ evolution: { stage: 3 } }))).toBe(true);
+    expect(holds('evo-stage-3', pokemon({ evolution: { stage: 2 } }))).toBe(false);
   });
 
   it('counts letters only in the length of a name', () => {

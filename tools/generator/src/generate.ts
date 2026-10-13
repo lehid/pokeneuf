@@ -6,6 +6,7 @@ import {
   daysBetween,
   difficultyOf,
   distinctRepresentatives,
+  familyLimit,
   GRID_RULES,
   GRID_SIZE,
   GRID_VERSION,
@@ -115,7 +116,7 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
   const launchDate = context.launchDate ?? LAUNCH_DATE;
   const weights = categoryWeights(categories, config);
   const pairs = new PairTable(memberships, categories);
-  const { minAnswers, maxAnswers, maxPerFamily } = GRID_RULES;
+  const { minAnswers, maxAnswers } = GRID_RULES;
 
   const familyCount = (list: readonly Category[], family: CategoryFamily) =>
     list.filter((c) => c.family === family).length;
@@ -180,7 +181,7 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
           GRID_SIZE,
           weightsNow,
           random,
-          (chosen, c) => familyCount(chosen, c.family) < maxPerFamily,
+          (chosen, c) => familyCount(chosen, c.family) < familyLimit(c.family),
         );
         if (!rows) {
           reject('no rows');
@@ -204,7 +205,7 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
           GRID_SIZE,
           weightsNow,
           random,
-          (chosen, c) => familyCount([...rows, ...chosen], c.family) < maxPerFamily,
+          (chosen, c) => familyCount([...rows, ...chosen], c.family) < familyLimit(c.family),
         );
         if (!cols) {
           reject('no columns');

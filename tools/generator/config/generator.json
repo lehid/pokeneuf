@@ -14,8 +14,7 @@
     "color": 1,
     "shape": 0.6,
     "size": 0.8,
-    "ability": 0.8,
-    "name": 0.5
+    "name": 0.1
   },
   "bonusWeight": 0.3,
   "categoryWeights": {},

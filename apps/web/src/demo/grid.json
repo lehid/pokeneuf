@@ -2,8 +2,8 @@
   "version": 1,
   "id": 1,
   "date": "2026-11-01",
-  "rows": ["gen-4", "evo-final", "stat-hp-50"],
-  "cols": ["ability-swift-swim", "type-ground", "type-dark"],
-  "cellSizes": [5, 10, 7, 13, 21, 12, 14, 13, 5],
-  "difficulty": 63
+  "rows": ["color-red", "color-purple", "gen-4"],
+  "cols": ["evo-middle", "evo-base", "form-mega"],
+  "cellSizes": [4, 15, 6, 4, 17, 5, 6, 33, 9],
+  "difficulty": 68
 }

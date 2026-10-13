@@ -26,7 +26,7 @@ pnpm --filter @pokeneuf/generator test
 ## Règles d'une grille (`checkGrid`)
 
 3 lignes × 3 colonnes de 6 catégories distinctes ; aucune paire `exclusiveWith` ; au plus 2
-catégories par famille, au moins 4 familles en tout et 2 par ligne de 3 ; chaque case a de 3 à 80
+catégories par famille (1 pour les noms : `GRID_RULES.maxByFamily`), au moins 4 familles en tout et 2 par ligne de 3 ; chaque case a de 3 à 80
 réponses ; **9 Pokémon différents** peuvent remplir la grille (couplage biparti, Hopcroft–Karp) ;
 taille des cases et difficulté cohérentes avec les données.
 

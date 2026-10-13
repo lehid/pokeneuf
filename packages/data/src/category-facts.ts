@@ -52,6 +52,7 @@ export const CATEGORY_FACTS: Record<string, CategoryFact> = {
   'evo-stone': { in: [25, 37, 58, 90, 133], out: [3, 26, 64, 129] },
   'evo-trade': { in: [64, 67, 75, 93, 125], out: [1, 25, 66, 133] },
   'evo-friendship': { in: [42, 172, 175, 447], out: [1, 25, 129, 143] },
+  'evo-stage-3': { in: [3, 6, 9, 26, 157, 248], out: [1, 2, 25, 133, 150] },
   'evo-baby': { in: [172, 175, 439, 440, 447], out: [1, 25, 26, 133] },
   'evo-gen4': { in: [122, 143, 448, 462, 468], out: [1, 25, 26, 133, 196] },
 
@@ -69,7 +70,6 @@ export const CATEGORY_FACTS: Record<string, CategoryFact> = {
   // --- Stats ----------------------------------------------------------------------------------
   'stat-total-500': { in: [6, 130, 143, 150, 248, 445], out: [1, 4, 25, 129, 133] },
   'stat-total-300': { in: [10, 129, 172, 292, 298], out: [1, 25, 133, 150] },
-  'stat-hp-50': { in: [1, 4, 7, 25, 292], out: [131, 143, 150, 242] },
   'stat-attack-100': { in: [68, 127, 150, 445, 448], out: [1, 7, 25, 133] },
   'stat-speed-100': { in: [6, 65, 135, 291, 445], out: [1, 25, 133, 143] },
 
@@ -78,19 +78,29 @@ export const CATEGORY_FACTS: Record<string, CategoryFact> = {
   'color-blue': { in: [7, 9, 130, 131, 382], out: [1, 4, 25, 143] },
   'color-green': { in: [1, 2, 3, 123, 252], out: [4, 7, 25, 143] },
   'color-yellow': { in: [25, 26, 135, 145], out: [1, 4, 7, 150] },
+  'color-purple': { in: [19, 48, 94, 190, 301], out: [1, 6, 25, 133] },
+  'color-brown': { in: [13, 59, 107, 185, 287], out: [1, 6, 25, 150] },
   'shape-quadruped': { in: [1, 58, 59, 133, 128], out: [16, 23, 100, 129] },
   'shape-wings': { in: [16, 21, 22, 41, 142], out: [1, 100, 129, 133] },
+  'shape-upright': { in: [4, 64, 160, 240, 312], out: [1, 25, 133, 129] },
   'size-height-2m': { in: [95, 130, 143, 321, 384], out: [1, 25, 92, 133] },
+  'size-height-50cm': { in: [7, 98, 182, 270, 343], out: [1, 4, 6, 150] }, // Bulbizarre is 70 cm
   'size-weight-100kg': { in: [95, 143, 321, 384, 493], out: [1, 25, 92, 133] },
-
-  // --- Abilities (hidden ones included) -------------------------------------------------------
-  'ability-levitate': { in: [92, 93, 109, 110, 200], out: [1, 25, 94, 133] }, // Gengar: Cursed Body now
-  'ability-intimidate': { in: [23, 24, 58, 59, 130], out: [1, 25, 133, 143] },
-  'ability-swift-swim': { in: [60, 118, 129, 230], out: [1, 7, 25, 143] },
 
   // --- Names (French, accents ignored) --------------------------------------------------------
   'name-starts-c': { in: [7, 8, 10, 57, 83], out: [1, 25, 133, 6] },
   'name-short': { in: [122, 133, 151, 172, 250], out: [1, 25, 29, 150] }, // M. Mime has 5 letters
+  'name-starts-vowel': { in: [13, 86, 133, 134, 224, 310], out: [1, 25, 150, 193] }, // Évoli: É is E; Yanma: Y is not a vowel
+  'name-ends-a': { in: [19, 86, 216, 281, 315, 384], out: [1, 25, 133, 150] },
+  'name-long': { in: [1, 50, 108, 160, 273, 418], out: [6, 25, 133, 150] },
+  'name-has-k': { in: [9, 96, 158, 283, 352, 401], out: [1, 6, 133, 150] },
+  'name-has-y': { in: [11, 116, 193, 246, 300, 382], out: [1, 25, 133, 150] },
+  'name-has-x': { in: [37, 95, 143, 178, 194, 386], out: [1, 25, 133, 150] },
+  'name-has-z': { in: [1, 65, 212, 298, 384, 401, 474], out: [6, 25, 133, 150] }, // Porygon-Z
+  'name-has-ou': { in: [16, 70, 174, 255, 387, 406], out: [1, 25, 133, 150] },
+  'name-has-ch': { in: [4, 66, 172, 293, 340, 412], out: [1, 6, 133, 150] },
+  'name-double-letter': { in: [1, 72, 149, 229, 307, 427], out: [6, 25, 133, 250] }, // Ho-Oh: the dash separates the two O
+  'name-same-ends': { in: [29, 63, 121, 154, 213, 250, 334], out: [1, 25, 133, 150] }, // Nidoran♀, Ho-Oh
 };
 
 /**

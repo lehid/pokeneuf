@@ -16,6 +16,8 @@ export const GRID_RULES = {
   maxAnswers: 80,
   /** No more than this many of the six categories come from the same family. */
   maxPerFamily: 2,
+  /** Tighter limits for families that must stay a seasoning: at most one spelling question per grid. */
+  maxByFamily: { name: 1 } as Partial<Record<CategoryFamily, number>>,
   /** The six categories span at least this many families… */
   minFamilies: 4,
   /** …and each line (the three rows, the three columns) spans at least this many. */
@@ -59,6 +61,11 @@ export function difficultyOf(cellSizes: readonly number[]): number {
   return Math.round(mean * 100);
 }
 
+/** How many of the six categories of a grid may belong to this family. */
+export function familyLimit(family: CategoryFamily): number {
+  return GRID_RULES.maxByFamily[family] ?? GRID_RULES.maxPerFamily;
+}
+
 /** Number of distinct families among categories. */
 export function familyCount(categories: readonly Category[]): number {
   return new Set(categories.map((c) => c.family)).size;
@@ -70,7 +77,7 @@ export function hasFamilyDiversity(rows: readonly Category[], cols: readonly Cat
   const perFamily = new Map<CategoryFamily, number>();
   for (const c of all) perFamily.set(c.family, (perFamily.get(c.family) ?? 0) + 1);
   return (
-    Math.max(...perFamily.values()) <= GRID_RULES.maxPerFamily &&
+    [...perFamily].every(([family, n]) => n <= familyLimit(family)) &&
     perFamily.size >= GRID_RULES.minFamilies &&
     familyCount(rows) >= GRID_RULES.minFamiliesPerLine &&
     familyCount(cols) >= GRID_RULES.minFamiliesPerLine
