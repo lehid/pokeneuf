@@ -3,25 +3,25 @@
   "id": 47,
   "date": "2026-12-17",
   "rows": [
-    "evo-none",
-    "status-legendary",
-    "type-ground"
+    "evo-stage-3",
+    "type-steel",
+    "evo-none"
   ],
   "cols": [
-    "shape-quadruped",
-    "color-brown",
-    "name-starts-vowel"
+    "type-rock",
+    "color-blue",
+    "name-double-letter"
   ],
   "cellSizes": [
-    14,
-    10,
-    8,
+    4,
+    15,
+    13,
+    6,
     5,
-    3,
-    3,
-    11,
-    14,
-    5
+    4,
+    7,
+    10,
+    6
   ],
   "difficulty": 74
 }

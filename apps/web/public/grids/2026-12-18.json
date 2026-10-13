@@ -3,25 +3,25 @@
   "id": 48,
   "date": "2026-12-18",
   "rows": [
-    "size-height-2m",
-    "type-bug",
-    "status-fossil"
+    "form-mega",
+    "type-dual",
+    "evo-baby"
   ],
   "cols": [
-    "gen-4",
-    "type-rock",
-    "name-has-k"
+    "gen-2",
+    "type-normal",
+    "name-short"
   ],
   "cellSizes": [
-    13,
-    4,
-    7,
     9,
-    3,
-    6,
     4,
+    3,
+    49,
+    23,
     13,
+    8,
+    4,
     4
   ],
-  "difficulty": 78
+  "difficulty": 69
 }

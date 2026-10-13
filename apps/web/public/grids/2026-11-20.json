@@ -3,25 +3,25 @@
   "id": 20,
   "date": "2026-11-20",
   "rows": [
-    "type-dark",
-    "shape-upright",
-    "status-pseudo"
+    "type-fighting",
+    "type-rock",
+    "stat-attack-100"
   ],
   "cols": [
-    "form-mega",
-    "type-dual",
-    "name-double-letter"
+    "evo-gen4",
+    "evo-final",
+    "name-ends-a"
   ],
   "cellSizes": [
-    6,
-    18,
     5,
-    21,
-    38,
-    21,
+    14,
     5,
     5,
-    3
+    13,
+    3,
+    22,
+    64,
+    9
   ],
-  "difficulty": 65
+  "difficulty": 64
 }

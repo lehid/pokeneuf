@@ -3,25 +3,25 @@
   "id": 34,
   "date": "2026-12-04",
   "rows": [
-    "status-fossil",
-    "stat-total-300",
-    "size-height-2m"
+    "type-fairy",
+    "stat-attack-100",
+    "evo-baby"
   ],
   "cols": [
-    "name-ends-a",
-    "type-dual",
-    "shape-upright"
+    "shape-upright",
+    "size-height-50cm",
+    "type-dual"
   ],
   "cellSizes": [
-    3,
-    11,
-    4,
+    6,
     7,
-    38,
-    10,
-    10,
-    26,
-    11
+    14,
+    32,
+    7,
+    46,
+    4,
+    9,
+    6
   ],
-  "difficulty": 63
+  "difficulty": 62
 }

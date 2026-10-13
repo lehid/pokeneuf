@@ -3,25 +3,25 @@
   "id": 76,
   "date": "2027-01-15",
   "rows": [
-    "evo-stone",
-    "gen-1",
-    "stat-attack-100"
+    "shape-wings",
+    "gen-2",
+    "status-starter"
   ],
   "cols": [
-    "color-blue",
-    "color-brown",
-    "name-has-k"
+    "evo-stage-3",
+    "evo-middle",
+    "color-yellow"
   ],
   "cellSizes": [
-    3,
-    5,
     4,
-    25,
-    35,
-    22,
-    18,
-    25,
-    17
+    3,
+    3,
+    12,
+    10,
+    12,
+    12,
+    12,
+    3
   ],
-  "difficulty": 56
+  "difficulty": 76
 }

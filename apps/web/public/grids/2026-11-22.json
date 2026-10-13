@@ -3,25 +3,25 @@
   "id": 22,
   "date": "2026-11-22",
   "rows": [
-    "type-rock",
-    "evo-final",
-    "evo-gen4"
+    "size-height-2m",
+    "type-fairy",
+    "shape-wings"
   ],
   "cols": [
-    "color-green",
-    "type-water",
-    "name-starts-c"
+    "color-blue",
+    "type-normal",
+    "name-has-ou"
   ],
   "cellSizes": [
+    10,
+    5,
     3,
-    6,
     3,
-    20,
-    39,
-    21,
-    8,
+    4,
+    3,
     7,
-    12
+    15,
+    6
   ],
-  "difficulty": 65
+  "difficulty": 83
 }

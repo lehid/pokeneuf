@@ -3,25 +3,25 @@
   "id": 5,
   "date": "2026-11-05",
   "rows": [
-    "color-green",
-    "evo-stage-3",
-    "stat-total-300"
-  ],
-  "cols": [
-    "type-ground",
-    "shape-quadruped",
+    "size-height-50cm",
+    "size-height-2m",
     "type-bug"
   ],
-  "cellSizes": [
-    4,
-    13,
-    8,
-    9,
-    8,
-    4,
-    11,
-    16,
-    17
+  "cols": [
+    "color-purple",
+    "evo-none",
+    "type-poison"
   ],
-  "difficulty": 67
+  "cellSizes": [
+    9,
+    19,
+    10,
+    6,
+    19,
+    4,
+    6,
+    5,
+    9
+  ],
+  "difficulty": 69
 }

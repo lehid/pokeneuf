@@ -92,3 +92,38 @@ test('the game in progress is kept when the player postpones the new grid', asyn
   await expect(page.getByText('Grille n° 5')).toBeVisible();
   await expect(page.getByTestId('cell-0-0')).toHaveAttribute('data-state', 'filled');
 });
+
+test.describe('difficulty of the day', () => {
+  // The calendar: easy to start the week, hard at the weekend, one very hard grid a week (Sunday).
+  const cases: [string, string, RegExp][] = [
+    ['2026-11-02', 'Monday', /^(Très facile|Facile)$/],
+    ['2026-11-03', 'Tuesday', /^Facile$/],
+    ['2026-11-05', 'Thursday', /^Intermédiaire$/],
+    ['2026-11-07', 'Saturday', /^Difficile$/],
+    ['2026-11-08', 'Sunday', /^Très difficile$/],
+  ];
+  for (const [date, day, name] of cases) {
+    test(`${day} ${date} is announced on the grid page`, async ({ page }) => {
+      await page.clock.setFixedTime(new Date(`${date}T12:00:00+01:00`));
+      await page.goto('./');
+      const badge = page.getByTestId('difficulty');
+      await expect(badge).toBeVisible();
+      await expect(badge).toContainText('Difficulté');
+      const label = (await badge.getAttribute('aria-label')) ?? '';
+      expect(
+        label.replace(/^Difficulté de la grille : /, '').replace(/ \(\d sur 5\)$/, ''),
+      ).toMatch(name);
+    });
+  }
+
+  test('a very hard grid fills all five squares, an easy one fewer', async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-11-08T12:00:00+01:00'));
+    await page.goto('./');
+    await expect(page.getByTestId('difficulty')).toHaveAttribute('data-level', 'veryHard');
+    await expect(page.getByTestId('difficulty')).toHaveAttribute('aria-label', /5 sur 5/);
+    await page.clock.setFixedTime(new Date('2026-11-03T12:00:00+01:00'));
+    await page.goto('./');
+    await expect(page.getByTestId('difficulty')).toHaveAttribute('data-level', 'easy');
+    await expect(page.getByTestId('difficulty')).toHaveAttribute('aria-label', /2 sur 5/);
+  });
+});

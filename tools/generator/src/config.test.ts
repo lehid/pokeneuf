@@ -1,4 +1,4 @@
-import { CATEGORIES, CATEGORY_FAMILIES } from '@pokeneuf/core';
+import { CATEGORIES, CATEGORY_FAMILIES, DIFFICULTY_LEVELS } from '@pokeneuf/core';
 import { describe, expect, it } from 'vitest';
 import { categoryWeights, loadConfig, parseConfig } from './config';
 
@@ -13,12 +13,17 @@ describe('the shipped config', () => {
     for (const family of CATEGORY_FAMILIES) expect(config.familyWeights[family]).toBeGreaterThan(0);
   });
 
-  it('makes weekdays easier early in the week and harder at the weekend', async () => {
-    const { weekdayDifficulty: d } = await loadConfig();
-    const top = (day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun') => d[day]?.[1] ?? 100;
-    expect(top('mon')).toBeLessThan(top('wed'));
-    expect(top('wed')).toBeLessThan(top('fri'));
-    expect(top('fri')).toBeLessThanOrEqual(top('sat'));
+  it('climbs from easy on Monday to very hard on Sunday, with a single very hard day a week', async () => {
+    const { weekdayLevels: levels } = await loadConfig();
+    const rank = (day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun') =>
+      Math.max(...(levels[day] ?? []).map((level) => DIFFICULTY_LEVELS.indexOf(level)));
+    expect(rank('mon')).toBeLessThanOrEqual(1);
+    expect(rank('mon')).toBeLessThan(rank('wed'));
+    expect(rank('wed')).toBeLessThan(rank('fri'));
+    expect(rank('fri')).toBeLessThanOrEqual(rank('sat'));
+    expect(rank('sun')).toBe(DIFFICULTY_LEVELS.length - 1);
+    const veryHardDays = Object.entries(levels).filter(([, list]) => list.includes('veryHard'));
+    expect(veryHardDays.map(([day]) => day)).toEqual(['sun']);
   });
 });
 
@@ -36,19 +41,19 @@ describe('parseConfig', () => {
     expect(() => parseConfig({ ...config, attemptsPerStage: 0 })).toThrow(
       /Invalid generator config/,
     );
-    expect(() => parseConfig({ ...config, weekdayDifficulty: { mon: [0, 101] } })).toThrow(
+    expect(() => parseConfig({ ...config, weekdayLevels: { mon: ['impossible'] } })).toThrow(
       /Invalid generator config/,
     );
-    expect(() => parseConfig({ ...config, weekdayDifficulty: { funday: [0, 10] } })).toThrow(
+    expect(() => parseConfig({ ...config, weekdayLevels: { mon: [] } })).toThrow(
+      /Invalid generator config/,
+    );
+    expect(() => parseConfig({ ...config, weekdayLevels: { funday: ['easy'] } })).toThrow(
       /Invalid generator config/,
     );
   });
 
-  it('rejects ranges and cooldowns that contradict themselves', async () => {
+  it('rejects cooldowns that contradict themselves', async () => {
     const config = await base();
-    expect(() => parseConfig({ ...config, weekdayDifficulty: { mon: [60, 40] } })).toThrow(
-      /min is above max/,
-    );
     expect(() =>
       parseConfig({ ...config, cooldown: { ...config.cooldown, minCategoryDays: 9 } }),
     ).toThrow(/minCategoryDays is above categoryDays/);

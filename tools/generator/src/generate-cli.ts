@@ -1,6 +1,6 @@
 import { parseArgs } from 'node:util';
 import { addDays, LAUNCH_DATE, type Grid } from '@pokeneuf/core';
-import { loadMemberships } from './cli-common';
+import { loadMemberships, loadPopularity } from './cli-common';
 import { loadConfig } from './config';
 import { createGenerator, dateRange, GenerationError } from './generate';
 import { GRIDS_DIR, MEMBERSHIPS_PATH, readGrids, writeGrid, writeIndex } from './files';
@@ -40,7 +40,8 @@ if (from < LAUNCH_DATE) fail(`--from ${from} is before the launch date ${LAUNCH_
 
 const memberships = await loadMemberships(values.memberships);
 const config = await loadConfig();
-const generate = createGenerator({ memberships, config });
+const popularity = await loadPopularity();
+const generate = createGenerator({ memberships, popularity, config });
 
 const dates = dateRange(from, days);
 const existing = await readGrids(values.out);

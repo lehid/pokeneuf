@@ -3,25 +3,25 @@
   "id": 62,
   "date": "2027-01-01",
   "rows": [
-    "type-water",
-    "size-height-2m",
-    "status-legendary"
+    "gen-2",
+    "stat-total-300",
+    "type-dark"
   ],
   "cols": [
-    "evo-none",
-    "type-flying",
-    "name-double-letter"
+    "shape-quadruped",
+    "type-grass",
+    "name-has-y"
   ],
   "cellSizes": [
+    22,
     10,
-    5,
-    18,
-    19,
+    14,
+    16,
     9,
-    9,
-    26,
-    6,
+    11,
+    8,
+    3,
     3
   ],
-  "difficulty": 65
+  "difficulty": 67
 }

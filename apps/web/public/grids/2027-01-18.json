@@ -3,25 +3,25 @@
   "id": 79,
   "date": "2027-01-18",
   "rows": [
-    "size-height-50cm",
-    "evo-friendship",
-    "gen-4"
+    "color-purple",
+    "status-legendary",
+    "type-dragon"
   ],
   "cols": [
-    "type-normal",
-    "shape-upright",
-    "name-double-letter"
+    "form-mega",
+    "stat-total-500",
+    "shape-quadruped"
   ],
   "cellSizes": [
-    19,
-    15,
-    18,
+    5,
+    12,
     7,
-    4,
-    4,
-    17,
+    5,
     26,
-    21
+    5,
+    7,
+    11,
+    3
   ],
-  "difficulty": 58
+  "difficulty": 73
 }

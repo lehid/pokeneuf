@@ -3,25 +3,25 @@
   "id": 78,
   "date": "2027-01-17",
   "rows": [
-    "evo-stage-3",
-    "status-legendary",
-    "stat-total-500"
+    "gen-3",
+    "status-fossil",
+    "stat-total-300"
   ],
   "cols": [
-    "stat-speed-100",
-    "type-fire",
-    "type-dragon"
+    "type-water",
+    "type-rock",
+    "name-has-k"
   ],
   "cellSizes": [
-    15,
-    5,
-    5,
-    10,
+    28,
+    12,
+    25,
     4,
-    6,
-    38,
-    14,
-    11
+    13,
+    4,
+    12,
+    3,
+    13
   ],
-  "difficulty": 66
+  "difficulty": 64
 }

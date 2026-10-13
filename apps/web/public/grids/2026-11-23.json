@@ -4,24 +4,24 @@
   "date": "2026-11-23",
   "rows": [
     "evo-stone",
-    "type-mono",
+    "gen-2",
     "gen-3"
   ],
   "cols": [
-    "type-psychic",
-    "color-blue",
+    "type-mono",
+    "type-grass",
     "color-brown"
   ],
   "cellSizes": [
-    3,
-    3,
+    17,
+    7,
     5,
-    20,
-    47,
-    48,
-    20,
-    32,
+    51,
+    10,
+    12,
+    69,
+    17,
     15
   ],
-  "difficulty": 53
+  "difficulty": 49
 }

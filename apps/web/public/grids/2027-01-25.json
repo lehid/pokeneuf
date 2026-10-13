@@ -3,25 +3,25 @@
   "id": 86,
   "date": "2027-01-25",
   "rows": [
-    "shape-upright",
-    "evo-none",
-    "type-rock"
+    "stat-total-500",
+    "shape-quadruped",
+    "color-purple"
   ],
   "cols": [
-    "type-steel",
-    "name-has-k",
-    "stat-total-500"
+    "evo-none",
+    "type-water",
+    "type-psychic"
   ],
   "cellSizes": [
-    3,
-    23,
-    30,
-    6,
-    10,
     39,
-    6,
+    21,
+    21,
+    14,
     7,
-    7
+    3,
+    7,
+    7,
+    4
   ],
-  "difficulty": 62
+  "difficulty": 63
 }

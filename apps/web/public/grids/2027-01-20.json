@@ -3,25 +3,25 @@
   "id": 81,
   "date": "2027-01-20",
   "rows": [
-    "type-water",
-    "type-electric",
-    "gen-2"
+    "type-dual",
+    "size-height-2m",
+    "stat-attack-100"
   ],
   "cols": [
-    "evo-middle",
-    "form-mega",
-    "shape-quadruped"
+    "type-steel",
+    "form-gmax",
+    "name-starts-vowel"
   ],
   "cellSizes": [
-    9,
-    7,
-    7,
+    24,
     5,
+    28,
     3,
-    11,
-    10,
-    9,
-    22
+    3,
+    6,
+    6,
+    3,
+    12
   ],
-  "difficulty": 70
+  "difficulty": 74
 }

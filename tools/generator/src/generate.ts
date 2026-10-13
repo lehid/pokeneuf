@@ -5,6 +5,7 @@ import {
   cellAnswers,
   daysBetween,
   difficultyOf,
+  gridDifficulty,
   distinctRepresentatives,
   familyLimit,
   GRID_RULES,
@@ -18,13 +19,21 @@ import {
   type Grid,
   type GridDate,
   type Memberships,
+  type Popularity,
 } from '@pokeneuf/core';
 import { categoryWeights, WEEKDAYS, type GeneratorConfig } from './config';
 import { PairTable } from './pairs';
 import { hashString, mulberry32, weightedIndex, type Random } from './rng';
 
+/** Identity of a puzzle: its rows and columns, in any order. */
+function puzzleKey(rows: readonly string[], cols: readonly string[]): string {
+  return JSON.stringify([[...rows].sort(), [...cols].sort()]);
+}
+
 export interface GeneratorContext {
   memberships: Memberships;
+  /** How well known each Pokémon is (the `pop` of the Pokédex): part of what makes a grid hard. */
+  popularity: Popularity;
   config: GeneratorConfig;
   /** Categories to draw from. Default: the whole registry. */
   categories?: readonly Category[];
@@ -106,12 +115,12 @@ function draw(
  * A grid is valid when (see `checkGrid`): 3 rows and 3 columns of distinct categories that may
  * cross and come from varied families; every cell has 3 to 80 answers; 9 different Pokémon can
  * fill it. On top of that the generator applies the cooldowns (category, row × column pair), the
- * family weights and the optional difficulty target of the weekday.
+ * family weights and the difficulty levels accepted on that weekday.
  *
  * Deterministic: the same inputs always give the same grid.
  */
 export function createGenerator(context: GeneratorContext): (input: GenerateInput) => Generated {
-  const { memberships, config } = context;
+  const { memberships, popularity, config } = context;
   const categories = context.categories ?? CATEGORIES;
   const launchDate = context.launchDate ?? LAUNCH_DATE;
   const weights = categoryWeights(categories, config);
@@ -144,6 +153,20 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
   }
 
   return ({ date, seed = seedFromDate(date), history }) => {
+    const candidate = (
+      rows: readonly Category[],
+      cols: readonly Category[],
+      cellSizes: number[],
+      difficulty = difficultyOf(cellSizes),
+    ): Grid => ({
+      version: GRID_VERSION,
+      id: gridNumber(date, launchDate),
+      date,
+      rows: rows.map((c) => c.id) as Grid['rows'],
+      cols: cols.map((c) => c.id) as Grid['cols'],
+      cellSizes,
+      difficulty,
+    });
     const random = mulberry32(seed);
     const rejections: Rejections = {};
     const reject = (reason: string) => {
@@ -158,8 +181,13 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
       if (!near(g, config.cooldown.pairDays)) continue;
       for (const r of g.rows) for (const c of g.cols) recentPairs.add(pairKey(r, c));
     }
+    // The same puzzle, even turned sideways, is never published twice (whatever the days between).
+    const seen = new Set<string>();
+    for (const g of history) {
+      if (g.date !== date) seen.add(puzzleKey(g.rows, g.cols)).add(puzzleKey(g.cols, g.rows));
+    }
     const weightsNow = balancedWeights(date, history);
-    const target = config.weekdayDifficulty[weekdayOf(date)];
+    const accepted = config.weekdayLevels[weekdayOf(date)];
     let attempts = 0;
 
     // The category cooldown is a target: when it leaves no valid grid, shorten it one day at a time.
@@ -217,21 +245,31 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
         }
 
         const cellSizes = rows.flatMap((r) => cols.map((c) => pairs.size(r.id, c.id)));
-        const difficulty = difficultyOf(cellSizes);
-        if (target && (difficulty < target[0] || difficulty > target[1])) {
-          reject('difficulty target');
+        if (
+          seen.has(
+            puzzleKey(
+              rows.map((c) => c.id),
+              cols.map((c) => c.id),
+            ),
+          )
+        ) {
+          reject('already published');
           continue;
         }
+        const difficulty = difficultyOf(cellSizes);
+        if (accepted) {
+          const level = gridDifficulty(
+            candidate(rows, cols, cellSizes),
+            memberships,
+            popularity,
+          ).level;
+          if (!accepted.includes(level)) {
+            reject('difficulty target');
+            continue;
+          }
+        }
 
-        const grid: Grid = {
-          version: GRID_VERSION,
-          id: gridNumber(date, launchDate),
-          date,
-          rows: rows.map((c) => c.id) as Grid['rows'],
-          cols: cols.map((c) => c.id) as Grid['cols'],
-          cellSizes,
-          difficulty,
-        };
+        const grid = candidate(rows, cols, cellSizes, difficulty);
         if (!distinctRepresentatives(cellAnswers(grid, memberships))) {
           reject('no 9 different Pokémon');
           continue;

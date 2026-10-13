@@ -3,25 +3,25 @@
   "id": 84,
   "date": "2027-01-23",
   "rows": [
-    "type-bug",
-    "stat-total-300",
-    "type-flying"
+    "gen-2",
+    "color-green",
+    "type-bug"
   ],
   "cols": [
-    "color-brown",
-    "color-red",
-    "name-has-y"
+    "size-height-50cm",
+    "type-poison",
+    "name-double-letter"
   ],
   "cellSizes": [
-    3,
-    10,
+    19,
+    4,
+    16,
+    15,
+    12,
     8,
-    20,
-    6,
     11,
-    14,
-    6,
-    6
+    9,
+    5
   ],
-  "difficulty": 70
+  "difficulty": 64
 }

@@ -4,24 +4,24 @@
   "date": "2026-12-11",
   "rows": [
     "name-has-x",
-    "stat-total-500",
-    "type-poison"
+    "form-gmax",
+    "type-electric"
   ],
   "cols": [
-    "gen-4",
-    "type-bug",
-    "size-height-2m"
+    "size-height-50cm",
+    "type-dual",
+    "shape-upright"
   ],
   "cellSizes": [
+    3,
+    11,
+    4,
+    3,
+    5,
+    3,
+    10,
     7,
-    4,
-    4,
-    41,
-    6,
-    36,
-    8,
-    9,
-    4
+    7
   ],
-  "difficulty": 68
+  "difficulty": 83
 }

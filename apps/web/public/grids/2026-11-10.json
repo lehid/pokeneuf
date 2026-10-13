@@ -3,25 +3,25 @@
   "id": 10,
   "date": "2026-11-10",
   "rows": [
-    "stat-speed-100",
-    "evo-none",
-    "stat-total-500"
+    "shape-upright",
+    "type-water",
+    "stat-speed-100"
   ],
   "cols": [
-    "type-flying",
-    "status-mythical",
-    "gen-1"
+    "evo-stage-3",
+    "type-ice",
+    "name-long"
   ],
   "cellSizes": [
-    14,
-    8,
     24,
-    12,
-    9,
-    12,
-    17,
-    8,
-    33
+    4,
+    13,
+    10,
+    6,
+    7,
+    15,
+    3,
+    13
   ],
-  "difficulty": 54
+  "difficulty": 67
 }

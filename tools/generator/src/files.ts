@@ -7,6 +7,7 @@ import { z } from 'zod';
 const ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 export const GRIDS_DIR = path.join(ROOT, 'apps/web/public/grids');
 export const MEMBERSHIPS_PATH = path.join(ROOT, 'packages/data/dist/memberships.json');
+export const POKEDEX_PATH = path.join(ROOT, 'packages/data/dist/pokedex.json');
 
 export { gridSchema };
 

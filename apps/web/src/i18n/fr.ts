@@ -11,6 +11,17 @@ export const fr = {
       month: 'long',
     }).format(new Date(`${isoDate}T12:00:00Z`)),
 
+  difficultyLabel: 'Difficulté',
+  difficulty: {
+    veryEasy: 'Très facile',
+    easy: 'Facile',
+    medium: 'Intermédiaire',
+    hard: 'Difficile',
+    veryHard: 'Très difficile',
+  },
+  difficultyAria: (level: string, index: number, total: number) =>
+    `Difficulté de la grille : ${level} (${index} sur ${total})`,
+
   loading: 'Chargement de la grille…',
   noGridTitle: 'Pas de grille aujourd’hui',
   noGrid: 'Pas de grille aujourd’hui, revenez demain.',

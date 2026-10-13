@@ -3,25 +3,25 @@
   "id": 16,
   "date": "2026-11-16",
   "rows": [
-    "size-height-2m",
-    "type-ground",
-    "shape-wings"
+    "gen-2",
+    "type-fire",
+    "gen-3"
   ],
   "cols": [
-    "stat-attack-100",
-    "color-brown",
-    "color-blue"
+    "shape-quadruped",
+    "status-legendary",
+    "evo-base"
   ],
   "cellSizes": [
-    28,
-    7,
-    10,
-    17,
-    14,
-    10,
-    6,
+    22,
+    5,
+    36,
+    16,
+    4,
     11,
-    7
+    20,
+    8,
+    45
   ],
-  "difficulty": 61
+  "difficulty": 53
 }

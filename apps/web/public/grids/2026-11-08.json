@@ -3,25 +3,25 @@
   "id": 8,
   "date": "2026-11-08",
   "rows": [
-    "gen-3",
-    "evo-stone",
-    "size-height-2m"
+    "color-blue",
+    "type-mono",
+    "gen-4"
   ],
   "cols": [
-    "type-grass",
-    "type-normal",
-    "name-double-letter"
+    "evo-baby",
+    "shape-quadruped",
+    "type-rock"
   ],
   "cellSizes": [
-    17,
-    18,
-    20,
-    7,
-    3,
     4,
+    12,
+    4,
+    12,
+    67,
     6,
-    5,
-    9
+    8,
+    25,
+    7
   ],
-  "difficulty": 70
+  "difficulty": 62
 }

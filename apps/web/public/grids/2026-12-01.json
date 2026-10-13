@@ -3,25 +3,25 @@
   "id": 31,
   "date": "2026-12-01",
   "rows": [
-    "type-flying",
-    "evo-stage-3",
-    "type-normal"
+    "status-starter",
+    "stat-speed-100",
+    "color-brown"
   ],
   "cols": [
-    "name-starts-vowel",
-    "color-brown",
-    "color-blue"
+    "type-grass",
+    "shape-quadruped",
+    "type-fire"
   ],
   "cellSizes": [
-    10,
-    14,
-    10,
-    7,
-    9,
-    15,
-    10,
-    30,
-    6
+    12,
+    12,
+    12,
+    4,
+    16,
+    6,
+    4,
+    22,
+    9
   ],
-  "difficulty": 60
+  "difficulty": 66
 }

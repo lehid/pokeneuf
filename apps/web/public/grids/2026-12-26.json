@@ -3,25 +3,25 @@
   "id": 56,
   "date": "2026-12-26",
   "rows": [
-    "type-dark",
-    "type-rock",
-    "color-red"
+    "status-legendary",
+    "size-height-50cm",
+    "evo-baby"
   ],
   "cols": [
-    "stat-total-500",
-    "shape-upright",
-    "name-has-y"
+    "type-psychic",
+    "color-blue",
+    "name-starts-vowel"
   ],
   "cellSizes": [
-    7,
+    8,
+    6,
     3,
-    3,
-    7,
-    9,
-    5,
-    11,
-    9,
-    12
+    13,
+    21,
+    13,
+    4,
+    4,
+    3
   ],
   "difficulty": 76
 }

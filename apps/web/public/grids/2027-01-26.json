@@ -3,25 +3,25 @@
   "id": 87,
   "date": "2027-01-26",
   "rows": [
-    "type-normal",
+    "status-starter",
     "gen-4",
-    "size-height-50cm"
+    "form-mega"
   ],
   "cols": [
-    "color-purple",
-    "evo-final",
-    "name-has-ch"
+    "type-fire",
+    "type-fighting",
+    "name-has-k"
   ],
   "cellSizes": [
-    5,
-    23,
-    4,
-    14,
-    49,
     12,
-    9,
     4,
-    12
+    6,
+    5,
+    7,
+    17,
+    5,
+    5,
+    11
   ],
-  "difficulty": 62
+  "difficulty": 74
 }

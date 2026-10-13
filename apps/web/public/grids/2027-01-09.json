@@ -3,25 +3,25 @@
   "id": 70,
   "date": "2027-01-09",
   "rows": [
-    "type-dragon",
-    "size-height-2m",
-    "type-grass"
+    "size-height-50cm",
+    "type-steel",
+    "form-mega"
   ],
   "cols": [
-    "shape-upright",
-    "color-green",
-    "name-ends-a"
+    "evo-gen4",
+    "shape-quadruped",
+    "name-has-ch"
   ],
   "cellSizes": [
-    5,
     3,
-    5,
-    11,
+    23,
+    12,
     6,
-    10,
-    9,
-    33,
-    6
+    6,
+    3,
+    8,
+    8,
+    3
   ],
-  "difficulty": 72
+  "difficulty": 77
 }

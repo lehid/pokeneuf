@@ -1,6 +1,7 @@
 export * from './categories';
 export * from './config';
 export * from './date';
+export * from './difficulty';
 export * from './game';
 export * from './grid';
 export * from './matching';

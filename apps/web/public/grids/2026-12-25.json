@@ -3,25 +3,25 @@
   "id": 55,
   "date": "2026-12-25",
   "rows": [
-    "size-height-2m",
-    "gen-4",
-    "type-ground"
+    "gen-2",
+    "type-electric",
+    "form-mega"
   ],
   "cols": [
-    "status-starter",
-    "evo-stage-3",
-    "type-dragon"
+    "name-has-x",
+    "evo-none",
+    "type-steel"
   ],
   "cellSizes": [
+    7,
+    18,
+    4,
     3,
-    11,
-    8,
-    9,
-    16,
     6,
     3,
-    9,
-    5
+    4,
+    14,
+    8
   ],
-  "difficulty": 75
+  "difficulty": 78
 }

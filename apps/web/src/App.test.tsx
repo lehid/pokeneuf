@@ -1,6 +1,8 @@
 import {
   APP_NAME,
+  DIFFICULTY_LEVELS,
   findSolution,
+  gridDifficulty,
   rankScore,
   scoreGame,
   solutionsFor,
@@ -307,5 +309,29 @@ describe('rarity, score, stats and sharing', () => {
       expect(lower.includes(p.nameEn.toLowerCase()), p.nameEn).toBe(false);
     }
     expect((await screen.findByTestId('toast')).textContent).toContain('copié');
+  });
+});
+
+describe('difficulty of the grid', () => {
+  it('is shown with the grid, as a name and five squares', () => {
+    start();
+    const { level, levelIndex } = gridDifficulty(demoGrid, memberships, popularity);
+    const badge = screen.getByTestId('difficulty');
+    expect(badge.getAttribute('data-level')).toBe(level);
+    expect(badge.textContent).toContain('Difficulté');
+    expect(badge.textContent).toContain(
+      {
+        veryEasy: 'Très facile',
+        easy: 'Facile',
+        medium: 'Intermédiaire',
+        hard: 'Difficile',
+        veryHard: 'Très difficile',
+      }[level],
+    );
+    expect(badge.getAttribute('aria-label')).toBe(
+      `Difficulté de la grille : ${badge.textContent?.split('Difficulté')[1]?.trim()} (${levelIndex + 1} sur ${DIFFICULTY_LEVELS.length})`,
+    );
+    const squares = badge.querySelectorAll('span.bg-lcd-ink');
+    expect(squares).toHaveLength(levelIndex + 1);
   });
 });

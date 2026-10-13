@@ -1,4 +1,11 @@
-import { computeStats, scoreGame, type GameScore, type Stats } from '@pokeneuf/core';
+import {
+  computeStats,
+  gridDifficulty,
+  scoreGame,
+  type GameScore,
+  type GridDifficulty,
+  type Stats,
+} from '@pokeneuf/core';
 import { useMemo } from 'react';
 import { memberships, popularity } from './data';
 import { useGame } from './GameContext';
@@ -14,4 +21,10 @@ export function useStats(): Stats {
   const grid = useGame((s) => s.grid);
   const history = useGame((s) => s.history);
   return useMemo(() => computeStats(history, grid.date), [history, grid.date]);
+}
+
+/** How hard today's grid is: size of the cells, obscurity and mass of the answers. */
+export function useDifficulty(): GridDifficulty {
+  const grid = useGame((s) => s.grid);
+  return useMemo(() => gridDifficulty(grid, memberships, popularity), [grid]);
 }

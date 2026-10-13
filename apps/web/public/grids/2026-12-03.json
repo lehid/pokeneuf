@@ -3,25 +3,25 @@
   "id": 33,
   "date": "2026-12-03",
   "rows": [
-    "type-fire",
-    "type-psychic",
-    "stat-speed-100"
+    "color-yellow",
+    "type-flying",
+    "type-dark"
   ],
   "cols": [
-    "gen-4",
-    "stat-total-500",
-    "name-short"
+    "gen-2",
+    "evo-base",
+    "form-mega"
   ],
   "cellSizes": [
-    5,
-    14,
-    3,
-    9,
-    21,
-    8,
-    17,
-    38,
-    4
+    12,
+    13,
+    4,
+    19,
+    19,
+    10,
+    6,
+    6,
+    6
   ],
-  "difficulty": 64
+  "difficulty": 66
 }

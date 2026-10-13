@@ -1,6 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { CATEGORY_FAMILIES, type Category, type CategoryFamily } from '@pokeneuf/core';
+import {
+  CATEGORY_FAMILIES,
+  DIFFICULTY_LEVELS,
+  type Category,
+  type CategoryFamily,
+} from '@pokeneuf/core';
 import { z } from 'zod';
 
 export const WEEKDAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
@@ -27,11 +32,11 @@ const configSchema = z.strictObject({
   bonusWeight: z.number().positive(),
   /** Per-category tuning (relative to the others of its family). Default 1. */
   categoryWeights: z.record(z.string(), z.number().positive()),
-  /** Optional accepted difficulty range per weekday, e.g. `"mon": [0, 45]`. */
-  weekdayDifficulty: z.partialRecord(
-    z.enum(WEEKDAYS),
-    z.tuple([z.number().int().min(0).max(100), z.number().int().min(0).max(100)]),
-  ),
+  /**
+   * Difficulty levels accepted per weekday (see `gridDifficulty`), e.g. `"mon": ["veryEasy", "easy"]`.
+   * A weekday without an entry takes any grid.
+   */
+  weekdayLevels: z.partialRecord(z.enum(WEEKDAYS), z.array(z.enum(DIFFICULTY_LEVELS)).min(1)),
   /**
    * Categories used less than their weight says (over this many days, both sides of the date) are
    * drawn more, the others less. Without it, the categories left after a week of cooldown are
@@ -51,9 +56,6 @@ export function parseConfig(input: unknown): GeneratorConfig {
   const { categoryDays, minCategoryDays } = result.data.cooldown;
   if (minCategoryDays > categoryDays)
     throw new Error('cooldown.minCategoryDays is above categoryDays');
-  for (const [day, range] of Object.entries(result.data.weekdayDifficulty)) {
-    if (range && range[0] > range[1]) throw new Error(`weekdayDifficulty.${day}: min is above max`);
-  }
   return result.data;
 }
 

@@ -3,25 +3,25 @@
   "id": 68,
   "date": "2027-01-07",
   "rows": [
-    "type-bug",
-    "stat-total-300",
-    "type-poison"
+    "type-dragon",
+    "color-red",
+    "type-ice"
   ],
   "cols": [
-    "color-purple",
-    "color-blue",
-    "name-starts-vowel"
+    "evo-none",
+    "gen-1",
+    "name-has-k"
   ],
   "cellSizes": [
     6,
     3,
-    9,
+    5,
     7,
-    18,
-    12,
-    22,
-    9,
-    8
+    16,
+    4,
+    4,
+    5,
+    4
   ],
-  "difficulty": 67
+  "difficulty": 83
 }

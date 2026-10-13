@@ -3,25 +3,25 @@
   "id": 72,
   "date": "2027-01-11",
   "rows": [
-    "gen-4",
-    "status-starter",
-    "evo-baby"
+    "form-gmax",
+    "type-dark",
+    "stat-attack-100"
   ],
   "cols": [
-    "type-dual",
-    "size-height-50cm",
-    "name-has-ou"
+    "type-mono",
+    "stat-total-500",
+    "shape-upright"
   ],
   "cellSizes": [
-    53,
-    32,
-    14,
-    12,
-    8,
-    6,
-    6,
-    9,
-    3
+    7,
+    7,
+    3,
+    5,
+    7,
+    3,
+    54,
+    61,
+    32
   ],
-  "difficulty": 61
+  "difficulty": 62
 }

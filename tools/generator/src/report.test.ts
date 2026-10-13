@@ -1,19 +1,27 @@
-import { CATEGORIES, GRID_VERSION, LAUNCH_DATE, type Grid, type Memberships } from '@pokeneuf/core';
+import {
+  CATEGORIES,
+  GRID_VERSION,
+  LAUNCH_DATE,
+  type Grid,
+  type Memberships,
+  type Popularity,
+} from '@pokeneuf/core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { loadConfig, type GeneratorConfig } from './config';
 import { buildIndex, type GridIndex } from './files';
 import { createGenerator, dateRange } from './generate';
 import { analyzeGrids, cooldownFindings } from './report';
-import { realMemberships } from './test-world';
+import { realWorld } from './test-world';
 
 let memberships: Memberships;
+let popularity: Popularity;
 let config: GeneratorConfig;
 let grids: Grid[];
 
 beforeAll(async () => {
-  memberships = await realMemberships();
+  ({ memberships, popularity } = await realWorld());
   config = await loadConfig();
-  const generate = createGenerator({ memberships, config });
+  const generate = createGenerator({ memberships, popularity, config });
   grids = [];
   for (const date of dateRange(LAUNCH_DATE, 40))
     grids.push(generate({ date, history: grids }).grid);
@@ -91,18 +99,46 @@ describe('cooldownFindings', () => {
 
 describe('analyzeGrids', () => {
   const run = (list: readonly Grid[], index: GridIndex | null = buildIndex(list)) =>
-    analyzeGrids(list, memberships, config, index);
+    analyzeGrids(list, memberships, popularity, config, index);
 
   it('finds nothing wrong with generated grids, and describes them', () => {
     const { text, problems } = run(grids);
     expect(problems).toEqual([]);
     expect(text).toContain('40 grids, #1 (2026-11-01) to #40 (2026-12-10)');
-    expect(text).toContain('Difficulty (0 easy - 100 hard)');
-    expect(text).toMatch(/mon: \d+ grids, average \d+/);
+    expect(text).toContain('Size difficulty (0 easy - 100 hard');
+    expect(text).toContain('Level by weekday (veryEasy / easy / medium / hard / veryHard):');
+    expect(text).toMatch(
+      /mon: \d+ grids, \d+ \/ \d+ \/ \d+ \/ \d+ \/ \d+ {2}\(accepted: veryEasy, easy\)/,
+    );
+    expect(text).toContain('at most one per week');
     expect(text).toContain('Categories:');
     expect(text).toContain('Families:');
     expect(text).toContain('Pair cooldown (30 days): respected');
     expect(text).toContain('No problem found.');
+  });
+
+  it('flags grids whose level is not accepted on their weekday', () => {
+    const strict = { ...config, weekdayLevels: { mon: ['veryEasy' as const] } };
+    const { problems } = analyzeGrids(grids, memberships, popularity, strict, buildIndex(grids));
+    expect(problems.some((p) => /mon grid\(s\) outside the accepted levels veryEasy/.test(p))).toBe(
+      true,
+    );
+  });
+
+  it('flags more than one very hard grid in a calendar week', () => {
+    const allVeryHard = {
+      ...config,
+      weekdayLevels: Object.fromEntries(
+        ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].map((d) => [d, ['veryHard' as const]]),
+      ),
+    };
+    const generate = createGenerator({ memberships, popularity, config: allVeryHard });
+    const week: Grid[] = [];
+    // 2026-11-02 is a Monday: Monday to Sunday is one calendar week.
+    for (const date of dateRange('2026-11-02', 7))
+      week.push(generate({ date, history: week }).grid);
+    const { problems } = analyzeGrids(week, memberships, popularity, allVeryHard, buildIndex(week));
+    expect(problems.some((p) => /7 very hard grids in the week of 2026-11-02/.test(p))).toBe(true);
   });
 
   it('says so when there is no grid', () => {
@@ -135,12 +171,6 @@ describe('analyzeGrids', () => {
         : g,
     );
     expect(run(repeated).problems.join('\n')).toMatch(/category "[a-z0-9-]+" returns after 1 day/);
-  });
-
-  it('flags a grid outside the difficulty target of its weekday', () => {
-    const mondayIndex = grids.findIndex((g) => g.date === '2026-11-02');
-    const hard = grids.map((g, i) => (i === mondayIndex ? { ...g, difficulty: 99 } : g));
-    expect(run(hard).problems.join('\n')).toMatch(/1 mon grid\(s\) outside the difficulty target/);
   });
 
   it('lists the categories that were never used', () => {
