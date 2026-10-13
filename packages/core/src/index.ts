@@ -13,3 +13,4 @@ export * from './share';
 export * from './stats';
 export * from './storage';
 export * from './theme';
+export * from './titles';

@@ -9,6 +9,7 @@ import {
   shareText,
   solutionsFor,
   sortByPopularity,
+  titleFor,
   type GameState,
 } from '@pokeneuf/core';
 import { useState } from 'react';
@@ -122,6 +123,9 @@ export function EndDialog() {
         {score.total}
         <span className="text-sm text-lcd-soft">/{MAX_SCORE}</span>
       </p>
+      <p className="mb-2 text-sm" data-testid="title">
+        {fr.titleLabel} : <strong>{fr.titles[titleFor(score.total)]}</strong>
+      </p>
       {rarest !== null && rarestTier !== null && (
         <p className="mb-1 text-sm" data-testid="rarest">
           {fr.rarestAnswer} : <strong>{pokemonById(rarest).nameFr}</strong>{' '}
@@ -177,6 +181,11 @@ export function StatsDialog() {
           </div>
         ))}
       </dl>
+      {stats.played > 0 && (
+        <p className="mb-4 text-center text-sm" data-testid="best-title">
+          {fr.bestTitle} : <strong>{fr.titles[titleFor(stats.bestScore)]}</strong>
+        </p>
+      )}
       <h3 className="mb-2 text-xs font-bold tracking-wide uppercase text-lcd-soft">
         {fr.statsDistribution}
       </h3>

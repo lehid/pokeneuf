@@ -8,6 +8,7 @@ pnpm data:build                                          # prérequis : dist/mem
 pnpm grids:generate --from 2026-11-01 --days 90          # → apps/web/public/grids/
 pnpm grids:report                                        # revue avant commit ; code 1 si problème
 pnpm grids:stock                                         # code 1 s'il reste moins de 30 jours de grilles
+pnpm score:simulate                                      # scores de joueurs simulés, par niveau, vs la bande visée
 pnpm --filter @pokeneuf/generator test
 ```
 
@@ -79,3 +80,11 @@ tout écart au calendrier et toute semaine avec plus d'une grille très difficil
 `pnpm grids:report` : niveau par jour de semaine, taille des cases, usage des catégories et des
 familles, cooldowns, jours manquants, cohérence de `index.json`. Il rejoue `checkGrid` sur chaque
 fichier : il sert aussi de garde-fou quand les catégories ou les données changent.
+
+## Calibrer le score
+
+`pnpm score:simulate` fait jouer trois profils (casual, regular, fan) sur les grilles publiées et
+affiche trouvées / victoires / score moyen par niveau de difficulté, puis les quantiles. Bande
+visée : médiane du profil *regular* entre 450 et 600, 99ᵉ centile du *fan* à 700 ou plus (sous 900).
+À relancer après tout changement de `SCORING` ou de `POPULARITY_WEIGHTS` (dans `core` et `data`). Les
+joueurs simulés ne sont qu'un modèle : à confirmer avec de vraies parties.
