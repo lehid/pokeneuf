@@ -1,0 +1,33 @@
+{
+  "cooldown": {
+    "categoryDays": 7,
+    "minCategoryDays": 3,
+    "pairDays": 30
+  },
+  "familyWeights": {
+    "type": 3,
+    "generation": 1.5,
+    "evolution": 2,
+    "status": 1,
+    "form": 0.4,
+    "stats": 1.5,
+    "color": 1,
+    "shape": 0.6,
+    "size": 0.8,
+    "ability": 0.8,
+    "name": 0.5
+  },
+  "bonusWeight": 0.3,
+  "categoryWeights": {},
+  "balanceWindowDays": 60,
+  "weekdayDifficulty": {
+    "mon": [40, 62],
+    "tue": [42, 66],
+    "wed": [46, 70],
+    "thu": [48, 74],
+    "fri": [52, 80],
+    "sat": [62, 90],
+    "sun": [62, 90]
+  },
+  "attemptsPerStage": 400
+}

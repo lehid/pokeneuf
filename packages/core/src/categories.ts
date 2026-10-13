@@ -503,11 +503,13 @@ export function getCategory(ref: CategoryRef): Category {
 }
 
 /** Can these two categories be the row and the column of the same cell? */
-export function canCross(a: CategoryRef, b: CategoryRef): boolean {
-  const [first, second] = [getCategory(a), getCategory(b)];
+export function canCrossCategories(a: Category, b: Category): boolean {
   return (
-    first.id !== second.id &&
-    !first.exclusiveWith.includes(second.family) &&
-    !second.exclusiveWith.includes(first.family)
+    a.id !== b.id && !a.exclusiveWith.includes(b.family) && !b.exclusiveWith.includes(a.family)
   );
+}
+
+/** Same, by registry id. */
+export function canCross(a: CategoryRef, b: CategoryRef): boolean {
+  return canCrossCategories(getCategory(a), getCategory(b));
 }
