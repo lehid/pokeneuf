@@ -7,6 +7,7 @@ import {
   scoreGame,
   solutionsFor,
   sortByPopularity,
+  titleFor,
 } from '@pokeneuf/core';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -252,6 +253,16 @@ describe('rarity, score, stats and sharing', () => {
     expect(within(dialog).getByTestId('score').textContent).toMatch(/^\d+\/900$/);
     expect(within(dialog).getByTestId('rarest').textContent).toContain('Réponse la plus rare');
     expect(within(dialog).getByText('Rareté estimée')).toBeTruthy();
+    const total = Number(within(dialog).getByTestId('score').textContent?.split('/')[0]);
+    expect(within(dialog).getByTestId('title').textContent).toContain(
+      {
+        curious: 'Curieux',
+        trainer: 'Dresseur',
+        expert: 'Expert',
+        champion: 'Champion',
+        legend: 'Légende',
+      }[titleFor(total)],
+    );
   });
 
   it('lists the solutions of a cell from the best known to the rarest, each with its tier', () => {
@@ -279,6 +290,7 @@ describe('rarity, score, stats and sharing', () => {
     expect(within(dialog).getByTestId('stat-Parties').textContent).toBe('1');
     expect(within(dialog).getByTestId('stat-Victoires').textContent).toBe('100 %');
     expect(within(dialog).getByTestId('stat-Série').textContent).toBe('1');
+    expect(within(dialog).getByTestId('best-title').textContent).toContain('Meilleur titre');
     const bars = within(dialog).getByTestId('distribution').querySelectorAll('li');
     expect(bars).toHaveLength(9);
     expect([...bars].reduce((n, li) => n + Number(li.getAttribute('data-count')), 0)).toBe(1);
@@ -288,6 +300,7 @@ describe('rarity, score, stats and sharing', () => {
     start();
     fireEvent.click(screen.getByTestId('open-stats'));
     expect(screen.getByText('Aucune partie terminée pour l’instant.')).toBeTruthy();
+    expect(screen.queryByTestId('best-title')).toBeNull();
   });
 
   it('shares a spoiler-free text, copies it and confirms with a toast', async () => {

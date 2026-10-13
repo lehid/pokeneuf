@@ -9,7 +9,8 @@
     "grids:generate": "tsx src/generate-cli.ts",
     "grids:report": "tsx src/report-cli.ts",
     "test": "vitest run",
-    "grids:stock": "tsx src/stock-cli.ts"
+    "grids:stock": "tsx src/stock-cli.ts",
+    "score:simulate": "tsx src/simulate-cli.ts"
   },
   "dependencies": {
     "@pokeneuf/core": "workspace:*",

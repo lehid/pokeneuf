@@ -55,6 +55,9 @@ test('the end screen shows the score out of 900 and the rarest answer; solutions
   const dialog = page.getByTestId('end-dialog');
   await expect(dialog.getByTestId('score')).toHaveText(/^\d+\/900$/);
   await expect(dialog.getByTestId('rarest')).toContainText('Réponse la plus rare');
+  await expect(dialog.getByTestId('title')).toContainText(
+    /Titre : (Curieux|Dresseur|Expert|Champion|Légende)/,
+  );
 
   await page.getByTestId('see-solutions').click();
   await page.getByTestId('cell-1-1').click();

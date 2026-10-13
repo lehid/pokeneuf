@@ -18,10 +18,16 @@ export type RarityTier = (typeof RARITY_TIERS)[number];
 
 /** Tunable numbers of the score (isolated on purpose, ROADMAP §3.5). */
 export const SCORING = {
-  /** Every correct answer is worth at least this. */
-  basePoints: 15,
-  /** …plus up to this much for the most obscure answer of the cell. */
-  rankPoints: 100,
+  /** Every correct answer is worth at least this: finishing the grid matters most. */
+  basePoints: 30,
+  /** …plus up to this much for the most obscure answer of the cell… */
+  rankPoints: 85,
+  /**
+   * …on a square-root curve: a somewhat uncommon answer already earns most of the bonus, and the
+   * very top is not out of reach. (With a straight line, a player who answers what comes to mind
+   * first scored about 300, and 900 was out of reach for anyone who does not aim at the obscure.)
+   */
+  rankCurve: 0.5,
   /** Lost per wrong answer. */
   errorPenalty: 20,
   maxScore: MAX_SCORE,
@@ -53,9 +59,11 @@ export function rarityTier(score: number): RarityTier {
   return 'veryRare';
 }
 
-/** Points of a correct answer from its rank score. */
+/** Points of a correct answer from its rank score: 30 + round(85 × √rank). */
 export function pointsFor(score: number): number {
-  return SCORING.basePoints + Math.round(SCORING.rankPoints * score);
+  return (
+    SCORING.basePoints + Math.round(SCORING.rankPoints * Math.max(0, score) ** SCORING.rankCurve)
+  );
 }
 
 /** Total of a game, bounded to [0, MAX_SCORE]. */

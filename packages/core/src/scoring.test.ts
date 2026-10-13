@@ -64,19 +64,28 @@ describe('rarityTier', () => {
 });
 
 describe('points', () => {
-  it('are 15 + round(100 × rank score)', () => {
-    expect(pointsFor(0)).toBe(15);
+  it('are 30 + round(85 × √rank score)', () => {
+    expect(pointsFor(0)).toBe(30);
     expect(pointsFor(1)).toBe(115);
-    expect(pointsFor(0.5)).toBe(65);
-    expect(pointsFor(0.004)).toBe(15);
-    expect(pointsFor(0.005)).toBe(16);
-    expect(pointsFor(15 / 29)).toBe(67);
+    expect(pointsFor(0.25)).toBe(73); // 30 + round(42.5)
+    expect(pointsFor(0.5)).toBe(90); // 30 + round(60.1)
+    expect(pointsFor(15 / 29)).toBe(91);
+    expect(pointsFor(0.0001)).toBe(31);
+  });
+
+  it('give a somewhat uncommon answer most of the bonus: the curve is concave', () => {
+    // the first quarter of the rank range earns over 40 % of the bonus (a straight line: 25 %)
+    expect(pointsFor(0.25) - pointsFor(0)).toBeGreaterThan(0.4 * (pointsFor(1) - pointsFor(0)));
+    for (let i = 1; i <= 10; i++) {
+      expect(pointsFor(i / 10)).toBeGreaterThanOrEqual(pointsFor((i - 1) / 10));
+    }
+    expect(pointsFor(-1)).toBe(30);
   });
 
   it('add up, lose 20 per error, and stay within [0, 900]', () => {
     expect(totalScore([65, 40, 115], 0)).toBe(220);
     expect(totalScore([115, 115, 115], 1)).toBe(325);
-    expect(totalScore([15, 15], 3)).toBe(0);
+    expect(totalScore([30, 30], 3)).toBe(0);
     expect(totalScore([], 2)).toBe(0);
     expect(totalScore(Array<number>(9).fill(115), 0)).toBe(SCORING.maxScore);
     expect(MAX_RAW_SCORE).toBe(1035);

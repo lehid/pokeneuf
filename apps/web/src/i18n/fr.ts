@@ -95,6 +95,15 @@ export const fr = {
   endFound: (found: number, errors: number) =>
     `${found}/9 trouvés · ${errors} erreur${errors > 1 ? 's' : ''}`,
   endScore: 'Score',
+  titleLabel: 'Titre',
+  titles: {
+    curious: 'Curieux',
+    trainer: 'Dresseur',
+    expert: 'Expert',
+    champion: 'Champion',
+    legend: 'Légende',
+  },
+  bestTitle: 'Meilleur titre',
   scoreOutOf: (score: number, max: number) => `${score}/${max}`,
   scoreLabel: 'Score',
   streakLabel: (n: number) => `Série de ${n} jour${n > 1 ? 's' : ''}`,
