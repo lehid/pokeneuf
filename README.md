@@ -13,6 +13,7 @@ Projet de fan non officiel, non affilié à Nintendo, Game Freak ou The Pokémon
 pnpm install
 pnpm dev        # site en local
 pnpm test       # tests
+pnpm data:build # régénère packages/data/dist/pokedex.json (voir packages/data/README.md)
 pnpm lint && pnpm typecheck
 ```
 

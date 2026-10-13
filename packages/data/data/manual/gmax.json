@@ -1,0 +1,4 @@
+{
+  "description": "Gen 1-4 Pokémon that have a Gigantamax form (Sword/Shield): Venusaur, Charizard, Blastoise, Butterfree, Pikachu, Meowth, Machamp, Gengar, Kingler, Lapras, Eevee, Snorlax. Cross-checked against PokeAPI forms at every build. National Pokédex ids.",
+  "ids": [3, 6, 9, 12, 25, 52, 68, 94, 99, 131, 133, 143]
+}

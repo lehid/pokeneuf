@@ -1,0 +1,8 @@
+{
+  "description": "Gen 1-4 Pokémon that have at least one Mega Evolution in the current games: the 44 classic ones (X/Y, Omega Ruby/Alpha Sapphire) plus the 13 added by Pokémon Legends: Z-A (Raichu, Clefable, Victreebel, Starmie, Dragonite, Meganium, Feraligatr, Skarmory, Chimecho, Staraptor, Froslass, Heatran, Darkrai). Cross-checked against PokeAPI pokemon_forms.is_mega at every build. National Pokédex ids.",
+  "ids": [
+    3, 6, 9, 15, 18, 26, 36, 65, 71, 80, 94, 115, 121, 127, 130, 142, 149, 150, 154, 160, 181, 208,
+    212, 214, 227, 229, 248, 254, 257, 260, 282, 302, 303, 306, 308, 310, 319, 323, 334, 354, 358,
+    359, 362, 373, 376, 380, 381, 384, 398, 428, 445, 448, 460, 475, 478, 485, 491
+  ]
+}

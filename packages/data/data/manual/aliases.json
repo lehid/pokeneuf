@@ -1,0 +1,7 @@
+{
+  "description": "Extra spellings the search must accept, keyed by national Pokédex id. Only for names that the FR/EN official names plus search normalisation cannot match.",
+  "aliases": {
+    "29": ["Nidoran F", "Nidoran femelle"],
+    "32": ["Nidoran M", "Nidoran mâle"]
+  }
+}

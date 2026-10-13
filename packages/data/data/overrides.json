@@ -1,0 +1,4 @@
+{
+  "description": "Manual corrections applied on top of the PokeAPI data, before validation. Each entry needs the national Pokédex id, a reason, and a `set` object merged into the entry (arrays and scalars replaced, objects merged). Every override must come with a golden fact in src/golden-facts.ts.",
+  "overrides": []
+}
