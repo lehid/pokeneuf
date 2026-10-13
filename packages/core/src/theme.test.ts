@@ -10,6 +10,7 @@ import {
   readableTextColor,
   relativeLuminance,
   TYPE_COLORS,
+  TYPE_ICON_PATHS,
   TYPE_LABELS_FR,
   WCAG_AA,
   WHITE,
@@ -125,5 +126,22 @@ describe('cell text', () => {
   it('flags the gradients where text cannot be read directly (the UI then needs a plate)', () => {
     expect(cellTextContrast(['electric', 'ghost'])).toBeLessThan(WCAG_AA);
     expect(cellTextContrast(['ground', 'steel'])).toBeGreaterThanOrEqual(WCAG_AA);
+  });
+});
+
+describe('type pictograms', () => {
+  it('has one drawing per type, made of valid path commands on a 24×24 grid', () => {
+    expect(Object.keys(TYPE_ICON_PATHS).sort()).toEqual([...POKEMON_TYPES].sort());
+    for (const type of POKEMON_TYPES) {
+      const path = TYPE_ICON_PATHS[type];
+      expect(path, type).toMatch(/^M[MmLlHhVvCcSsAaZz0-9\s.,-]+$/);
+      expect(path.endsWith('Z'), type).toBe(true);
+      const numbers = (path.match(/-?\d*\.?\d+/g) ?? []).map(Number);
+      expect(numbers.length, type).toBeGreaterThan(6);
+    }
+  });
+
+  it('gives every type a different drawing', () => {
+    expect(new Set(Object.values(TYPE_ICON_PATHS)).size).toBe(POKEMON_TYPES.length);
   });
 });

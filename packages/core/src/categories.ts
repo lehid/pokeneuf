@@ -25,7 +25,6 @@ export const CATEGORY_FAMILIES = [
   'color',
   'shape',
   'size',
-  'ability',
   'name',
 ] as const;
 export type CategoryFamily = (typeof CATEGORY_FAMILIES)[number];
@@ -60,6 +59,16 @@ export function statTotal(p: Pokemon): number {
 /** Letters only: "M. Mime" has 5, "Nidoran♀" has 7. */
 export function letterCount(name: string): number {
   return (name.match(/\p{L}/gu) ?? []).length;
+}
+
+/** Lower case, accents removed, everything else (spaces, dashes, dots) kept: "Ho-Oh" → "ho-oh". */
+function folded(name: string): string {
+  return name.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+}
+
+/** Only the letters of a name, folded: "M. Mime" → "mmime", "Nidoran♀" → "nidoran". */
+function lettersOf(name: string): string {
+  return folded(name).replace(/[^\p{L}]/gu, '');
 }
 
 const TYPE_EN: Record<PokemonType, string> = {
@@ -178,6 +187,17 @@ const evolutionCategories: Category[] = [
       fr: `Pokémon sans pré-évolution ni évolution, ${IN_GAME} (Métamorph, Canarticho…).`,
     },
     predicate: (p) => p.evolution.stage === 1 && p.evolution.isFinal,
+    exclusiveWith: ['evolution'],
+    bonus: false,
+  },
+  {
+    id: 'evo-stage-3',
+    family: 'evolution',
+    label: { fr: 'Troisième stade', en: 'Third stage' },
+    definition: {
+      fr: `Pokémon qui est au troisième stade de sa famille d'évolution (Dracaufeu, Tortank, Raichu…), ${IN_GAME}. Un bébé compte pour un stade : Raichu est au troisième stade (Pichu, Pikachu, Raichu).`,
+    },
+    predicate: (p) => p.evolution.stage === 3,
     exclusiveWith: ['evolution'],
     bonus: false,
   },
@@ -345,13 +365,6 @@ const STATS: StatSpec[] = [
     predicate: (p) => statTotal(p) <= 300,
   },
   {
-    id: 'stat-hp-50',
-    fr: 'PV ≤ 50',
-    en: 'HP ≤ 50',
-    definition: 'Stat de base PV inférieure ou égale à 50.',
-    predicate: (p) => p.baseStats.hp <= 50,
-  },
-  {
     id: 'stat-attack-100',
     fr: 'Attaque ≥ 100',
     en: 'Attack ≥ 100',
@@ -382,6 +395,8 @@ const COLORS: [PokedexColor, string, string][] = [
   ['blue', 'bleu', 'blue'],
   ['green', 'vert', 'green'],
   ['yellow', 'jaune', 'yellow'],
+  ['purple', 'violet', 'purple'],
+  ['brown', 'marron', 'brown'],
 ];
 
 const colorCategories: Category[] = COLORS.map(([color, fr, en]) => ({
@@ -398,6 +413,7 @@ const colorCategories: Category[] = COLORS.map(([color, fr, en]) => ({
 const SHAPES: [PokedexShape, string, string, string][] = [
   ['quadruped', 'quadrupède', 'Quadruped', 'sur quatre pattes'],
   ['wings', 'ailée', 'Winged', 'avec des ailes'],
+  ['upright', 'bipède', 'Upright', 'debout sur deux pattes'],
 ];
 
 const shapeCategories: Category[] = SHAPES.map(([shape, fr, en, detail]) => ({
@@ -423,33 +439,114 @@ const sizeCategories: Category[] = [
     bonus: false,
   },
   {
-    id: 'size-weight-100kg',
+    id: 'size-height-50cm',
     family: 'size',
-    label: { fr: 'Poids ≥ 100 kg', en: 'Weight ≥ 100 kg' },
-    definition: { fr: 'Pokémon pesant 100 kilogrammes ou plus.' },
-    predicate: (p) => p.weightHg >= 1000,
+    label: { fr: 'Petit (50 cm ou moins)', en: 'Small (50 cm or less)' },
+    definition: { fr: 'Pokémon mesurant 50 centimètres ou moins.' },
+    predicate: (p) => p.heightDm <= 5,
     exclusiveWith: ['size'],
     bonus: false,
   },
 ];
 
-const ABILITIES: [string, string, string][] = [
-  ['levitate', 'Lévitation', 'Levitate'],
-  ['intimidate', 'Intimidation', 'Intimidate'],
-  ['swift-swim', 'Glissade', 'Swift Swim'],
-];
+const FR_ONLY = 'Dépend de la langue : nom français uniquement.';
 
-const abilityCategories: Category[] = ABILITIES.map(([slug, fr, en]) => ({
-  id: `ability-${slug}`,
-  family: 'ability',
-  label: { fr: `Talent ${fr}`, en: `${en} ability` },
-  definition: {
-    fr: `Pokémon qui peut avoir le talent ${fr}, qu'il soit normal ou caché (talents des jeux actuels).`,
+interface NameSpec {
+  id: string;
+  fr: string;
+  en: string;
+  definition: string;
+  predicate: (name: string) => boolean;
+  bonus?: boolean;
+}
+
+const VOWELS = /^[aeiou]/;
+const containsLetter = (letter: string) => (name: string) => lettersOf(name).includes(letter);
+
+const NAME_SPECS: NameSpec[] = [
+  {
+    id: 'name-starts-vowel',
+    fr: 'Nom commençant par une voyelle',
+    en: 'Name starts with a vowel',
+    definition: `Pokémon dont le nom français commence par A, E, I, O ou U (accents ignorés ; le Y ne compte pas comme une voyelle). ${FR_ONLY}`,
+    predicate: (name) => VOWELS.test(lettersOf(name)),
   },
-  predicate: (p) => p.abilities.some((ability) => ability.slug === slug),
-  exclusiveWith: ['ability'],
-  bonus: false,
-}));
+  {
+    id: 'name-ends-a',
+    fr: 'Nom finissant par A',
+    en: 'Name ends with A',
+    definition: `Pokémon dont le nom français finit par la lettre A (Rattata, Otaria, Rayquaza…). ${FR_ONLY}`,
+    predicate: (name) => lettersOf(name).endsWith('a'),
+  },
+  {
+    id: 'name-long',
+    fr: 'Nom de 10 lettres ou plus',
+    en: 'Name of 10 letters or more',
+    definition: `Pokémon dont le nom français compte 10 lettres ou plus (on ne compte que les lettres, pas les espaces, points ou tirets). ${FR_ONLY}`,
+    predicate: (name) => letterCount(name) >= 10,
+  },
+  {
+    id: 'name-has-k',
+    fr: 'Nom contenant un K',
+    en: 'Name contains a K',
+    definition: `Pokémon dont le nom français contient la lettre K. ${FR_ONLY}`,
+    predicate: containsLetter('k'),
+  },
+  {
+    id: 'name-has-y',
+    fr: 'Nom contenant un Y',
+    en: 'Name contains a Y',
+    definition: `Pokémon dont le nom français contient la lettre Y. ${FR_ONLY}`,
+    predicate: containsLetter('y'),
+  },
+  {
+    id: 'name-has-x',
+    fr: 'Nom contenant un X',
+    en: 'Name contains an X',
+    definition: `Pokémon dont le nom français contient la lettre X. ${FR_ONLY}`,
+    predicate: containsLetter('x'),
+  },
+  {
+    id: 'name-has-z',
+    fr: 'Nom contenant un Z',
+    en: 'Name contains a Z',
+    definition: `Pokémon dont le nom français contient la lettre Z. ${FR_ONLY}`,
+    predicate: containsLetter('z'),
+    bonus: true,
+  },
+  {
+    id: 'name-has-ou',
+    fr: 'Nom contenant « OU »',
+    en: 'Name contains "OU"',
+    definition: `Pokémon dont le nom français contient les deux lettres O et U l'une après l'autre (il s'agit des lettres écrites, pas du son). ${FR_ONLY}`,
+    predicate: (name) => folded(name).includes('ou'),
+  },
+  {
+    id: 'name-has-ch',
+    fr: 'Nom contenant « CH »',
+    en: 'Name contains "CH"',
+    definition: `Pokémon dont le nom français contient les deux lettres C et H l'une après l'autre (il s'agit des lettres écrites, pas du son). ${FR_ONLY}`,
+    predicate: (name) => folded(name).includes('ch'),
+  },
+  {
+    id: 'name-double-letter',
+    fr: 'Nom avec une lettre double',
+    en: 'Name with a double letter',
+    definition: `Pokémon dont le nom français contient deux fois la même lettre de suite, comme dans Bulbizarre ou Tentacool. Un espace, un point ou un tiret les sépare : « Ho-Oh » n'en a pas. ${FR_ONLY}`,
+    predicate: (name) => /(\p{L})\1/u.test(folded(name)),
+  },
+  {
+    id: 'name-same-ends',
+    fr: 'Nom commençant et finissant par la même lettre',
+    en: 'Name starts and ends with the same letter',
+    definition: `Pokémon dont le nom français commence et finit par la même lettre (accents ignorés), comme Abra, Staross ou Nidoran. ${FR_ONLY}`,
+    predicate: (name) => {
+      const letters = lettersOf(name);
+      return letters.length > 1 && letters[0] === letters.at(-1);
+    },
+    bonus: true,
+  },
+];
 
 const nameCategories: Category[] = [
   {
@@ -457,7 +554,7 @@ const nameCategories: Category[] = [
     family: 'name',
     label: { fr: 'Nom commençant par C', en: 'Name starts with C' },
     definition: {
-      fr: 'Pokémon dont le nom français commence par la lettre C (les accents sont ignorés). Dépend de la langue : français uniquement.',
+      fr: `Pokémon dont le nom français commence par la lettre C (les accents sont ignorés). ${FR_ONLY}`,
     },
     predicate: (p) => normalize(p.nameFr).startsWith('c'),
     exclusiveWith: ['name'],
@@ -468,12 +565,21 @@ const nameCategories: Category[] = [
     family: 'name',
     label: { fr: 'Nom de 5 lettres ou moins', en: 'Name of 5 letters or fewer' },
     definition: {
-      fr: 'Pokémon dont le nom français compte 5 lettres ou moins (on ne compte que les lettres : « M. Mime » en a 5). Dépend de la langue : français uniquement.',
+      fr: `Pokémon dont le nom français compte 5 lettres ou moins (on ne compte que les lettres : « M. Mime » en a 5). ${FR_ONLY}`,
     },
     predicate: (p) => letterCount(p.nameFr) <= 5,
     exclusiveWith: ['name'],
     bonus: false,
   },
+  ...NAME_SPECS.map((spec): Category => ({
+    id: spec.id,
+    family: 'name',
+    label: { fr: spec.fr, en: spec.en },
+    definition: { fr: spec.definition },
+    predicate: (p) => spec.predicate(p.nameFr),
+    exclusiveWith: ['name'],
+    bonus: spec.bonus ?? false,
+  })),
 ];
 
 export const CATEGORIES: readonly Category[] = [
@@ -487,7 +593,6 @@ export const CATEGORIES: readonly Category[] = [
   ...colorCategories,
   ...shapeCategories,
   ...sizeCategories,
-  ...abilityCategories,
   ...nameCategories,
 ];
 

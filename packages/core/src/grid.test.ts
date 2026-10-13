@@ -4,6 +4,7 @@ import {
   cellIndex,
   checkGrid,
   difficultyOf,
+  familyLimit,
   findSolution,
   GRID_RULES,
   GRID_VERSION,
@@ -49,7 +50,7 @@ const registry: Category[] = [
   category('huge3', 'size', multiples(3)),
   category('r5b', 'type', multiples(5)),
   category('r7b', 'type', multiples(7)),
-  category('no-type', 'ability', multiples(23), ['type']),
+  category('no-type', 'name', multiples(23), ['type']),
   category('name-a', 'name', multiples(29)),
   category('only-a', 'type', (id) => id <= 3),
   category('only-b', 'generation', (id) => id <= 3),
@@ -130,6 +131,13 @@ describe('hasFamilyDiversity', () => {
   it('allows two of a family, as long as there are four families in all', () => {
     expect(hasFamilyDiversity(get('r5', 'r5b', 'r11'), get('c13', 'c17', 'r7'))).toBe(true);
     expect(hasFamilyDiversity(get('r5', 'r5b', 'r7'), get('r7b', 'c13', 'r7'))).toBe(false);
+  });
+
+  it('allows at most one name category per grid (spelling questions stay a seasoning)', () => {
+    expect(hasFamilyDiversity(get('r5', 'r7', 'name-a'), get('c13', 'c17', 'c19'))).toBe(true);
+    expect(hasFamilyDiversity(get('r5', 'r7', 'name-a'), get('c13', 'c17', 'no-type'))).toBe(false);
+    expect(familyLimit('name')).toBe(1);
+    expect(familyLimit('type')).toBe(2);
   });
 
   it('wants every line to mix at least two families', () => {
