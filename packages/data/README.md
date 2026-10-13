@@ -9,6 +9,8 @@ pnpm --filter @pokeneuf/data crosscheck   # compare avec Pokémon Showdown (sour
 pnpm --filter @pokeneuf/data test
 ```
 
+`data:build` écrit aussi `dist/memberships.json` (voir « Catégories » plus bas).
+
 Le build est reproductible : mêmes CSV + mêmes listes manuelles = même fichier, octet pour octet.
 `dist/` et `.cache/` ne sont pas versionnés et **ne se modifient jamais à la main**.
 
@@ -62,3 +64,22 @@ qui a bougé. Le changement de commit est une décision, jamais un effet de bord
   *Légendes Z-A*). Pour ne garder que les classiques, retirer les 13 de `data/manual/mega.json` : le
   recoupement avec PokeAPI (`forms.ts`) le signalera, il faudra alors adapter son test en connaissance de cause.
 - **Starters** = les 12 lignées complètes (36 Pokémon), pas seulement les 12 de départ.
+
+## Catégories et memberships (phase 2)
+
+Le registre vit dans `@pokeneuf/core` (`CATEGORIES`, 58 catégories, 11 familles). `data:build`
+évalue chaque prédicat sur chaque Pokémon et écrit `dist/memberships.json` : un bitset hexadécimal
+par catégorie (1 bit par n° national). Le jeu et le générateur lisent ce fichier avec
+`new Memberships(file)` : `isValid(pokemonId, ligne, colonne)`, `answersFor(ligne, colonne)`, `size(cat)`.
+Le build échoue si une catégorie n'a aucun membre.
+
+- **Tailles** : une catégorie ordinaire a entre 20 et 200 membres ; les exceptions sont listées avec
+  leur raison dans `src/categories.test.ts` (Spectre 18, Dragon 19, monotype 258, double type 235).
+  Les catégories rares par nature sont marquées `bonus: true` (moins de 20 membres, tirage rare).
+  Un snapshot fige toutes les tailles : le changer, c'est changer le jeu.
+- **Ajouter ou modifier une catégorie** : entrée dans `packages/core/src/categories.ts` (id préfixé par
+  sa famille, définition française visible en jeu), ≥ 3 faits positifs et ≥ 3 négatifs dans
+  `src/category-facts.ts`, mise à jour du snapshot de tailles, `pnpm data:build`, `pnpm test`.
+  Un id n'est jamais réutilisé ni renommé : les grilles déjà générées le référencent.
+- **Définitions** : celles des catégories d'évolution précisent « parmi les Pokémon du jeu (Gén 1 à 4) ».
+  Les talents comptent les talents cachés ; les catégories de nom ne valent que pour le français.

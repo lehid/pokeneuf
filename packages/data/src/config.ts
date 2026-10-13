@@ -57,5 +57,6 @@ export const SHOWDOWN_CACHE_FILE = path.join(
 );
 export const DIST_DIR = path.join(PACKAGE_ROOT, 'dist');
 export const POKEDEX_PATH = path.join(DIST_DIR, 'pokedex.json');
+export const MEMBERSHIPS_PATH = path.join(DIST_DIR, 'memberships.json');
 export const MANUAL_DIR = path.join(PACKAGE_ROOT, 'data', 'manual');
 export const OVERRIDES_PATH = path.join(PACKAGE_ROOT, 'data', 'overrides.json');
