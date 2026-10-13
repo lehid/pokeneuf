@@ -1,5 +1,5 @@
 import { parseArgs } from 'node:util';
-import { loadMemberships, loadPopularity } from './cli-common';
+import { fromWhereTyped, loadMemberships, loadPopularity } from './cli-common';
 import { GRIDS_DIR, MEMBERSHIPS_PATH, readGrids } from './files';
 import { formatSimulation, simulate } from './simulate';
 
@@ -27,9 +27,9 @@ if (!Number.isInteger(games) || games < 1) {
 }
 
 const [memberships, popularity, grids] = await Promise.all([
-  loadMemberships(values.memberships),
+  loadMemberships(fromWhereTyped(values.memberships)),
   loadPopularity(),
-  readGrids(values.dir),
+  readGrids(fromWhereTyped(values.dir)),
 ]);
 if (grids.length === 0) {
   console.error('No grid to play: run "pnpm grids:generate" first.');

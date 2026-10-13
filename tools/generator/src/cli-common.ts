@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import { Memberships, type MembershipsFile, type Pokedex, type Popularity } from '@pokeneuf/core';
 import { MEMBERSHIPS_PATH, POKEDEX_PATH } from './files';
 
@@ -29,4 +30,13 @@ export async function loadPopularity(path: string = POKEDEX_PATH): Promise<Popul
   }
   const pop = new Map((JSON.parse(text) as Pokedex).pokemon.map((p) => [p.id, p.pop]));
   return (id) => pop.get(id) ?? 0;
+}
+
+/**
+ * A path given on the command line, relative to where the command was typed. `pnpm grids:x` from
+ * the root runs the script in `tools/generator`, so `process.cwd()` is not that place: pnpm names
+ * it in `INIT_CWD`.
+ */
+export function fromWhereTyped(given: string): string {
+  return path.resolve(process.env.INIT_CWD ?? process.cwd(), given);
 }

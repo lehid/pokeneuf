@@ -28,12 +28,13 @@ Jeu web quotidien : grille 3×3 à remplir avec des Pokémon qui vérifient un c
 ## Commandes
 - `pnpm dev`, `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm build`
 - `pnpm data:build` : régénère pokedex.json + memberships
-- `pnpm grids:generate --from YYYY-MM-DD --days N`, `pnpm grids:report`, `pnpm grids:stock` (échoue s'il reste moins de 30 jours de grilles), `pnpm score:simulate` (scores de joueurs simulés par niveau de difficulté, à comparer à la bande visée)
+- `pnpm grids:generate --from YYYY-MM-DD --days N`, `pnpm grids:report`, `pnpm grids:stock` (échoue s'il reste moins de 30 jours de grilles), `pnpm grids:publish --dir apps/web/dist/grids` (retire du site construit les grilles des jours à venir), `pnpm score:simulate` (scores de joueurs simulés par niveau de difficulté, à comparer à la bande visée)
 
 ## À ne pas faire
 - Ne pas mettre « Pokémon » en toutes lettres dans le nom du site, le domaine ou le logo ; pas de Poké Ball ni d'icônes officielles.
 - Ne pas inclure d'espèce de génération > MAX_GEN, ni d'évolution vers une telle espèce.
 - Ne pas mettre en cache longue durée les grilles (service worker ou CDN).
+- Ne pas publier les grilles des jours à venir : le dépôt garde 90 jours d'avance, le site déployé n'a que celles d'aujourd'hui et du passé (`grids:publish`, déploiement planifié après minuit Paris). Une grille publiée est de l'histoire : on ne la régénère jamais, on ne retire jamais une catégorie qu'elle utilise.
 - Ne pas compter les parties d'archives dans les stats ou la streak : une partie ne compte que si elle se termine le jour de sa grille (`endedOnItsDay`), jamais après minuit ni depuis les archives.
 - Ne pas afficher de faux « % de joueurs » en v1 : la rareté est estimée et présentée en paliers.
 - Ne pas casser le déploiement GitHub Pages : le site doit marcher sous `/<repo>/` (base Vite via `VITE_BASE`).

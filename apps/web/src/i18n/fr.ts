@@ -51,6 +51,7 @@ export const fr = {
   loading: 'Chargement de la grille…',
   noGridTitle: 'Pas de grille aujourd’hui',
   noGrid: 'Pas de grille aujourd’hui, revenez demain.',
+  noGridRetry: 'La page se met à jour toute seule si la grille arrive.',
   notLaunched: (date: string) => `Le jeu ouvre le ${date}. Revenez ce jour-là !`,
   launchDate: (isoDate: string) =>
     new Intl.DateTimeFormat('fr-FR', {

@@ -134,6 +134,83 @@ describe('daily grid', () => {
     expect(screen.queryByTestId('try-demo')).toBeNull();
   });
 
+  it('asks again every minute when the grid of the day is not published yet, then shows it', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: false });
+    try {
+      let published = false;
+      const fetchImpl = vi.fn(async () =>
+        published ? new Response(JSON.stringify(demoGrid)) : new Response('', { status: 404 }),
+      );
+      daily(noon(DAY), fetchImpl);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(10);
+      });
+      expect(screen.getByTestId('no-grid').textContent).toContain('revenez demain');
+      expect(screen.getByText(/se met à jour toute seule/)).toBeTruthy();
+      expect(fetchImpl).toHaveBeenCalledTimes(1);
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(60_000);
+      });
+      expect(fetchImpl).toHaveBeenCalledTimes(2);
+      expect(screen.queryByTestId('board')).toBeNull(); // still missing, and no loading flash
+      expect(screen.queryByText('Chargement de la grille…')).toBeNull();
+
+      published = true; // the deploy of just after midnight is done
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(60_000);
+      });
+      expect(screen.getByTestId('board')).toBeTruthy();
+      expect(screen.queryByTestId('no-grid')).toBeNull();
+
+      const calls = fetchImpl.mock.calls.length;
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(5 * 60_000);
+      });
+      expect(fetchImpl).toHaveBeenCalledTimes(calls); // it stops asking once there is a grid
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('stops asking after an hour', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: false });
+    try {
+      const fetchImpl = vi.fn(async () => new Response('', { status: 404 }));
+      daily(noon(DAY), fetchImpl);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(10); // the first answer comes in
+      });
+      for (let minute = 0; minute < 120; minute++) {
+        await act(async () => {
+          await vi.advanceTimersByTimeAsync(60_000); // a minute at a time: React renders in between
+        });
+      }
+      expect(fetchImpl.mock.calls.length).toBeLessThanOrEqual(62);
+      expect(fetchImpl.mock.calls.length).toBeGreaterThan(55);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('does not keep asking before the launch: nothing is expected to appear', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: false });
+    try {
+      const fetchImpl = vi.fn(async () => new Response('', { status: 404 }));
+      daily(noon('2026-10-13'), fetchImpl);
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(10);
+      });
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(10 * 60_000);
+      });
+      expect(fetchImpl).toHaveBeenCalledTimes(1);
+      expect(screen.queryByText(/se met à jour toute seule/)).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('announces the launch and offers the demo before launch day', async () => {
     daily(noon('2026-10-13'), served({}));
     expect((await screen.findByTestId('no-grid')).textContent).toContain('1 novembre 2026');

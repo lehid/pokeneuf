@@ -1,15 +1,18 @@
 import { parseArgs } from 'node:util';
-import { addDays, LAUNCH_DATE, type Grid } from '@pokeneuf/core';
-import { loadMemberships, loadPopularity } from './cli-common';
+import { addDays, gridDateFor, LAUNCH_DATE, type Grid } from '@pokeneuf/core';
+import { fromWhereTyped, loadMemberships, loadPopularity } from './cli-common';
 import { loadConfig } from './config';
 import { createGenerator, dateRange, GenerationError } from './generate';
+import { frozenDates } from './publish';
 import { GRIDS_DIR, MEMBERSHIPS_PATH, readGrids, writeGrid, writeIndex } from './files';
 
 const USAGE = `Usage: pnpm grids:generate --from YYYY-MM-DD --days N [--force] [--out DIR] [--memberships FILE]
 
   --from   first date (Paris calendar date), not before the launch date (${LAUNCH_DATE})
   --days   number of consecutive days to cover (1-366)
-  --force  regenerate dates that already have a grid (default: keep them, they feed the cooldowns)`;
+  --force  regenerate dates that already have a grid (default: keep them, they feed the cooldowns);
+           never for today or a past day: a published grid is history and does not change
+  --today  the date taken for today, for tests (default: today in Paris)`;
 
 const { values } = parseArgs({
   options: {
@@ -18,6 +21,7 @@ const { values } = parseArgs({
     out: { type: 'string', default: GRIDS_DIR },
     memberships: { type: 'string', default: MEMBERSHIPS_PATH },
     force: { type: 'boolean', default: false },
+    today: { type: 'string' },
     help: { type: 'boolean', default: false },
   },
 });
@@ -38,13 +42,28 @@ if (!Number.isInteger(days) || days < 1 || days > 366)
   fail('--days must be an integer from 1 to 366');
 if (from < LAUNCH_DATE) fail(`--from ${from} is before the launch date ${LAUNCH_DATE}`);
 
-const memberships = await loadMemberships(values.memberships);
+const outDir = fromWhereTyped(values.out);
+const memberships = await loadMemberships(fromWhereTyped(values.memberships));
 const config = await loadConfig();
 const popularity = await loadPopularity();
 const generate = createGenerator({ memberships, popularity, config });
 
 const dates = dateRange(from, days);
-const existing = await readGrids(values.out);
+const existing = await readGrids(outDir);
+const today = values.today ?? gridDateFor(new Date());
+if (values.force) {
+  const have = new Set(existing.map((g) => g.date));
+  const frozen = frozenDates(
+    dates.filter((d) => have.has(d)),
+    today,
+  );
+  if (frozen.length > 0) {
+    fail(
+      `--force would rewrite published grids (${frozen.slice(0, 3).join(', ')}${frozen.length > 3 ? '…' : ''}): ` +
+        `the grids of today and of past days are history and never change.`,
+    );
+  }
+}
 const regenerated = new Set(values.force ? dates : []);
 const grids: Grid[] = existing.filter((g) => !regenerated.has(g.date));
 const have = new Set(grids.map((g) => g.date));
@@ -63,7 +82,7 @@ for (const date of dates) {
   try {
     const result = generate({ date, history: grids });
     grids.push(result.grid);
-    await writeGrid(result.grid, values.out);
+    await writeGrid(result.grid, outDir);
     generated++;
     attempts += result.attempts;
     if (result.categoryCooldownDays < config.cooldown.categoryDays) {
@@ -78,10 +97,10 @@ for (const date of dates) {
   }
 }
 
-await writeIndex(grids, values.out);
+await writeIndex(grids, outDir);
 
 console.log(
-  `${from} → ${addDays(from, days - 1)}: ${generated} generated, ${kept} kept (${grids.length} grids in ${values.out})`,
+  `${from} → ${addDays(from, days - 1)}: ${generated} generated, ${kept} kept (${grids.length} grids in ${outDir})`,
 );
 if (generated > 0) console.log(`  average draws per grid: ${(attempts / generated).toFixed(0)}`);
 const relaxedCount = Object.values(relaxed).reduce((s, n) => s + n, 0);

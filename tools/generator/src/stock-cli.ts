@@ -1,4 +1,5 @@
 import { parseArgs } from 'node:util';
+import { fromWhereTyped } from './cli-common';
 import { gridDateFor } from '@pokeneuf/core';
 import { GRIDS_DIR, readGrids } from './files';
 import { MIN_STOCK_DAYS, stockDays, stockEnd } from './stock';
@@ -27,7 +28,7 @@ if (!Number.isInteger(min) || min < 1) {
 // `--today` is for tests and dry runs; the real run always uses the Paris date.
 const today = values.today ?? gridDateFor(new Date());
 
-const dates = (await readGrids(values.dir)).map((g) => g.date);
+const dates = (await readGrids(fromWhereTyped(values.dir))).map((g) => g.date);
 const days = stockDays(dates, today);
 const end = stockEnd(dates, today);
 console.log(
