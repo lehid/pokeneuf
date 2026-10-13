@@ -2,6 +2,7 @@ import { categoryAccent, getCategory, readableTextColor } from '@pokeneuf/core';
 import { useState } from 'react';
 import { fr } from '../i18n/fr';
 import { FamilyIcon } from './FamilyIcon';
+import { TypeIcon } from './TypeIcon';
 import { Modal } from './Modal';
 
 /** A row or column title. Tapping it explains exactly what counts (ROADMAP §1.6). */
@@ -24,7 +25,11 @@ export function CategoryHeader({ id, axis }: { id: string; axis: 'row' | 'col' }
         data-testid={`${axis}-header-${id}`}
         onClick={() => setOpen(true)}
       >
-        <FamilyIcon family={category.family} />
+        {category.type === undefined ? (
+          <FamilyIcon family={category.family} />
+        ) : (
+          <TypeIcon type={category.type} size={22} />
+        )}
         <span>{label}</span>
       </button>
       {open && (
