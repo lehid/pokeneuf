@@ -1,0 +1,133 @@
+import {
+  foundCount,
+  getCategory,
+  provisionalScore,
+  solutionsFor,
+  type GameState,
+} from '@pokeneuf/core';
+import { useState } from 'react';
+import { memberships, pokemonById } from '../data';
+import { formatNumber } from '../format';
+import { useGame } from '../GameContext';
+import { fr } from '../i18n/fr';
+import { Modal } from './Modal';
+import { TypeBadge } from './TypeBadge';
+
+export function RulesDialog() {
+  const closeRules = useGame((s) => s.closeRules);
+  const [hide, setHide] = useState(false);
+  return (
+    <Modal title={fr.rulesTitle} onClose={() => closeRules(hide)} testId="rules-dialog">
+      <ul className="mb-4 list-disc space-y-2 pl-5">
+        {fr.rules.map((rule) => (
+          <li key={rule}>{rule}</li>
+        ))}
+      </ul>
+      <label className="mb-4 flex items-center gap-3 font-bold">
+        <input
+          type="checkbox"
+          className="size-5 accent-[var(--lcd-ink)]"
+          checked={hide}
+          onChange={(event) => setHide(event.target.checked)}
+        />
+        {fr.hideRules}
+      </label>
+      <button type="button" className="btn btn-primary w-full" onClick={() => closeRules(hide)}>
+        {fr.play}
+      </button>
+    </Modal>
+  );
+}
+
+export function AbandonDialog() {
+  const closeDialog = useGame((s) => s.closeDialog);
+  const confirmAbandon = useGame((s) => s.confirmAbandon);
+  return (
+    <Modal title={fr.abandonTitle} onClose={closeDialog} testId="abandon-dialog">
+      <p className="mb-4">{fr.abandonQuestion}</p>
+      <div className="flex flex-col gap-3 sm:flex-row-reverse">
+        <button type="button" className="btn btn-danger flex-1" onClick={confirmAbandon}>
+          {fr.abandonYes}
+        </button>
+        <button type="button" className="btn btn-primary flex-1" onClick={closeDialog}>
+          {fr.abandonNo}
+        </button>
+      </div>
+    </Modal>
+  );
+}
+
+const END_TITLES: Record<Exclude<GameState['status'], 'playing'>, string> = {
+  won: fr.endWon,
+  lost: fr.endLost,
+  abandoned: fr.endAbandoned,
+};
+
+export function EndDialog() {
+  const game = useGame((s) => s.game);
+  const closeDialog = useGame((s) => s.closeDialog);
+  if (game.status === 'playing') return null;
+  return (
+    <Modal title={END_TITLES[game.status]} onClose={closeDialog} testId="end-dialog">
+      <p className="mb-1">{fr.endFound(foundCount(game), game.errors)}</p>
+      <p className="mb-1 text-xs font-bold tracking-wide uppercase text-lcd-soft">{fr.endScore}</p>
+      <p className="title-pixel mb-1 text-2xl" data-testid="score">
+        {provisionalScore(game)}
+      </p>
+      <p className="mb-4 text-xs text-lcd-soft">{fr.endScoreNote}</p>
+      <button
+        type="button"
+        className="btn btn-primary w-full"
+        onClick={closeDialog}
+        data-testid="see-solutions"
+      >
+        {fr.seeSolutions}
+      </button>
+    </Modal>
+  );
+}
+
+export function SolutionsDialog() {
+  const cell = useGame((s) => s.solutionsCell);
+  const grid = useGame((s) => s.grid);
+  const game = useGame((s) => s.game);
+  const closeSolutions = useGame((s) => s.closeSolutions);
+  if (cell === null) return null;
+
+  const row = getCategory(grid.rows[Math.floor(cell / 3)] ?? '').label.fr;
+  const col = getCategory(grid.cols[cell % 3] ?? '').label.fr;
+  const answers = solutionsFor(grid, memberships, cell);
+  const placed = game.cells[cell] ?? null;
+  return (
+    <Modal title={`${row} × ${col}`} onClose={closeSolutions} testId="solutions-dialog">
+      <p className="mb-2 text-sm text-lcd-soft">{fr.solutionsCount(answers.length)}</p>
+      <ul className="mb-4 max-h-[50dvh] space-y-1 overflow-y-auto">
+        {answers.map((id) => {
+          const p = pokemonById(id);
+          return (
+            <li
+              key={id}
+              className={`flex items-center gap-2 border-2 border-lcd-ink px-2 py-1 ${
+                id === placed ? 'bg-lcd-ink text-lcd-panel' : 'bg-lcd-panel'
+              }`}
+            >
+              <span className="min-w-0 flex-1">
+                <span className="font-bold">{p.nameFr}</span>{' '}
+                <span className="text-xs opacity-70">{p.nameEn}</span>
+              </span>
+              <span className="text-xs tabular-nums">{formatNumber(p.id)}</span>
+              <span className="flex gap-1">
+                {p.types.map((type) => (
+                  <TypeBadge key={type} type={type} />
+                ))}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+      <button type="button" className="btn btn-primary w-full" onClick={closeSolutions}>
+        {fr.close}
+      </button>
+    </Modal>
+  );
+}

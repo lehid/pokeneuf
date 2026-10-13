@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   canCross,
+  categoryAccent,
   CATEGORIES,
   CATEGORY_FAMILIES,
   getCategory,
@@ -10,6 +11,7 @@ import {
 } from './categories';
 import { MAX_GEN } from './config';
 import { POKEDEX_COLORS, POKEMON_TYPES } from './pokedex';
+import { POKEDEX_COLOR_SWATCHES, TYPE_COLORS } from './theme';
 import { pokemon } from './test-fixtures';
 
 const PREFIX: Record<CategoryFamily, string> = {
@@ -229,5 +231,21 @@ describe('predicates', () => {
     expect(holds('shape-wings', pokemon({ shape: 'wings' }))).toBe(true);
     expect(holds('gen-3', pokemon({ generation: 3 }))).toBe(true);
     expect(holds('gen-2', pokemon({ generation: 3 }))).toBe(false);
+  });
+});
+
+describe('categoryAccent', () => {
+  it('gives type categories their type colour and colour categories their swatch', () => {
+    expect(categoryAccent(getCategory('type-fire'))).toBe(TYPE_COLORS.fire);
+    const colour = CATEGORIES.find((c) => c.color !== undefined);
+    expect(colour && categoryAccent(colour)).toBe(
+      colour?.color && POKEDEX_COLOR_SWATCHES[colour.color],
+    );
+  });
+
+  it('is null for the other families', () => {
+    for (const c of CATEGORIES.filter((c) => c.type === undefined && c.color === undefined)) {
+      expect(categoryAccent(c)).toBeNull();
+    }
   });
 });
