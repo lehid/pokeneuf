@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 65,
+  "date": "2027-01-04",
+  "rows": [
+    "evo-base",
+    "shape-wings",
+    "evo-gen4"
+  ],
+  "cols": [
+    "type-ground",
+    "type-dual",
+    "name-has-x"
+  ],
+  "cellSizes": [
+    18,
+    68,
+    10,
+    3,
+    42,
+    3,
+    8,
+    36,
+    6
+  ],
+  "difficulty": 56
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 80,
+  "date": "2027-01-19",
+  "rows": [
+    "gen-3",
+    "size-height-2m",
+    "type-fairy"
+  ],
+  "cols": [
+    "evo-final",
+    "type-dual",
+    "name-has-ou"
+  ],
+  "cellSizes": [
+    45,
+    66,
+    7,
+    25,
+    26,
+    3,
+    7,
+    14,
+    3
+  ],
+  "difficulty": 55
+}

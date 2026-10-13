@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 8,
+  "date": "2026-11-08",
+  "rows": [
+    "gen-3",
+    "evo-stone",
+    "size-height-2m"
+  ],
+  "cols": [
+    "type-grass",
+    "type-normal",
+    "name-double-letter"
+  ],
+  "cellSizes": [
+    17,
+    18,
+    20,
+    7,
+    3,
+    4,
+    6,
+    5,
+    9
+  ],
+  "difficulty": 70
+}

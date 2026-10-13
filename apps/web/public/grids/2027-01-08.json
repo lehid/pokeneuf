@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 69,
+  "date": "2027-01-08",
+  "rows": [
+    "gen-1",
+    "evo-none",
+    "stat-attack-100"
+  ],
+  "cols": [
+    "type-flying",
+    "type-normal",
+    "color-red"
+  ],
+  "cellSizes": [
+    19,
+    22,
+    16,
+    12,
+    16,
+    7,
+    11,
+    10,
+    11
+  ],
+  "difficulty": 55
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 44,
+  "date": "2026-12-14",
+  "rows": [
+    "form-mega",
+    "stat-total-300",
+    "type-mono"
+  ],
+  "cols": [
+    "type-fairy",
+    "color-yellow",
+    "name-double-letter"
+  ],
+  "cellSizes": [
+    3,
+    4,
+    12,
+    9,
+    8,
+    17,
+    6,
+    32,
+    44
+  ],
+  "difficulty": 62
+}

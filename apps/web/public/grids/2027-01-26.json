@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 87,
+  "date": "2027-01-26",
+  "rows": [
+    "type-normal",
+    "gen-4",
+    "size-height-50cm"
+  ],
+  "cols": [
+    "color-purple",
+    "evo-final",
+    "name-has-ch"
+  ],
+  "cellSizes": [
+    5,
+    23,
+    4,
+    14,
+    49,
+    12,
+    9,
+    4,
+    12
+  ],
+  "difficulty": 62
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 19,
+  "date": "2026-11-19",
+  "rows": [
+    "type-steel",
+    "stat-total-300",
+    "status-starter"
+  ],
+  "cols": [
+    "gen-4",
+    "gen-2",
+    "name-starts-vowel"
+  ],
+  "cellSizes": [
+    10,
+    4,
+    3,
+    15,
+    21,
+    12,
+    9,
+    9,
+    3
+  ],
+  "difficulty": 71
+}

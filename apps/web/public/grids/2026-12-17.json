@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 47,
+  "date": "2026-12-17",
+  "rows": [
+    "evo-none",
+    "status-legendary",
+    "type-ground"
+  ],
+  "cols": [
+    "shape-quadruped",
+    "color-brown",
+    "name-starts-vowel"
+  ],
+  "cellSizes": [
+    14,
+    10,
+    8,
+    5,
+    3,
+    3,
+    11,
+    14,
+    5
+  ],
+  "difficulty": 74
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 72,
+  "date": "2027-01-11",
+  "rows": [
+    "gen-4",
+    "status-starter",
+    "evo-baby"
+  ],
+  "cols": [
+    "type-dual",
+    "size-height-50cm",
+    "name-has-ou"
+  ],
+  "cellSizes": [
+    53,
+    32,
+    14,
+    12,
+    8,
+    6,
+    6,
+    9,
+    3
+  ],
+  "difficulty": 61
+}

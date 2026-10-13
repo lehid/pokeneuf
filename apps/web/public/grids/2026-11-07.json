@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 7,
+  "date": "2026-11-07",
+  "rows": [
+    "type-psychic",
+    "type-electric",
+    "evo-final"
+  ],
+  "cols": [
+    "color-red",
+    "color-yellow",
+    "name-has-ch"
+  ],
+  "cellSizes": [
+    5,
+    9,
+    4,
+    3,
+    13,
+    4,
+    20,
+    19,
+    11
+  ],
+  "difficulty": 71
+}

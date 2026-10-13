@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 31,
+  "date": "2026-12-01",
+  "rows": [
+    "type-flying",
+    "evo-stage-3",
+    "type-normal"
+  ],
+  "cols": [
+    "name-starts-vowel",
+    "color-brown",
+    "color-blue"
+  ],
+  "cellSizes": [
+    10,
+    14,
+    10,
+    7,
+    9,
+    15,
+    10,
+    30,
+    6
+  ],
+  "difficulty": 60
+}

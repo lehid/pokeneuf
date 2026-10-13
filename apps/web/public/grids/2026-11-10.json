@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 10,
+  "date": "2026-11-10",
+  "rows": [
+    "stat-speed-100",
+    "evo-none",
+    "stat-total-500"
+  ],
+  "cols": [
+    "type-flying",
+    "status-mythical",
+    "gen-1"
+  ],
+  "cellSizes": [
+    14,
+    8,
+    24,
+    12,
+    9,
+    12,
+    17,
+    8,
+    33
+  ],
+  "difficulty": 54
+}

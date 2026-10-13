@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 42,
+  "date": "2026-12-12",
+  "rows": [
+    "size-height-50cm",
+    "evo-trade",
+    "evo-baby"
+  ],
+  "cols": [
+    "shape-upright",
+    "color-blue",
+    "type-dual"
+  ],
+  "cellSizes": [
+    15,
+    21,
+    45,
+    4,
+    3,
+    6,
+    4,
+    4,
+    6
+  ],
+  "difficulty": 71
+}

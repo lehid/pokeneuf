@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 71,
+  "date": "2027-01-10",
+  "rows": [
+    "evo-stage-3",
+    "stat-speed-100",
+    "stat-total-500"
+  ],
+  "cols": [
+    "name-double-letter",
+    "type-psychic",
+    "type-water"
+  ],
+  "cellSizes": [
+    13,
+    4,
+    10,
+    5,
+    13,
+    5,
+    21,
+    21,
+    21
+  ],
+  "difficulty": 62
+}

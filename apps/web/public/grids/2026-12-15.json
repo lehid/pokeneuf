@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 45,
+  "date": "2026-12-15",
+  "rows": [
+    "type-grass",
+    "shape-wings",
+    "type-dark"
+  ],
+  "cols": [
+    "gen-3",
+    "evo-final",
+    "name-starts-c"
+  ],
+  "cellSizes": [
+    17,
+    22,
+    9,
+    9,
+    14,
+    6,
+    10,
+    12,
+    5
+  ],
+  "difficulty": 62
+}

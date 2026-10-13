@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 74,
+  "date": "2027-01-13",
+  "rows": [
+    "type-mono",
+    "gen-2",
+    "evo-middle"
+  ],
+  "cols": [
+    "type-ground",
+    "color-yellow",
+    "name-starts-c"
+  ],
+  "cellSizes": [
+    12,
+    32,
+    27,
+    10,
+    12,
+    13,
+    7,
+    4,
+    7
+  ],
+  "difficulty": 59
+}

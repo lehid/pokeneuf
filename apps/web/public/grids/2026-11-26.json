@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 26,
+  "date": "2026-11-26",
+  "rows": [
+    "gen-4",
+    "stat-total-300",
+    "stat-total-500"
+  ],
+  "cols": [
+    "color-red",
+    "type-ghost",
+    "name-long"
+  ],
+  "cellSizes": [
+    5,
+    8,
+    16,
+    6,
+    3,
+    11,
+    11,
+    3,
+    16
+  ],
+  "difficulty": 72
+}

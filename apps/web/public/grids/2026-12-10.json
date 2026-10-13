@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 40,
+  "date": "2026-12-10",
+  "rows": [
+    "color-brown",
+    "status-legendary",
+    "shape-quadruped"
+  ],
+  "cols": [
+    "type-fire",
+    "stat-speed-100",
+    "type-psychic"
+  ],
+  "cellSizes": [
+    9,
+    13,
+    4,
+    4,
+    10,
+    8,
+    16,
+    16,
+    3
+  ],
+  "difficulty": 71
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 62,
+  "date": "2027-01-01",
+  "rows": [
+    "type-water",
+    "size-height-2m",
+    "status-legendary"
+  ],
+  "cols": [
+    "evo-none",
+    "type-flying",
+    "name-double-letter"
+  ],
+  "cellSizes": [
+    10,
+    5,
+    18,
+    19,
+    9,
+    9,
+    26,
+    6,
+    3
+  ],
+  "difficulty": 65
+}

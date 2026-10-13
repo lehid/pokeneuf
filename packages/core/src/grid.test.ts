@@ -9,6 +9,7 @@ import {
   GRID_RULES,
   GRID_VERSION,
   hasFamilyDiversity,
+  parseGrid,
   type Grid,
 } from './grid';
 import { computeMemberships, Memberships } from './memberships';
@@ -242,5 +243,29 @@ describe('findSolution', () => {
   it('is null when the grid cannot be filled', () => {
     const bad = honest(['only-a', 'only-b', 'only-c'], ['only-d', 'only-e', 'only-f']);
     expect(findSolution(bad, memberships)).toBeNull();
+  });
+});
+
+describe('parseGrid', () => {
+  const good = grid();
+
+  it('reads a grid file', () => {
+    expect(parseGrid(JSON.parse(JSON.stringify(good)))).toEqual(good);
+  });
+
+  it('refuses anything that is not a grid of this version', () => {
+    for (const bad of [
+      null,
+      'grid',
+      {},
+      { ...good, version: GRID_VERSION + 1 },
+      { ...good, rows: ['r5', 'r7'] },
+      { ...good, cellSizes: [1, 2, 3] },
+      { ...good, date: '5 novembre' },
+      { ...good, difficulty: 120 },
+      { ...good, extra: true },
+    ]) {
+      expect(parseGrid(bad)).toBeNull();
+    }
   });
 });

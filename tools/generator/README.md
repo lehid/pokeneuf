@@ -7,6 +7,7 @@ Fabrique les grilles quotidiennes (ROADMAP §3.4). Les **règles** d'une grille 
 pnpm data:build                                          # prérequis : dist/memberships.json
 pnpm grids:generate --from 2026-11-01 --days 90          # → apps/web/public/grids/
 pnpm grids:report                                        # revue avant commit ; code 1 si problème
+pnpm grids:stock                                         # code 1 s'il reste moins de 30 jours de grilles
 pnpm --filter @pokeneuf/generator test
 ```
 

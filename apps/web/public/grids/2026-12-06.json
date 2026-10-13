@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 36,
+  "date": "2026-12-06",
+  "rows": [
+    "status-starter",
+    "type-electric",
+    "color-red"
+  ],
+  "cols": [
+    "form-mega",
+    "evo-gen4",
+    "name-has-ou"
+  ],
+  "cellSizes": [
+    8,
+    6,
+    6,
+    3,
+    4,
+    3,
+    6,
+    3,
+    3
+  ],
+  "difficulty": 89
+}

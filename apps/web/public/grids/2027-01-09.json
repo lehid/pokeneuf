@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 70,
+  "date": "2027-01-09",
+  "rows": [
+    "type-dragon",
+    "size-height-2m",
+    "type-grass"
+  ],
+  "cols": [
+    "shape-upright",
+    "color-green",
+    "name-ends-a"
+  ],
+  "cellSizes": [
+    5,
+    3,
+    5,
+    11,
+    6,
+    10,
+    9,
+    33,
+    6
+  ],
+  "difficulty": 72
+}

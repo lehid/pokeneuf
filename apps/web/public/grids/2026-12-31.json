@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 61,
+  "date": "2026-12-31",
+  "rows": [
+    "stat-attack-100",
+    "stat-total-300",
+    "gen-1"
+  ],
+  "cols": [
+    "type-ice",
+    "color-green",
+    "type-grass"
+  ],
+  "cellSizes": [
+    3,
+    12,
+    10,
+    3,
+    10,
+    9,
+    5,
+    9,
+    14
+  ],
+  "difficulty": 73
+}

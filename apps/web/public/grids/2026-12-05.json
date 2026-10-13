@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 35,
+  "date": "2026-12-05",
+  "rows": [
+    "size-height-50cm",
+    "evo-middle",
+    "type-ice"
+  ],
+  "cols": [
+    "gen-2",
+    "type-ground",
+    "name-starts-c"
+  ],
+  "cellSizes": [
+    19,
+    9,
+    16,
+    10,
+    7,
+    7,
+    5,
+    3,
+    3
+  ],
+  "difficulty": 73
+}

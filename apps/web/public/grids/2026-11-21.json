@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 21,
+  "date": "2026-11-21",
+  "rows": [
+    "color-purple",
+    "evo-middle",
+    "size-height-50cm"
+  ],
+  "cols": [
+    "type-poison",
+    "shape-quadruped",
+    "type-bug"
+  ],
+  "cellSizes": [
+    22,
+    7,
+    6,
+    9,
+    11,
+    4,
+    10,
+    23,
+    11
+  ],
+  "difficulty": 64
+}

@@ -3,6 +3,33 @@ export const fr = {
   tagline: 'Chaque jour, une grille 3×3 à remplir avec les bons Pokémon.',
   gridTitle: (n: number) => `Grille n° ${n}`,
   demoGrid: 'Grille de démonstration',
+  gridDate: (isoDate: string) =>
+    new Intl.DateTimeFormat('fr-FR', {
+      timeZone: 'UTC',
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    }).format(new Date(`${isoDate}T12:00:00Z`)),
+
+  loading: 'Chargement de la grille…',
+  noGridTitle: 'Pas de grille aujourd’hui',
+  noGrid: 'Pas de grille aujourd’hui, revenez demain.',
+  notLaunched: (date: string) => `Le jeu ouvre le ${date}. Revenez ce jour-là !`,
+  launchDate: (isoDate: string) =>
+    new Intl.DateTimeFormat('fr-FR', {
+      timeZone: 'UTC',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(`${isoDate}T12:00:00Z`)),
+  tryDemo: 'Essayer la grille de démonstration',
+  loadError: 'Impossible de charger la grille du jour.',
+  retry: 'Réessayer',
+  newGridTitle: 'Nouvelle grille !',
+  newGridText: 'Un nouveau jour a commencé : la grille du jour a changé.',
+  newGridPlay: 'Jouer la nouvelle grille',
+  newGridLater: 'Plus tard',
+  backToToday: 'Grille du jour',
   disclaimer:
     'Projet de fan non officiel, non affilié à Nintendo, Game Freak ou The Pokémon Company.',
 

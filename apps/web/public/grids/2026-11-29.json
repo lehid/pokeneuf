@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 29,
+  "date": "2026-11-29",
+  "rows": [
+    "type-poison",
+    "color-purple",
+    "form-mega"
+  ],
+  "cols": [
+    "evo-gen4",
+    "evo-final",
+    "type-water"
+  ],
+  "cellSizes": [
+    5,
+    20,
+    3,
+    9,
+    24,
+    7,
+    8,
+    43,
+    7
+  ],
+  "difficulty": 63
+}

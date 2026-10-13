@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 79,
+  "date": "2027-01-18",
+  "rows": [
+    "size-height-50cm",
+    "evo-friendship",
+    "gen-4"
+  ],
+  "cols": [
+    "type-normal",
+    "shape-upright",
+    "name-double-letter"
+  ],
+  "cellSizes": [
+    19,
+    15,
+    18,
+    7,
+    4,
+    4,
+    17,
+    26,
+    21
+  ],
+  "difficulty": 58
+}

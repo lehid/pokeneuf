@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 52,
+  "date": "2026-12-22",
+  "rows": [
+    "type-ghost",
+    "form-mega",
+    "gen-3"
+  ],
+  "cols": [
+    "type-mono",
+    "color-purple",
+    "name-ends-a"
+  ],
+  "cellSizes": [
+    7,
+    8,
+    4,
+    18,
+    5,
+    5,
+    69,
+    7,
+    17
+  ],
+  "difficulty": 64
+}

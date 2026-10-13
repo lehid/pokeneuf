@@ -47,3 +47,22 @@ export function gridNumber(date: GridDate, launchDate: GridDate = LAUNCH_DATE): 
 export function addDays(date: GridDate, days: number): GridDate {
   return new Date((toUtcDay(date) + days) * DAY_MS).toISOString().slice(0, 10);
 }
+
+/** Has a new grid date started since `loadedDate` was loaded? (The tab stayed open past Paris midnight.) */
+export function hasNewGrid(loadedDate: GridDate, now: Date): boolean {
+  return gridDateFor(now) !== loadedDate;
+}
+
+/** Is there no grid yet for this date, because the game has not launched? */
+export function isBeforeLaunch(date: GridDate, launchDate: GridDate = LAUNCH_DATE): boolean {
+  return gridNumber(date, launchDate) < 1;
+}
+
+/**
+ * Where a grid file lives: `grids/{date}.json` under the app's base path (`import.meta.env.BASE_URL`),
+ * so the site works under `/<repo>/` on GitHub Pages and under `/` on a custom domain.
+ */
+export function gridUrl(date: GridDate, baseUrl: string): string {
+  toUtcDay(date);
+  return `${baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`}grids/${date}.json`;
+}

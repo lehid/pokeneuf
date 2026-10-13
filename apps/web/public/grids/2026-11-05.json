@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 5,
+  "date": "2026-11-05",
+  "rows": [
+    "color-green",
+    "evo-stage-3",
+    "stat-total-300"
+  ],
+  "cols": [
+    "type-ground",
+    "shape-quadruped",
+    "type-bug"
+  ],
+  "cellSizes": [
+    4,
+    13,
+    8,
+    9,
+    8,
+    4,
+    11,
+    16,
+    17
+  ],
+  "difficulty": 67
+}

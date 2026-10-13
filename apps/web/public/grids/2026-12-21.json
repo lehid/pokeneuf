@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 51,
+  "date": "2026-12-21",
+  "rows": [
+    "type-fairy",
+    "type-normal",
+    "color-blue"
+  ],
+  "cols": [
+    "gen-2",
+    "evo-base",
+    "name-double-letter"
+  ],
+  "cellSizes": [
+    8,
+    7,
+    7,
+    15,
+    26,
+    17,
+    15,
+    33,
+    13
+  ],
+  "difficulty": 54
+}

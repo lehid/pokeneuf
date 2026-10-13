@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 68,
+  "date": "2027-01-07",
+  "rows": [
+    "type-bug",
+    "stat-total-300",
+    "type-poison"
+  ],
+  "cols": [
+    "color-purple",
+    "color-blue",
+    "name-starts-vowel"
+  ],
+  "cellSizes": [
+    6,
+    3,
+    9,
+    7,
+    18,
+    12,
+    22,
+    9,
+    8
+  ],
+  "difficulty": 67
+}

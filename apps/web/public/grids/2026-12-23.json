@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 53,
+  "date": "2026-12-23",
+  "rows": [
+    "evo-stone",
+    "evo-final",
+    "stat-total-300"
+  ],
+  "cols": [
+    "gen-1",
+    "type-electric",
+    "type-water"
+  ],
+  "cellSizes": [
+    18,
+    3,
+    5,
+    57,
+    9,
+    39,
+    24,
+    4,
+    12
+  ],
+  "difficulty": 57
+}

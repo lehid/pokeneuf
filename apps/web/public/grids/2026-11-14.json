@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 14,
+  "date": "2026-11-14",
+  "rows": [
+    "type-bug",
+    "type-psychic",
+    "shape-quadruped"
+  ],
+  "cols": [
+    "evo-final",
+    "evo-gen4",
+    "name-ends-a"
+  ],
+  "cellSizes": [
+    19,
+    5,
+    4,
+    19,
+    4,
+    8,
+    33,
+    12,
+    9
+  ],
+  "difficulty": 64
+}

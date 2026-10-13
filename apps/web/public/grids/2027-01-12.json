@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 73,
+  "date": "2027-01-12",
+  "rows": [
+    "gen-3",
+    "form-mega",
+    "evo-final"
+  ],
+  "cols": [
+    "type-ice",
+    "type-rock",
+    "shape-quadruped"
+  ],
+  "cellSizes": [
+    6,
+    12,
+    20,
+    3,
+    3,
+    8,
+    10,
+    13,
+    33
+  ],
+  "difficulty": 66
+}

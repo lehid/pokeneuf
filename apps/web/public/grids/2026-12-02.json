@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 32,
+  "date": "2026-12-02",
+  "rows": [
+    "color-yellow",
+    "type-bug",
+    "type-fighting"
+  ],
+  "cols": [
+    "stat-attack-100",
+    "gen-1",
+    "evo-base"
+  ],
+  "cellSizes": [
+    5,
+    19,
+    13,
+    5,
+    12,
+    17,
+    13,
+    8,
+    7
+  ],
+  "difficulty": 64
+}

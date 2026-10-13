@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 83,
+  "date": "2027-01-22",
+  "rows": [
+    "shape-wings",
+    "color-yellow",
+    "type-poison"
+  ],
+  "cols": [
+    "stat-attack-100",
+    "gen-1",
+    "name-long"
+  ],
+  "cellSizes": [
+    6,
+    12,
+    8,
+    5,
+    19,
+    9,
+    5,
+    33,
+    12
+  ],
+  "difficulty": 63
+}

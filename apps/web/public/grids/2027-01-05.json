@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 66,
+  "date": "2027-01-05",
+  "rows": [
+    "evo-middle",
+    "gen-2",
+    "shape-quadruped"
+  ],
+  "cols": [
+    "type-mono",
+    "type-steel",
+    "name-has-y"
+  ],
+  "cellSizes": [
+    30,
+    3,
+    6,
+    51,
+    4,
+    14,
+    67,
+    6,
+    13
+  ],
+  "difficulty": 56
+}

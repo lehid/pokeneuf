@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 15,
+  "date": "2026-11-15",
+  "rows": [
+    "type-grass",
+    "evo-stone",
+    "gen-3"
+  ],
+  "cols": [
+    "type-mono",
+    "color-yellow",
+    "name-has-ou"
+  ],
+  "cellSizes": [
+    21,
+    3,
+    6,
+    17,
+    3,
+    4,
+    69,
+    10,
+    7
+  ],
+  "difficulty": 67
+}

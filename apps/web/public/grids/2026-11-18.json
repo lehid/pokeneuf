@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 18,
+  "date": "2026-11-18",
+  "rows": [
+    "type-dragon",
+    "status-legendary",
+    "type-ice"
+  ],
+  "cols": [
+    "evo-none",
+    "stat-total-500",
+    "name-has-k"
+  ],
+  "cellSizes": [
+    6,
+    11,
+    5,
+    26,
+    26,
+    5,
+    4,
+    8,
+    4
+  ],
+  "difficulty": 70
+}

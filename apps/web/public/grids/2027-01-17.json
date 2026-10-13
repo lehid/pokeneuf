@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 78,
+  "date": "2027-01-17",
+  "rows": [
+    "evo-stage-3",
+    "status-legendary",
+    "stat-total-500"
+  ],
+  "cols": [
+    "stat-speed-100",
+    "type-fire",
+    "type-dragon"
+  ],
+  "cellSizes": [
+    15,
+    5,
+    5,
+    10,
+    4,
+    6,
+    38,
+    14,
+    11
+  ],
+  "difficulty": 66
+}

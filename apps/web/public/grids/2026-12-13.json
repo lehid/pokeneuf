@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 43,
+  "date": "2026-12-13",
+  "rows": [
+    "color-red",
+    "evo-gen4",
+    "gen-2"
+  ],
+  "cols": [
+    "type-fighting",
+    "type-flying",
+    "name-short"
+  ],
+  "cellSizes": [
+    3,
+    6,
+    5,
+    5,
+    10,
+    3,
+    3,
+    19,
+    11
+  ],
+  "difficulty": 79
+}

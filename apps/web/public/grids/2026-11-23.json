@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 23,
+  "date": "2026-11-23",
+  "rows": [
+    "evo-stone",
+    "type-mono",
+    "gen-3"
+  ],
+  "cols": [
+    "type-psychic",
+    "color-blue",
+    "color-brown"
+  ],
+  "cellSizes": [
+    3,
+    3,
+    5,
+    20,
+    47,
+    48,
+    20,
+    32,
+    15
+  ],
+  "difficulty": 53
+}

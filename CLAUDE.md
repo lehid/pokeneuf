@@ -28,7 +28,7 @@ Jeu web quotidien : grille 3×3 à remplir avec des Pokémon qui vérifient un c
 ## Commandes
 - `pnpm dev`, `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm build`
 - `pnpm data:build` : régénère pokedex.json + memberships
-- `pnpm grids:generate --from YYYY-MM-DD --days N`, `pnpm grids:report`
+- `pnpm grids:generate --from YYYY-MM-DD --days N`, `pnpm grids:report`, `pnpm grids:stock` (échoue s'il reste moins de 30 jours de grilles)
 
 ## À ne pas faire
 - Ne pas mettre « Pokémon » en toutes lettres dans le nom du site, le domaine ou le logo ; pas de Poké Ball ni d'icônes officielles.

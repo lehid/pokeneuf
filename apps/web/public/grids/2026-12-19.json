@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 49,
+  "date": "2026-12-19",
+  "rows": [
+    "evo-friendship",
+    "type-poison",
+    "stat-total-500"
+  ],
+  "cols": [
+    "shape-upright",
+    "type-dual",
+    "name-has-ou"
+  ],
+  "cellSizes": [
+    4,
+    4,
+    3,
+    3,
+    37,
+    6,
+    30,
+    64,
+    4
+  ],
+  "difficulty": 68
+}

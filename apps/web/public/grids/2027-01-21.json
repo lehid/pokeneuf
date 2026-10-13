@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 82,
+  "date": "2027-01-21",
+  "rows": [
+    "type-grass",
+    "type-dark",
+    "status-starter"
+  ],
+  "cols": [
+    "evo-gen4",
+    "evo-base",
+    "name-starts-c"
+  ],
+  "cellSizes": [
+    9,
+    19,
+    9,
+    4,
+    6,
+    5,
+    6,
+    12,
+    4
+  ],
+  "difficulty": 73
+}

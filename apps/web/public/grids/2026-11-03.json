@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 3,
+  "date": "2026-11-03",
+  "rows": [
+    "type-flying",
+    "stat-speed-100",
+    "stat-total-500"
+  ],
+  "cols": [
+    "color-purple",
+    "type-poison",
+    "gen-4"
+  ],
+  "cellSizes": [
+    9,
+    3,
+    14,
+    9,
+    3,
+    17,
+    12,
+    9,
+    41
+  ],
+  "difficulty": 64
+}
