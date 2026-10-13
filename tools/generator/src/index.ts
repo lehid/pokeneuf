@@ -1,4 +1,22 @@
-// Phase 3: grid generator CLI (→ apps/web/public/grids/). See ROADMAP §3.4.
-import { LAUNCH_DATE } from '@pokeneuf/core';
-
-export const DEFAULT_START = LAUNCH_DATE;
+export { loadConfig, parseConfig, categoryWeights, type GeneratorConfig } from './config';
+export {
+  buildIndex,
+  gridSchema,
+  indexSchema,
+  readGrids,
+  readIndex,
+  writeGrid,
+  writeIndex,
+  type GridIndex,
+} from './files';
+export {
+  createGenerator,
+  dateRange,
+  GenerationError,
+  seedFromDate,
+  weekdayOf,
+  type GenerateInput,
+  type Generated,
+  type GeneratorContext,
+} from './generate';
+export { analyzeGrids, cooldownFindings, type GridReport } from './report';

@@ -121,10 +121,19 @@ importers:
       '@pokeneuf/core':
         specifier: workspace:*
         version: link:../../packages/core
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
+      '@pokeneuf/data':
+        specifier: workspace:*
+        version: link:../../packages/data
       '@types/node':
         specifier: ^22.17.0
         version: 22.20.5
+      tsx:
+        specifier: ^4.23.15
+        version: 4.23.15
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
