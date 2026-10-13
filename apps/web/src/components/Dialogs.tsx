@@ -1,6 +1,7 @@
 import {
   APP_NAME,
   DISTRIBUTION_STEP,
+  endedOnItsDay,
   getCategory,
   MAX_SCORE,
   rankScore,
@@ -79,6 +80,7 @@ function ShareButton() {
   const showToast = useGame((s) => s.showToast);
   const score = useScore();
   const stats = useStats();
+  const finishedOn = useGame((s) => s.finishedOn);
 
   const share = async () => {
     const text = shareText({
@@ -86,7 +88,8 @@ function ShareButton() {
       gridId: grid.id,
       score: score.total,
       maxScore: MAX_SCORE,
-      streak: stats.streak,
+      // An archive never extends the streak: do not claim it.
+      streak: endedOnItsDay(finishedOn, grid.date) ? stats.streak : 0,
       cells: shareCells(
         game,
         score.cells.map((c) => c?.tier ?? null),
@@ -110,8 +113,11 @@ export function EndDialog() {
   const game = useGame((s) => s.game);
   const closeDialog = useGame((s) => s.closeDialog);
   const openStats = useGame((s) => s.openStats);
+  const grid = useGame((s) => s.grid);
+  const finishedOn = useGame((s) => s.finishedOn);
   const score = useScore();
   if (game.status === 'playing') return null;
+  const countsAsDaily = endedOnItsDay(finishedOn, grid.date);
   const rarest = score.rarestCell === null ? null : (game.cells[score.rarestCell] ?? null);
   const rarestTier =
     score.rarestCell === null ? null : (score.cells[score.rarestCell]?.tier ?? null);
@@ -132,7 +138,15 @@ export function EndDialog() {
           <RarityChip tier={rarestTier} />
         </p>
       )}
-      <p className="mb-4 text-xs text-lcd-soft">{fr.rarityEstimated}</p>
+      <p className="mb-2 text-xs text-lcd-soft">{fr.rarityEstimated}</p>
+      {!countsAsDaily && (
+        <p
+          className="mb-3 border-2 border-lcd-ink bg-lcd-bg p-2 text-xs"
+          data-testid="archive-note"
+        >
+          {fr.archiveNote}
+        </p>
+      )}
       <div className="mb-3 flex gap-3">
         <ShareButton />
         <button

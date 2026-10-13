@@ -22,6 +22,32 @@ export const fr = {
   difficultyAria: (level: string, index: number, total: number) =>
     `Difficulté de la grille : ${level} (${index} sur ${total})`,
 
+  archivesButton: 'Archives',
+  archivesTitle: 'Archives',
+  archivesIntro:
+    'Rejouez les grilles passées. Une archive ne compte ni dans vos stats ni dans votre série.',
+  backToArchives: '← Archives',
+  archiveLabel: 'Archive',
+  archiveStatus: {
+    unplayed: 'Non jouée',
+    inProgress: 'En cours',
+    dailyDone: 'Terminée en daily',
+    archiveDone: 'Terminée en archive',
+  },
+  archiveFound: (found: number) => `${found}/9 trouvés`,
+  archiveRowLabel: (n: number, date: string, status: string) =>
+    `Grille n° ${n}, ${date} : ${status}`,
+  archiveAction: { unplayed: 'Jouer', inProgress: 'Reprendre', done: 'Voir' },
+  pagePrevious: 'Précédent',
+  pageNext: 'Suivant',
+  pageOf: (page: number, pages: number) => `Page ${page} sur ${pages}`,
+  paginationLabel: 'Pagination des archives',
+  archivesEmpty: 'Pas encore d’archive : les grilles passées apparaîtront ici dès demain.',
+  archiveNote:
+    'Terminée après le jour de la grille, cette partie est une archive : elle ne compte ni dans les stats ni dans la série.',
+  gridUnavailable: 'Cette grille n’est pas disponible.',
+  gridUnavailableTitle: 'Grille introuvable',
+
   loading: 'Chargement de la grille…',
   noGridTitle: 'Pas de grille aujourd’hui',
   noGrid: 'Pas de grille aujourd’hui, revenez demain.',

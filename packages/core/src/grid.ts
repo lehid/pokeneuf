@@ -62,6 +62,19 @@ export const gridSchema = z.strictObject({
 type Same<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
 export type SchemaMatchesGrid = Same<z.infer<typeof gridSchema>, Grid> extends true ? true : never;
 
+/** `grids/index.json`: the grid number and date of every published grid. */
+export const gridIndexSchema = z.strictObject({
+  version: z.literal(GRID_VERSION),
+  grids: z.array(z.strictObject({ id: z.number().int(), date: gridDateSchema })),
+});
+export type GridIndex = z.infer<typeof gridIndexSchema>;
+
+/** The index read from untrusted JSON, or `null`. */
+export function parseGridIndex(raw: unknown): GridIndex | null {
+  const parsed = gridIndexSchema.safeParse(raw);
+  return parsed.success ? parsed.data : null;
+}
+
 /** A grid read from untrusted JSON, or `null` if it is not one (wrong shape or other version). */
 export function parseGrid(raw: unknown): Grid | null {
   const parsed = gridSchema.safeParse(raw);

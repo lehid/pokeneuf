@@ -1,5 +1,6 @@
 import {
   APP_NAME,
+  archiveDates,
   gridDateFor,
   hasNewGrid,
   isOver,
@@ -7,8 +8,10 @@ import {
   livesLeft,
   MAX_ERRORS,
   MAX_SCORE,
+  parseRoute,
   RARITY_TIERS,
   type GridDate,
+  type Route,
 } from '@pokeneuf/core';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Board } from './components/Board';
@@ -24,9 +27,11 @@ import { Toast } from './components/Toast';
 import { RarityChip } from './components/RarityChip';
 import { useScore, useStats } from './hooks';
 import { GuessSheet } from './components/GuessSheet';
+import { ArchivesPage } from './components/ArchivesPage';
 import { Modal } from './components/Modal';
+import { Notice, Shell } from './components/Shell';
 import { demoGrid, memberships, pokemonById, popularity } from './data';
-import { loadDailyGrid, type GridLoad } from './gridLoader';
+import { loadGrid, type GridLoad } from './gridLoader';
 import { GameStoreContext, useGame } from './GameContext';
 import { fr } from './i18n/fr';
 import { browserStorage, demoStorage, type KeyValueStorage } from './storage';
@@ -85,7 +90,9 @@ function Announcer() {
   );
 }
 
-function Game({ demo }: { demo: boolean }) {
+export type GameKind = 'daily' | 'demo' | 'archive';
+
+function Game({ kind }: { kind: GameKind }) {
   const grid = useGame((s) => s.grid);
   const game = useGame((s) => s.game);
   const dialog = useGame((s) => s.dialog);
@@ -103,7 +110,12 @@ function Game({ demo }: { demo: boolean }) {
         <div>
           <h1 className="title-pixel text-base sm:text-xl">{APP_NAME}</h1>
           <p className="mt-1 text-xs text-lcd-soft">
-            {fr.gridTitle(grid.id)} · {demo ? fr.demoGrid : fr.gridDate(grid.date)}
+            {fr.gridTitle(grid.id)} ·{' '}
+            {kind === 'demo'
+              ? fr.demoGrid
+              : kind === 'archive'
+                ? `${fr.archiveLabel} · ${fr.gridDate(grid.date)}`
+                : fr.gridDate(grid.date)}
           </p>
           <DifficultyBadge />
         </div>
@@ -142,9 +154,14 @@ function Game({ demo }: { demo: boolean }) {
         <button type="button" className="btn" onClick={openStats} data-testid="open-stats">
           {fr.statsButton}
         </button>
-        {demo && (
+        {kind === 'demo' && (
           <a className="btn" href={import.meta.env.BASE_URL} data-testid="back-to-today">
             {fr.backToToday}
+          </a>
+        )}
+        {kind !== 'demo' && (
+          <a className="btn" href="#/archives" data-testid="open-archives">
+            {kind === 'archive' ? fr.backToArchives : fr.archivesButton}
           </a>
         )}
         {over ? (
@@ -181,29 +198,6 @@ function Game({ demo }: { demo: boolean }) {
   );
 }
 
-/** Page frame for every screen that is not the game itself. */
-function Shell({ children }: { children: ReactNode }) {
-  return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-4 px-3 py-4 sm:px-6 sm:py-8">
-      <header className="panel p-3">
-        <h1 className="title-pixel text-base sm:text-xl">{APP_NAME}</h1>
-        <p className="mt-1 text-xs text-lcd-soft">{fr.tagline}</p>
-      </header>
-      {children}
-      <footer className="mt-auto pt-4 text-center text-xs text-lcd-soft">{fr.disclaimer}</footer>
-    </main>
-  );
-}
-
-function Notice({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="panel flex flex-col items-center gap-3 p-5 text-center" role="status">
-      <h2 className="title-pixel text-sm">{title}</h2>
-      {children}
-    </section>
-  );
-}
-
 const systemNow = () => new Date();
 
 export interface AppProps {
@@ -232,7 +226,7 @@ function useDailyGrid(
     if (!enabled) return;
     let cancelled = false;
     setLoad(null);
-    void loadDailyGrid(date, {
+    void loadGrid(date, {
       memberships,
       baseUrl,
       ...(fetchImpl ? { fetchImpl } : {}),
@@ -319,7 +313,7 @@ function DailyApp({
     );
   }
   return (
-    <GameSession key={load.grid.date} grid={load.grid} storage={storage} demo={false}>
+    <GameSession key={load.grid.date} grid={load.grid} storage={storage} now={now} kind="daily">
       {offer && (
         <Modal title={fr.newGridTitle} onClose={later} testId="new-grid-dialog">
           <p className="mb-4">{fr.newGridText}</p>
@@ -337,27 +331,108 @@ function DailyApp({
   );
 }
 
-function GameSession({
+/** A past grid played from the archives. Never today's grid, never a grid of the future. */
+function ArchiveGame({
+  date,
+  storage,
+  now,
+  baseUrl,
+  fetchImpl,
+}: Required<Pick<AppProps, 'storage' | 'now' | 'baseUrl'>> &
+  Pick<AppProps, 'fetchImpl'> & { date: GridDate }) {
+  const today = gridDateFor(now());
+  const allowed = archiveDates([date], today).length === 1;
+  const [load, setLoad] = useState<GridLoad | null>(null);
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    if (!allowed) return;
+    let cancelled = false;
+    setLoad(null);
+    void loadGrid(date, { memberships, baseUrl, ...(fetchImpl ? { fetchImpl } : {}) }).then(
+      (result) => {
+        if (!cancelled) setLoad(result);
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [allowed, date, baseUrl, fetchImpl, attempt]);
+
+  if (!allowed || load?.kind === 'missing') {
+    return (
+      <Shell>
+        <Notice title={fr.gridUnavailableTitle}>
+          <p data-testid="grid-unavailable">{fr.gridUnavailable}</p>
+          <a className="btn btn-primary" href="#/archives">
+            {fr.backToArchives}
+          </a>
+        </Notice>
+      </Shell>
+    );
+  }
+  if (load === null) {
+    return (
+      <Shell>
+        <Notice title={fr.loading}>
+          <span className="sr-only">{fr.loading}</span>
+        </Notice>
+      </Shell>
+    );
+  }
+  if (load.kind === 'error') {
+    return (
+      <Shell>
+        <Notice title={fr.gridUnavailableTitle}>
+          <p data-testid="load-error">{fr.loadError}</p>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setAttempt((n) => n + 1)}
+          >
+            {fr.retry}
+          </button>
+        </Notice>
+      </Shell>
+    );
+  }
+  return <GameSession grid={load.grid} storage={storage} now={now} kind="archive" />;
+}
+
+export function GameSession({
   grid,
   storage,
-  demo,
+  now,
+  kind,
   children,
 }: {
   grid: typeof demoGrid;
   storage: KeyValueStorage;
-  demo: boolean;
+  now: () => Date;
+  kind: GameKind;
   children?: ReactNode;
 }) {
   const store = useMemo(
-    () => createGameStore({ grid, memberships, popularity, storage }),
-    [grid, storage],
+    () => createGameStore({ grid, memberships, popularity, storage, now }),
+    [grid, storage, now],
   );
   return (
     <GameStoreContext.Provider value={store}>
-      <Game demo={demo} />
+      <Game kind={kind} />
       {children}
     </GameStoreContext.Provider>
   );
+}
+
+/** The route of the page, from the URL hash; follows the back button and the links. */
+function useRoute(): Route {
+  const [route, setRoute] = useState<Route>(() => parseRoute(window.location.hash));
+  useEffect(() => {
+    const update = () => setRoute(parseRoute(window.location.hash));
+    window.addEventListener('hashchange', update);
+    return () => window.removeEventListener('hashchange', update);
+  }, []);
+  return route;
 }
 
 export function App({
@@ -368,6 +443,30 @@ export function App({
   demo = new URLSearchParams(window.location.search).has('demo'),
 }: AppProps) {
   const demoStore = useMemo(() => demoStorage(storage), [storage]);
-  if (demo) return <GameSession grid={demoGrid} storage={demoStore} demo />;
+  const route = useRoute();
+  if (demo) return <GameSession grid={demoGrid} storage={demoStore} now={now} kind="demo" />;
+  if (route.kind === 'archives') {
+    return (
+      <ArchivesPage
+        page={route.page}
+        storage={storage}
+        now={now}
+        baseUrl={baseUrl}
+        fetchImpl={fetchImpl}
+      />
+    );
+  }
+  if (route.kind === 'archive') {
+    return (
+      <ArchiveGame
+        key={route.date}
+        date={route.date}
+        storage={storage}
+        now={now}
+        baseUrl={baseUrl}
+        fetchImpl={fetchImpl}
+      />
+    );
+  }
   return <DailyApp storage={storage} now={now} baseUrl={baseUrl} fetchImpl={fetchImpl} />;
 }
