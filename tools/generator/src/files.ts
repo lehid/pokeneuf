@@ -1,7 +1,14 @@
 import { mkdir, readdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GRID_VERSION, gridSchema, type Grid, type GridDate } from '@pokeneuf/core';
+import {
+  GRID_VERSION,
+  gridIndexSchema,
+  gridSchema,
+  type Grid,
+  type GridDate,
+  type GridIndex,
+} from '@pokeneuf/core';
 import { z } from 'zod';
 
 const ROOT = fileURLToPath(new URL('../../../', import.meta.url));
@@ -11,13 +18,8 @@ export const POKEDEX_PATH = path.join(ROOT, 'packages/data/dist/pokedex.json');
 
 export { gridSchema };
 
-const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
-
-export const indexSchema = z.strictObject({
-  version: z.literal(GRID_VERSION),
-  grids: z.array(z.strictObject({ id: z.number().int(), date })),
-});
-export type GridIndex = z.infer<typeof indexSchema>;
+const indexSchema = gridIndexSchema;
+export { indexSchema, type GridIndex };
 
 const GRID_FILE = /^(\d{4}-\d{2}-\d{2})\.json$/;
 

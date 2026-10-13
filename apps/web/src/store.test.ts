@@ -21,9 +21,12 @@ const WRONG = (cell: number): number => {
   throw new Error('every Pokémon fits');
 };
 
-function setup(initial: Record<string, string> = {}) {
+/** Noon in Paris on the day of the grid: the game is played on its day. */
+const ON_THE_DAY = new Date(`${demoGrid.date}T11:00:00Z`);
+
+function setup(initial: Record<string, string> = {}, now: () => Date = () => ON_THE_DAY) {
   const storage = memoryStorage(initial);
-  const store = createGameStore({ grid: demoGrid, memberships, popularity, storage });
+  const store = createGameStore({ grid: demoGrid, memberships, popularity, storage, now });
   const play = (cell: number, id: number) => {
     store.getState().selectCell(cell);
     store.getState().guess(id);
@@ -86,6 +89,72 @@ describe('game store', () => {
     // The history survives a refresh.
     const second = setup(Object.fromEntries(first.storage.data));
     expect(second.state().history).toEqual(first.state().history);
+  });
+
+  it('records the end date of a game with its frozen score, and a refresh keeps both', () => {
+    const first = setup();
+    first.state().askAbandon();
+    first.state().confirmAbandon();
+    expect(first.state().finishedOn).toBe(demoGrid.date);
+    const raw = JSON.parse(first.storage.get(gameKey(demoGrid.id)) ?? '{}') as Record<
+      string,
+      unknown
+    >;
+    expect(raw).toMatchObject({
+      version: 2,
+      status: 'abandoned',
+      finishedOn: demoGrid.date,
+      score: 0,
+    });
+    const second = setup(Object.fromEntries(first.storage.data));
+    expect(second.state().finishedOn).toBe(demoGrid.date);
+  });
+
+  it('counts a game that ends after the day of its grid as an archive: no history, no streak', () => {
+    let now = new Date(`${demoGrid.date}T22:30:00Z`); // 23:30 in Paris, still the day
+    const { state, play, storage } = setup({}, () => now);
+    play(0, solution[0] ?? 0);
+    play(1, solution[1] ?? 0);
+    now = new Date(`${demoGrid.date}T23:30:00Z`); // 00:30 in Paris: the day is over
+    solution.slice(2).forEach((id, i) => play(i + 2, id));
+    expect(state().game.status).toBe('won');
+    expect(state().finishedOn).toBe('2026-11-02');
+    expect(state().history).toEqual([]);
+    expect(storage.get(HISTORY_KEY)).toBeNull();
+    // …but the game itself is saved and frozen, as an archive.
+    expect(JSON.parse(storage.get(gameKey(demoGrid.id)) ?? '{}')).toMatchObject({
+      status: 'won',
+      finishedOn: '2026-11-02',
+    });
+  });
+
+  it('counts a past grid played from the archives as an archive too', () => {
+    const { state, play, storage } = setup({}, () => new Date('2026-12-24T12:00:00Z'));
+    solution.forEach((id, cell) => play(cell, id));
+    expect(state().game.status).toBe('won');
+    expect(state().history).toEqual([]);
+    expect(storage.get(HISTORY_KEY)).toBeNull();
+  });
+
+  it('counts a game that ends on its own day as a daily game, even a few seconds before midnight', () => {
+    const { state, play } = setup({}, () => new Date(`${demoGrid.date}T22:59:59Z`));
+    solution.forEach((id, cell) => play(cell, id));
+    expect(state().history).toHaveLength(1);
+    expect(state().finishedOn).toBe(demoGrid.date);
+  });
+
+  it('resumes an unfinished game the day after, to finish it as an archive', () => {
+    const first = setup();
+    first.play(0, solution[0] ?? 0);
+    const next = setup(
+      Object.fromEntries(first.storage.data),
+      () => new Date('2026-11-02T12:00:00Z'),
+    );
+    expect(next.state().game.cells[0]).toBe(solution[0]);
+    expect(next.state().finishedOn).toBeNull();
+    solution.slice(1).forEach((id, i) => next.play(i + 1, id));
+    expect(next.state().finishedOn).toBe('2026-11-02');
+    expect(next.state().history).toEqual([]);
   });
 
   it('shows and clears a toast', () => {

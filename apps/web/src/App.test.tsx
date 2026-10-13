@@ -8,6 +8,9 @@ import {
   solutionsFor,
   sortByPopularity,
   titleFor,
+  serializeGame,
+  gameKey,
+  type SavedGame,
 } from '@pokeneuf/core';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -24,7 +27,7 @@ function start(hideRules = true) {
   const storage = memoryStorage(
     hideRules ? { 'pokeneuf:v1:settings': '{"version":1,"hideRules":true}' } : {},
   );
-  render(<App storage={storage} demo />);
+  render(<App storage={storage} now={() => new Date(`${demoGrid.date}T11:00:00Z`)} demo />);
   return storage;
 }
 
@@ -346,5 +349,181 @@ describe('difficulty of the grid', () => {
     );
     const squares = badge.querySelectorAll('span.bg-lcd-ink');
     expect(squares).toHaveLength(levelIndex + 1);
+  });
+});
+
+describe('archives', () => {
+  const dayOf = (n: number) => `2026-11-${String(n).padStart(2, '0')}`;
+  const index = (days: number) => ({
+    version: 1,
+    grids: Array.from({ length: days }, (_, i) => ({ id: i + 1, date: dayOf(i + 1) })),
+  });
+  const noonOn = (date: string) => new Date(`${date}T11:00:00Z`);
+  const server = (days: number) =>
+    vi.fn(async (url: string | URL | Request) => {
+      const path = String(url);
+      if (path.endsWith('/grids/index.json')) return new Response(JSON.stringify(index(days)));
+      const date = /(\d{4}-\d{2}-\d{2})\.json$/.exec(path)?.[1] ?? '';
+      // Every published day serves the demo grid under its own date and number.
+      const n = Number(date.slice(-2));
+      return n >= 1 && n <= days
+        ? new Response(JSON.stringify({ ...demoGrid, id: n, date }))
+        : new Response('', { status: 404 });
+    });
+  const settings = { 'pokeneuf:v1:settings': '{"version":1,"hideRules":true}' };
+  const saved = (
+    state: Partial<SavedGame['state']>,
+    finishedOn: string | null,
+    score: number | null,
+  ) =>
+    serializeGame({
+      state: {
+        gridId: 1,
+        cells: Array(9).fill(null),
+        errors: 0,
+        status: 'playing',
+        ...state,
+      },
+      finishedOn,
+      score,
+    });
+  const open = (hash: string, today: string, storage = memoryStorage(settings), days = 10) => {
+    window.location.hash = hash;
+    render(
+      <App
+        storage={storage}
+        now={() => noonOn(today)}
+        fetchImpl={server(days)}
+        baseUrl="/"
+        demo={false}
+      />,
+    );
+    return storage;
+  };
+  afterEach(() => {
+    window.location.hash = '';
+  });
+
+  it('lists the days that are over, newest first, never today or the future', async () => {
+    open('#/archives', dayOf(5));
+    const list = await screen.findByTestId('archive-list');
+    const dates = within(list)
+      .getAllByRole('listitem')
+      .map((li) => li.getAttribute('data-testid'));
+    expect(dates).toEqual([
+      'archive-2026-11-04',
+      'archive-2026-11-03',
+      'archive-2026-11-02',
+      'archive-2026-11-01',
+    ]);
+    expect(screen.queryByTestId('archive-2026-11-05')).toBeNull();
+    expect(screen.queryByTestId('archive-2026-11-06')).toBeNull();
+  });
+
+  it('tells never played, in progress, finished in daily and finished in archive, with the score', async () => {
+    const storage = memoryStorage({
+      ...settings,
+      [gameKey(4)]: saved(
+        { gridId: 4, cells: [1, ...Array(8).fill(null)], errors: 3, status: 'lost' },
+        '2026-11-04',
+        412,
+      ),
+      [gameKey(3)]: saved(
+        { gridId: 3, cells: [1, ...Array(8).fill(null)], errors: 3, status: 'lost' },
+        '2026-11-05',
+        233,
+      ),
+      [gameKey(2)]: saved({ gridId: 2, cells: [1, 2, 3, ...Array(6).fill(null)] }, null, null),
+    });
+    open('#/archives', dayOf(5), storage);
+    await screen.findByTestId('archive-list');
+    const row = (n: number) => screen.getByTestId(`archive-${dayOf(n)}`);
+    expect(row(4).getAttribute('data-status')).toBe('dailyDone');
+    expect(within(row(4)).getByTestId('status').textContent).toBe('Terminée en daily');
+    expect(within(row(4)).getByTestId('row-score').textContent).toBe('412/900');
+    expect(row(3).getAttribute('data-status')).toBe('archiveDone');
+    expect(within(row(3)).getByTestId('status').textContent).toBe('Terminée en archive');
+    expect(within(row(3)).getByTestId('row-score').textContent).toBe('233/900');
+    expect(row(2).getAttribute('data-status')).toBe('inProgress');
+    expect(row(2).textContent).toContain('3/9 trouvés');
+    expect(within(row(2)).getByTestId('archive-action').textContent).toBe('Reprendre');
+    expect(row(1).getAttribute('data-status')).toBe('unplayed');
+    expect(within(row(1)).getByTestId('archive-action').textContent).toBe('Jouer');
+    expect(within(row(4)).getByTestId('archive-action').textContent).toBe('Voir');
+    expect(within(row(1)).queryByTestId('row-score')).toBeNull();
+  });
+
+  it('keeps "finished in daily" the next day, and shows a game finished after midnight as an archive', async () => {
+    const storage = memoryStorage({
+      ...settings,
+      [gameKey(4)]: saved({ gridId: 4, errors: 3, status: 'lost' }, '2026-11-04', 80),
+      [gameKey(3)]: saved({ gridId: 3, errors: 3, status: 'lost' }, '2026-11-04', 90), // began on the 3rd, ended the 4th
+    });
+    open('#/archives', dayOf(5), storage);
+    await screen.findByTestId('archive-list');
+    expect(screen.getByTestId('archive-2026-11-04').getAttribute('data-status')).toBe('dailyDone');
+    expect(screen.getByTestId('archive-2026-11-03').getAttribute('data-status')).toBe(
+      'archiveDone',
+    );
+  });
+
+  it('paginates by ten, with previous and next', async () => {
+    open('#/archives', dayOf(30), memoryStorage(settings), 25);
+    const nav = await screen.findByTestId('pagination');
+    expect(nav.getAttribute('data-pages')).toBe('3');
+    expect(nav.getAttribute('data-page')).toBe('1');
+    expect(within(screen.getByTestId('archive-list')).getAllByRole('listitem')).toHaveLength(10);
+    expect(within(nav).getByText('Page 1 sur 3')).toBeTruthy();
+    expect(within(nav).queryByTestId('previous-page')).toBeNull();
+    expect(within(nav).getByTestId('next-page').getAttribute('href')).toBe('#/archives?page=2');
+  });
+
+  it('shows the requested page, the last one with what is left', async () => {
+    open('#/archives?page=3', dayOf(30), memoryStorage(settings), 25);
+    const nav = await screen.findByTestId('pagination');
+    expect(nav.getAttribute('data-page')).toBe('3');
+    expect(within(screen.getByTestId('archive-list')).getAllByRole('listitem')).toHaveLength(5);
+    expect(within(nav).queryByTestId('next-page')).toBeNull();
+    expect(within(nav).getByTestId('previous-page').getAttribute('href')).toBe('#/archives?page=2');
+  });
+
+  it('says there is nothing to replay on the first days', async () => {
+    open('#/archives', dayOf(1));
+    expect((await screen.findByTestId('archives-empty')).textContent).toContain(
+      'Pas encore d’archive',
+    );
+  });
+
+  it('plays a past grid; it joins neither the stats nor the streak, and the list shows it as an archive', async () => {
+    const storage = open('#/archive/2026-11-01', dayOf(5));
+    expect(await screen.findByTestId('board')).toBeTruthy();
+    expect(screen.getByText(/Archive · /)).toBeTruthy();
+    for (const [cell, id] of solution.entries()) {
+      play(`cell-${Math.floor(cell / 3)}-${cell % 3}`, pokemonById(id).nameFr);
+    }
+    expect(screen.getByTestId('end-dialog')).toBeTruthy();
+    expect(screen.getByTestId('archive-note').textContent).toContain('archive');
+    expect(storage.get('pokeneuf:v1:history')).toBeNull();
+
+    // The streak is not claimed in the shared text, and the stats stay empty.
+    fireEvent.click(screen.getByTestId('open-stats-end'));
+    expect(screen.getByTestId('stat-Parties').textContent).toBe('0');
+    expect(screen.getByTestId('stat-Série').textContent).toBe('0');
+  });
+
+  it('refuses today, the future and unknown days, politely', async () => {
+    for (const date of ['2026-11-05', '2026-11-09', '2026-12-31']) {
+      open(`#/archive/${date}`, dayOf(5));
+      expect((await screen.findByTestId('grid-unavailable')).textContent).toBe(
+        'Cette grille n’est pas disponible.',
+      );
+      cleanup();
+    }
+  });
+
+  it('is reachable from the page of the day, and leads back to it', async () => {
+    open('', dayOf(5));
+    await screen.findByTestId('board');
+    expect(screen.getByTestId('open-archives').getAttribute('href')).toBe('#/archives');
   });
 });

@@ -10,6 +10,7 @@ import {
   GRID_VERSION,
   hasFamilyDiversity,
   parseGrid,
+  parseGridIndex,
   type Grid,
 } from './grid';
 import { computeMemberships, Memberships } from './memberships';
@@ -266,6 +267,26 @@ describe('parseGrid', () => {
       { ...good, extra: true },
     ]) {
       expect(parseGrid(bad)).toBeNull();
+    }
+  });
+});
+
+describe('parseGridIndex', () => {
+  it('reads the index of the published grids', () => {
+    const index = { version: GRID_VERSION, grids: [{ id: 1, date: '2026-11-01' }] };
+    expect(parseGridIndex(JSON.parse(JSON.stringify(index)))).toEqual(index);
+  });
+
+  it('refuses anything else', () => {
+    for (const bad of [
+      null,
+      {},
+      { version: GRID_VERSION + 1, grids: [] },
+      { version: GRID_VERSION, grids: [{ id: 1, date: 'hier' }] },
+      { version: GRID_VERSION, grids: [{ id: 1 }] },
+      { version: GRID_VERSION, grids: [], extra: 1 },
+    ]) {
+      expect(parseGridIndex(bad)).toBeNull();
     }
   });
 });

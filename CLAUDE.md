@@ -34,6 +34,6 @@ Jeu web quotidien : grille 3×3 à remplir avec des Pokémon qui vérifient un c
 - Ne pas mettre « Pokémon » en toutes lettres dans le nom du site, le domaine ou le logo ; pas de Poké Ball ni d'icônes officielles.
 - Ne pas inclure d'espèce de génération > MAX_GEN, ni d'évolution vers une telle espèce.
 - Ne pas mettre en cache longue durée les grilles (service worker ou CDN).
-- Ne pas compter les parties d'archives dans les stats ou la streak.
+- Ne pas compter les parties d'archives dans les stats ou la streak : une partie ne compte que si elle se termine le jour de sa grille (`endedOnItsDay`), jamais après minuit ni depuis les archives.
 - Ne pas afficher de faux « % de joueurs » en v1 : la rareté est estimée et présentée en paliers.
 - Ne pas casser le déploiement GitHub Pages : le site doit marcher sous `/<repo>/` (base Vite via `VITE_BASE`).

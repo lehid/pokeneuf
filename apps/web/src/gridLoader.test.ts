@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { demoGrid, memberships } from './data';
-import { loadDailyGrid } from './gridLoader';
+import { loadGrid } from './gridLoader';
 
 const DATE = demoGrid.date;
 const json = (body: unknown, init: ResponseInit = {}) =>
@@ -10,9 +10,9 @@ const json = (body: unknown, init: ResponseInit = {}) =>
     ...init,
   });
 const load = (fetchImpl: typeof fetch, date = DATE, baseUrl = '/') =>
-  loadDailyGrid(date, { memberships, baseUrl, fetchImpl });
+  loadGrid(date, { memberships, baseUrl, fetchImpl });
 
-describe('loadDailyGrid', () => {
+describe('loadGrid', () => {
   it('loads a valid grid, revalidating it every time', async () => {
     const fetchImpl = vi.fn(async () => json(demoGrid));
     expect(await load(fetchImpl)).toEqual({ kind: 'ready', grid: demoGrid });

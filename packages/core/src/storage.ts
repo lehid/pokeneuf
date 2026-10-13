@@ -3,13 +3,15 @@ import { MAX_ERRORS, MAX_SCORE, STORAGE_PREFIX } from './config';
 import { CELLS, type Grid } from './grid';
 import { cellCategories, type GameState } from './game';
 import type { Memberships } from './memberships';
+import { scoreGame, type Popularity } from './scoring';
+import type { GridDate } from './date';
 
 /**
  * Persistence formats (ROADMAP phase 4). Pure: this module parses and serializes strings; reading
  * and writing `localStorage` is the web app's job. Any schema change = bump the version, add a
  * migration here and a test.
  */
-export const GAME_STORAGE_VERSION = 1;
+export const GAME_STORAGE_VERSION = 2;
 export const SETTINGS_STORAGE_VERSION = 1;
 export const HISTORY_STORAGE_VERSION = 2;
 
@@ -18,18 +20,44 @@ export const SETTINGS_KEY = `${STORAGE_PREFIX}settings`;
 export const HISTORY_KEY = `${STORAGE_PREFIX}history`;
 export const DEVICE_ID_KEY = `${STORAGE_PREFIX}deviceId`;
 
-const storedGameSchema = z.object({
-  version: z.literal(GAME_STORAGE_VERSION),
+const gameBase = {
   gridId: z.number().int(),
   cells: z.array(z.number().int().nullable()).length(CELLS),
   errors: z.number().int().min(0).max(MAX_ERRORS),
   status: z.enum(['playing', 'won', 'lost', 'abandoned']),
-});
-export type StoredGame = z.infer<typeof storedGameSchema>;
+};
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
 
-export function serializeGame(state: GameState): string {
-  const stored: StoredGame = { version: GAME_STORAGE_VERSION, ...state };
-  return JSON.stringify(stored);
+/** Version 1 (phases 4-6): the game only. */
+const storedGameV1 = z.object({ version: z.literal(1), ...gameBase });
+/** Version 2 (phase 7): plus the day the game ended and its frozen score. */
+const storedGameV2 = z.object({
+  version: z.literal(2),
+  ...gameBase,
+  finishedOn: isoDate.nullable(),
+  score: z.number().int().min(0).max(MAX_SCORE).nullable(),
+});
+
+/** A game as saved: its state, and how it ended. */
+export interface SavedGame {
+  state: GameState;
+  /**
+   * The Paris date on which the game ended, `null` while it is in progress. A game that ends on its
+   * own grid date is a daily game; one that ends later (or is a past grid played from the archives)
+   * counts as an archive and never reaches the stats or the streak.
+   */
+  finishedOn: GridDate | null;
+  /** Score frozen when the game ended, `null` while it is in progress. */
+  score: number | null;
+}
+
+export function serializeGame(saved: SavedGame): string {
+  return JSON.stringify({
+    version: GAME_STORAGE_VERSION,
+    ...saved.state,
+    finishedOn: saved.finishedOn,
+    score: saved.score,
+  });
 }
 
 function parseJson(raw: string | null): unknown {
@@ -44,17 +72,30 @@ function parseJson(raw: string | null): unknown {
 /**
  * A saved game, or `null` when there is none or it cannot be trusted (corrupt, unknown version,
  * another grid, a placed Pokémon that does not fit its cell, inconsistent status). A bad save is
- * dropped rather than repaired: the player simply restarts today's grid.
+ * dropped rather than repaired: the player simply restarts the grid.
+ *
+ * Migration: a version 1 game that had ended was a daily game (the only mode that existed), so it
+ * ends "on its grid date", and its score is computed now.
  */
 export function parseStoredGame(
   raw: string | null,
   grid: Grid,
   memberships: Memberships,
-): GameState | null {
-  const parsed = storedGameSchema.safeParse(parseJson(raw));
-  if (!parsed.success) return null;
-  const { gridId, cells, errors, status } = parsed.data;
-  const state: GameState = { gridId, cells, errors, status };
+  popularity: Popularity,
+): SavedGame | null {
+  const json = parseJson(raw);
+  const v2 = storedGameV2.safeParse(json);
+  const v1 = v2.success ? null : storedGameV1.safeParse(json);
+  if (!v2.success && !v1?.success) return null;
+
+  const base = v2.success ? v2.data : v1?.success ? v1.data : null;
+  if (base === null) return null;
+  const state: GameState = {
+    gridId: base.gridId,
+    cells: base.cells,
+    errors: base.errors,
+    status: base.status,
+  };
   if (state.gridId !== grid.id) return null;
 
   const placed = state.cells.filter((id): id is number => id !== null);
@@ -70,7 +111,49 @@ export function parseStoredGame(
   if ((state.status === 'won') !== full) return null;
   if (state.status === 'lost' && state.errors < MAX_ERRORS) return null;
   if (state.status === 'playing' && state.errors >= MAX_ERRORS) return null;
-  return state;
+
+  const over = state.status !== 'playing';
+  if (v2.success) {
+    const { finishedOn, score } = v2.data;
+    // In progress: no end date, no score. Over: both.
+    if (over !== (finishedOn !== null) || over !== (score !== null)) return null;
+    return { state, finishedOn, score };
+  }
+  return {
+    state,
+    finishedOn: over ? grid.date : null,
+    score: over ? scoreGame(state, grid, memberships, popularity).total : null,
+  };
+}
+
+/** What the list of archives needs to know about a saved game, without loading its grid. */
+export interface GameSummary {
+  status: GameState['status'];
+  found: number;
+  finishedOn: GridDate | null;
+  score: number | null;
+}
+
+/**
+ * A light read of a saved game (no grid, so no check against its cells). `gridDate` is the date of
+ * the grid it belongs to: a version 1 game that had ended was a daily one, ended on that date.
+ */
+export function readGameSummary(raw: string | null, gridDate: GridDate): GameSummary | null {
+  const json = parseJson(raw);
+  const v2 = storedGameV2.safeParse(json);
+  if (v2.success) {
+    const { status, cells, finishedOn, score } = v2.data;
+    return { status, found: cells.filter((id) => id !== null).length, finishedOn, score };
+  }
+  const v1 = storedGameV1.safeParse(json);
+  if (!v1.success) return null;
+  const over = v1.data.status !== 'playing';
+  return {
+    status: v1.data.status,
+    found: v1.data.cells.filter((id) => id !== null).length,
+    finishedOn: over ? gridDate : null,
+    score: null,
+  };
 }
 
 const settingsSchema = z.object({

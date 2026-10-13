@@ -1,3 +1,4 @@
+export * from './archives';
 export * from './categories';
 export * from './config';
 export * from './date';
@@ -7,6 +8,7 @@ export * from './grid';
 export * from './matching';
 export * from './memberships';
 export * from './pokedex';
+export * from './routes';
 export * from './scoring';
 export * from './search';
 export * from './share';

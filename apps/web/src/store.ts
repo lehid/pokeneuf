@@ -15,7 +15,10 @@ import {
   serializeHistory,
   serializeSettings,
   SETTINGS_KEY,
+  endedOnItsDay,
+  gridDateFor,
   type GameState,
+  type GridDate,
   type HistoryEntry,
   type Popularity,
   type Grid,
@@ -32,6 +35,12 @@ export interface GameStore {
   grid: Grid;
   game: GameState;
   settings: Settings;
+  /**
+   * The Paris date on which the game ended, `null` while it is in progress. A game that ends on
+   * its own grid date is a daily game; any other (a past grid, or a game that ran past midnight)
+   * is an archive: it never reaches the history, so never the stats or the streak.
+   */
+  finishedOn: GridDate | null;
   /** Finished daily games, for the stats and the streak. */
   history: HistoryEntry[];
   /** A short message shown for a moment ("copied"…). */
@@ -64,6 +73,8 @@ export interface GameStoreDeps {
   memberships: Memberships;
   popularity: Popularity;
   storage: KeyValueStorage;
+  /** The clock, injectable for tests. Default: the system clock. */
+  now?: () => Date;
 }
 
 function ensureDeviceId(storage: KeyValueStorage): void {
@@ -75,26 +86,37 @@ export function createGameStore({
   memberships,
   popularity,
   storage,
+  now = () => new Date(),
 }: GameStoreDeps): StoreApi<GameStore> {
   ensureDeviceId(storage);
   const settings = parseSettings(storage.get(SETTINGS_KEY));
-  const saved = parseStoredGame(storage.get(gameKey(grid.id)), grid, memberships);
-  const game = saved ?? newGame(grid);
+  const saved = parseStoredGame(storage.get(gameKey(grid.id)), grid, memberships, popularity);
+  const game = saved?.state ?? newGame(grid);
+  let finishedOn: GridDate | null = saved?.finishedOn ?? null;
   const fresh = foundCount(game) === 0 && game.errors === 0;
 
   let history = parseHistory(storage.get(HISTORY_KEY));
 
-  /** Saves the game; at its end, freezes the score into the history. */
+  /**
+   * Saves the game. At its end, the score is frozen with the day it ended on; and only a game that
+   * ends on its own day (a daily game) joins the history.
+   */
   const save = (state: GameState): void => {
-    storage.set(gameKey(grid.id), serializeGame(state));
-    if (state.status === 'playing') return;
+    if (state.status === 'playing') {
+      storage.set(gameKey(grid.id), serializeGame({ state, finishedOn: null, score: null }));
+      return;
+    }
+    finishedOn = gridDateFor(now());
+    const score = scoreGame(state, grid, memberships, popularity).total;
+    storage.set(gameKey(grid.id), serializeGame({ state, finishedOn, score }));
+    if (!endedOnItsDay(finishedOn, grid.date)) return;
     const entry: HistoryEntry = {
       gridId: grid.id,
       date: grid.date,
       status: state.status,
       found: foundCount(state),
       errors: state.errors,
-      score: scoreGame(state, grid, memberships, popularity).total,
+      score,
     };
     storage.set(HISTORY_KEY, serializeHistory(history, entry));
     history = parseHistory(storage.get(HISTORY_KEY));
@@ -105,6 +127,7 @@ export function createGameStore({
     grid,
     game,
     settings,
+    finishedOn,
     history,
     toast: null,
     selectedCell: null,
@@ -129,6 +152,7 @@ export function createGameStore({
         game: state,
         selectedCell: null,
         history,
+        finishedOn,
         lastGuess: { cell: selectedCell, pokemonId, result, seq: ++seq },
         dialog: isOver(state) ? 'end' : get().dialog,
       });
@@ -140,7 +164,7 @@ export function createGameStore({
     confirmAbandon() {
       const state = abandon(get().game);
       save(state);
-      set({ game: state, history, selectedCell: null, dialog: 'end' });
+      set({ game: state, history, finishedOn, selectedCell: null, dialog: 'end' });
     },
 
     openRules: () => set({ dialog: 'rules' }),
