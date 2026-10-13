@@ -12,6 +12,7 @@ import {
 } from '@pokeneuf/core';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Board } from './components/Board';
+import { DifficultyBadge } from './components/DifficultyBadge';
 import {
   AbandonDialog,
   EndDialog,
@@ -104,6 +105,7 @@ function Game({ demo }: { demo: boolean }) {
           <p className="mt-1 text-xs text-lcd-soft">
             {fr.gridTitle(grid.id)} · {demo ? fr.demoGrid : fr.gridDate(grid.date)}
           </p>
+          <DifficultyBadge />
         </div>
         <div className="flex items-center gap-3">
           <div className="text-right" data-testid="header-score" data-score={score.total}>

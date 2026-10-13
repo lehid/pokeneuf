@@ -3,25 +3,25 @@
   "id": 1,
   "date": "2026-11-01",
   "rows": [
-    "gen-3",
-    "evo-base",
-    "form-gmax"
+    "evo-middle",
+    "status-fossil",
+    "stat-total-300"
   ],
   "cols": [
-    "size-height-2m",
-    "type-water",
-    "status-starter"
+    "gen-3",
+    "color-blue",
+    "gen-4"
   ],
   "cellSizes": [
-    13,
-    28,
-    9,
-    3,
-    34,
-    12,
-    3,
-    3,
-    3
+    17,
+    15,
+    6,
+    4,
+    4,
+    4,
+    33,
+    18,
+    15
   ],
-  "difficulty": 71
+  "difficulty": 64
 }

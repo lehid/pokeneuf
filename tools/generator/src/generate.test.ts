@@ -3,19 +3,22 @@ import {
   checkGrid,
   daysBetween,
   findSolution,
+  gridDifficulty,
   gridNumber,
   GRID_RULES,
   LAUNCH_DATE,
   type Grid,
   type Memberships,
+  type Popularity,
 } from '@pokeneuf/core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { loadConfig, type GeneratorConfig } from './config';
 import { createGenerator, dateRange, GenerationError, seedFromDate, weekdayOf } from './generate';
 import { cooldownFindings } from './report';
-import { realMemberships } from './test-world';
+import { realWorld } from './test-world';
 
 let memberships: Memberships;
+let popularity: Popularity;
 let config: GeneratorConfig;
 let generate: ReturnType<typeof createGenerator>;
 
@@ -24,9 +27,9 @@ let grids: Grid[];
 let cooldowns: number[];
 
 beforeAll(async () => {
-  memberships = await realMemberships();
+  ({ memberships, popularity } = await realWorld());
   config = await loadConfig();
-  generate = createGenerator({ memberships, config });
+  generate = createGenerator({ memberships, popularity, config });
   grids = [];
   cooldowns = [];
   for (const date of dateRange(LAUNCH_DATE, DAYS)) {
@@ -81,19 +84,33 @@ describe(`${DAYS} consecutive grids on the real data`, () => {
     expect(Math.min(...cooldowns)).toBeGreaterThanOrEqual(config.cooldown.minCategoryDays);
   });
 
-  it('follow the difficulty target of their weekday', () => {
+  it('follow the difficulty levels accepted on their weekday', () => {
     for (const g of grids) {
-      const target = config.weekdayDifficulty[weekdayOf(g.date)];
-      if (!target) continue;
-      expect(g.difficulty, `${g.date} (${weekdayOf(g.date)})`).toBeGreaterThanOrEqual(target[0]);
-      expect(g.difficulty, `${g.date} (${weekdayOf(g.date)})`).toBeLessThanOrEqual(target[1]);
+      const accepted = config.weekdayLevels[weekdayOf(g.date)];
+      if (!accepted) continue;
+      const { level } = gridDifficulty(g, memberships, popularity);
+      expect(accepted, `${g.date} (${weekdayOf(g.date)}) is ${level}`).toContain(level);
     }
+  });
+
+  it('have at most one very hard grid per week, always on a Sunday', () => {
+    const veryHard = grids.filter(
+      (g) => gridDifficulty(g, memberships, popularity).level === 'veryHard',
+    );
+    expect(veryHard.length).toBeGreaterThan(DAYS / 7 - 5);
+    for (const g of veryHard) expect(weekdayOf(g.date)).toBe('sun');
+  });
+
+  it('get harder from Monday to Sunday on average', () => {
     const average = (day: string) => {
-      const values = grids.filter((g) => weekdayOf(g.date) === day).map((g) => g.difficulty);
-      return values.reduce((s, v) => s + v, 0) / values.length;
+      const scores = grids
+        .filter((g) => weekdayOf(g.date) === day)
+        .map((g) => gridDifficulty(g, memberships, popularity).score);
+      return scores.reduce((s, v) => s + v, 0) / scores.length;
     };
-    expect(average('mon')).toBeLessThan(average('fri'));
-    expect(average('tue')).toBeLessThan(average('sat'));
+    expect(average('mon')).toBeLessThan(average('wed'));
+    expect(average('wed')).toBeLessThan(average('fri'));
+    expect(average('fri')).toBeLessThan(average('sun'));
   });
 
   it('use every category, and the rare "bonus" ones less than the others', () => {
@@ -108,9 +125,13 @@ describe(`${DAYS} consecutive grids on the real data`, () => {
     );
   });
 
-  it('are all different from each other', () => {
-    const keys = grids.map((g) => JSON.stringify([[...g.rows].sort(), [...g.cols].sort()]));
+  it('are all different from each other, even turned sideways', () => {
+    const key = (rows: readonly string[], cols: readonly string[]) =>
+      JSON.stringify([[...rows].sort(), [...cols].sort()]);
+    const keys = grids.map((g) => key(g.rows, g.cols));
     expect(new Set(keys).size).toBe(DAYS);
+    const sideways = new Set(grids.map((g) => key(g.cols, g.rows)));
+    expect(keys.filter((k) => sideways.has(k))).toEqual([]);
   });
 });
 
@@ -131,7 +152,7 @@ describe('determinism', () => {
   });
 
   it('is rebuilt identically by a fresh generator', () => {
-    const again = createGenerator({ memberships, config });
+    const again = createGenerator({ memberships, popularity, config });
     const history: Grid[] = [];
     for (const date of dateRange(LAUNCH_DATE, 30)) history.push(again({ date, history }).grid);
     expect(history).toEqual(grids.slice(0, 30));
@@ -192,6 +213,7 @@ describe('when no grid is possible', () => {
   it('fails loudly with the reasons, instead of publishing something invalid', () => {
     const strict = createGenerator({
       memberships,
+      popularity,
       config: {
         ...config,
         // A month of cooldown with only a few days of history to stay clear of: impossible.
@@ -217,7 +239,9 @@ describe('when no grid is possible', () => {
   it('reports an unreachable difficulty target as such', () => {
     const impossible = createGenerator({
       memberships,
-      config: { ...config, attemptsPerStage: 20, weekdayDifficulty: { mon: [0, 1] } },
+      // Every Pokémon equally famous: every grid is easy to think of, so none can be very hard.
+      popularity: () => 1,
+      config: { ...config, attemptsPerStage: 20, weekdayLevels: { mon: ['veryHard'] } },
     });
     const monday = dateRange(LAUNCH_DATE, 7).find((d) => weekdayOf(d) === 'mon') as string;
     try {

@@ -3,25 +3,25 @@
   "id": 2,
   "date": "2026-11-02",
   "rows": [
-    "gen-1",
-    "type-fighting",
-    "evo-none"
+    "type-flying",
+    "gen-2",
+    "form-mega"
   ],
   "cols": [
-    "color-brown",
-    "stat-attack-100",
-    "color-blue"
+    "shape-upright",
+    "evo-stage-3",
+    "type-water"
   ],
   "cellSizes": [
-    35,
-    29,
-    25,
-    8,
-    13,
-    7,
+    5,
     10,
-    29,
-    10
+    5,
+    24,
+    12,
+    18,
+    21,
+    25,
+    7
   ],
-  "difficulty": 50
+  "difficulty": 58
 }

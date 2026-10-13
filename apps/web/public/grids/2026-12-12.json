@@ -3,25 +3,25 @@
   "id": 42,
   "date": "2026-12-12",
   "rows": [
-    "size-height-50cm",
-    "evo-trade",
-    "evo-baby"
+    "color-green",
+    "type-poison",
+    "type-fighting"
   ],
   "cols": [
-    "shape-upright",
-    "color-blue",
-    "type-dual"
+    "stat-attack-100",
+    "evo-base",
+    "name-starts-c"
   ],
   "cellSizes": [
-    15,
-    21,
-    45,
+    12,
+    17,
+    9,
+    5,
+    19,
     4,
-    3,
-    6,
-    4,
-    4,
+    13,
+    7,
     6
   ],
-  "difficulty": 71
+  "difficulty": 67
 }

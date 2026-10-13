@@ -3,25 +3,25 @@
   "id": 29,
   "date": "2026-11-29",
   "rows": [
-    "type-poison",
-    "color-purple",
-    "form-mega"
+    "evo-final",
+    "evo-gen4",
+    "size-height-2m"
   ],
   "cols": [
-    "evo-gen4",
-    "evo-final",
-    "type-water"
+    "type-ice",
+    "shape-wings",
+    "name-short"
   ],
   "cellSizes": [
+    10,
+    14,
     5,
-    20,
+    5,
+    6,
     3,
-    9,
-    24,
+    3,
     7,
-    8,
-    43,
     7
   ],
-  "difficulty": 63
+  "difficulty": 79
 }

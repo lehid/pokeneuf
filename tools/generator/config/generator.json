@@ -19,14 +19,14 @@
   "bonusWeight": 0.3,
   "categoryWeights": {},
   "balanceWindowDays": 60,
-  "weekdayDifficulty": {
-    "mon": [40, 62],
-    "tue": [42, 66],
-    "wed": [46, 70],
-    "thu": [48, 74],
-    "fri": [52, 80],
-    "sat": [62, 90],
-    "sun": [62, 90]
+  "weekdayLevels": {
+    "mon": ["veryEasy", "easy"],
+    "tue": ["easy"],
+    "wed": ["easy", "medium"],
+    "thu": ["medium"],
+    "fri": ["medium", "hard"],
+    "sat": ["hard"],
+    "sun": ["veryHard"]
   },
   "attemptsPerStage": 400
 }

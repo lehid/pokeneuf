@@ -1,5 +1,5 @@
 import { parseArgs } from 'node:util';
-import { loadMemberships } from './cli-common';
+import { loadMemberships, loadPopularity } from './cli-common';
 import { loadConfig } from './config';
 import { GRIDS_DIR, MEMBERSHIPS_PATH, readGrids, readIndex } from './files';
 import { analyzeGrids } from './report';
@@ -11,13 +11,14 @@ const { values } = parseArgs({
   },
 });
 
-const [memberships, config, grids, index] = await Promise.all([
+const [memberships, popularity, config, grids, index] = await Promise.all([
   loadMemberships(values.memberships),
+  loadPopularity(),
   loadConfig(),
   readGrids(values.dir),
   readIndex(values.dir),
 ]);
 
-const { text, problems } = analyzeGrids(grids, memberships, config, index);
+const { text, problems } = analyzeGrids(grids, memberships, popularity, config, index);
 console.log(text);
 process.exitCode = problems.length === 0 ? 0 : 1;

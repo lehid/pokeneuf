@@ -3,25 +3,25 @@
   "id": 18,
   "date": "2026-11-18",
   "rows": [
-    "type-dragon",
-    "status-legendary",
-    "type-ice"
+    "gen-1",
+    "type-psychic",
+    "status-fossil"
   ],
   "cols": [
-    "evo-none",
-    "stat-total-500",
+    "shape-upright",
+    "type-water",
     "name-has-k"
   ],
   "cellSizes": [
-    6,
+    34,
+    32,
+    22,
     11,
-    5,
-    26,
-    26,
-    5,
     4,
-    8,
+    12,
+    4,
+    4,
     4
   ],
-  "difficulty": 70
+  "difficulty": 64
 }

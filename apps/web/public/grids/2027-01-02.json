@@ -3,25 +3,25 @@
   "id": 63,
   "date": "2027-01-02",
   "rows": [
-    "status-pseudo",
-    "form-gmax",
-    "status-starter"
+    "gen-4",
+    "color-yellow",
+    "type-ground"
   ],
   "cols": [
-    "shape-upright",
-    "stat-total-500",
-    "evo-stage-3"
+    "form-mega",
+    "size-height-50cm",
+    "name-starts-vowel"
   ],
   "cellSizes": [
-    3,
-    5,
-    5,
-    3,
-    7,
-    6,
-    21,
-    12,
-    12
+    9,
+    32,
+    11,
+    4,
+    11,
+    8,
+    4,
+    9,
+    5
   ],
-  "difficulty": 75
+  "difficulty": 69
 }

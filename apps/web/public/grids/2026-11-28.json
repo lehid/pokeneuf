@@ -3,25 +3,25 @@
   "id": 28,
   "date": "2026-11-28",
   "rows": [
-    "size-height-50cm",
-    "evo-middle",
-    "gen-2"
+    "type-fighting",
+    "stat-total-300",
+    "stat-total-500"
   ],
   "cols": [
-    "type-electric",
-    "type-grass",
-    "name-has-ou"
+    "color-red",
+    "name-has-ch",
+    "type-psychic"
   ],
   "cellSizes": [
-    10,
-    18,
-    18,
+    3,
     5,
-    10,
+    3,
     6,
-    8,
     10,
-    10
+    8,
+    11,
+    4,
+    21
   ],
-  "difficulty": 64
+  "difficulty": 77
 }

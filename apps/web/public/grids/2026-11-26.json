@@ -3,25 +3,25 @@
   "id": 26,
   "date": "2026-11-26",
   "rows": [
-    "gen-4",
-    "stat-total-300",
-    "stat-total-500"
+    "size-height-50cm",
+    "color-green",
+    "color-yellow"
   ],
   "cols": [
-    "color-red",
-    "type-ghost",
-    "name-long"
+    "shape-upright",
+    "evo-middle",
+    "type-flying"
   ],
   "cellSizes": [
-    5,
+    15,
+    4,
+    11,
     8,
-    16,
-    6,
-    3,
-    11,
-    11,
-    3,
-    16
+    10,
+    7,
+    10,
+    4,
+    8
   ],
-  "difficulty": 72
+  "difficulty": 71
 }

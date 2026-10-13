@@ -4,24 +4,24 @@
   "date": "2026-11-14",
   "rows": [
     "type-bug",
-    "type-psychic",
-    "shape-quadruped"
+    "stat-total-500",
+    "type-ground"
   ],
   "cols": [
-    "evo-final",
-    "evo-gen4",
-    "name-ends-a"
+    "color-yellow",
+    "color-green",
+    "name-starts-vowel"
   ],
   "cellSizes": [
-    19,
-    5,
-    4,
-    19,
-    4,
     8,
-    33,
-    12,
-    9
+    8,
+    9,
+    14,
+    15,
+    14,
+    3,
+    4,
+    5
   ],
-  "difficulty": 64
+  "difficulty": 71
 }

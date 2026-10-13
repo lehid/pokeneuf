@@ -3,25 +3,25 @@
   "id": 36,
   "date": "2026-12-06",
   "rows": [
-    "status-starter",
-    "type-electric",
-    "color-red"
+    "shape-wings",
+    "stat-total-300",
+    "name-has-y"
   ],
   "cols": [
-    "form-mega",
-    "evo-gen4",
-    "name-has-ou"
+    "type-ground",
+    "color-purple",
+    "type-water"
   ],
   "cellSizes": [
-    8,
-    6,
-    6,
     3,
+    6,
     4,
+    11,
+    7,
+    12,
     3,
-    6,
     3,
-    3
+    13
   ],
-  "difficulty": 89
+  "difficulty": 80
 }

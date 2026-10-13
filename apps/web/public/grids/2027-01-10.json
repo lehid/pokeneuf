@@ -3,25 +3,25 @@
   "id": 71,
   "date": "2027-01-10",
   "rows": [
-    "evo-stage-3",
-    "stat-speed-100",
-    "stat-total-500"
+    "name-has-ou",
+    "gen-3",
+    "stat-total-300"
   ],
   "cols": [
-    "name-double-letter",
-    "type-psychic",
-    "type-water"
+    "color-blue",
+    "type-poison",
+    "type-electric"
   ],
   "cellSizes": [
-    13,
+    7,
+    6,
+    3,
+    32,
+    5,
     4,
+    18,
     10,
-    5,
-    13,
-    5,
-    21,
-    21,
-    21
+    4
   ],
-  "difficulty": 62
+  "difficulty": 73
 }

@@ -3,25 +3,25 @@
   "id": 49,
   "date": "2026-12-19",
   "rows": [
-    "evo-friendship",
-    "type-poison",
-    "stat-total-500"
+    "shape-quadruped",
+    "evo-stone",
+    "size-height-50cm"
   ],
   "cols": [
-    "shape-upright",
-    "type-dual",
-    "name-has-ou"
+    "color-green",
+    "type-water",
+    "type-poison"
   ],
   "cellSizes": [
-    4,
-    4,
+    13,
+    7,
+    9,
     3,
-    3,
-    37,
-    6,
-    30,
-    64,
-    4
+    5,
+    5,
+    15,
+    20,
+    10
   ],
-  "difficulty": 68
+  "difficulty": 69
 }

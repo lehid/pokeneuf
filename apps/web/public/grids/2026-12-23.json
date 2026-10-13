@@ -3,25 +3,25 @@
   "id": 53,
   "date": "2026-12-23",
   "rows": [
-    "evo-stone",
-    "evo-final",
-    "stat-total-300"
+    "type-fighting",
+    "type-fire",
+    "size-height-2m"
   ],
   "cols": [
-    "gen-1",
-    "type-electric",
-    "type-water"
+    "gen-3",
+    "gen-4",
+    "name-long"
   ],
   "cellSizes": [
-    18,
+    7,
+    7,
     3,
+    6,
     5,
-    57,
-    9,
-    39,
-    24,
-    4,
-    12
+    5,
+    13,
+    13,
+    6
   ],
-  "difficulty": 57
+  "difficulty": 76
 }

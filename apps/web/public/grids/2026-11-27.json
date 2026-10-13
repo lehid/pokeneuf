@@ -3,25 +3,25 @@
   "id": 27,
   "date": "2026-11-27",
   "rows": [
-    "status-starter",
-    "status-legendary",
-    "evo-none"
+    "stat-attack-100",
+    "type-dual",
+    "type-rock"
   ],
   "cols": [
-    "shape-upright",
-    "type-dual",
-    "name-double-letter"
+    "evo-trade",
+    "status-fossil",
+    "name-long"
   ],
   "cellSizes": [
-    21,
-    12,
-    10,
-    6,
-    12,
     3,
-    16,
-    33,
-    6
+    5,
+    17,
+    6,
+    11,
+    30,
+    3,
+    13,
+    5
   ],
-  "difficulty": 61
+  "difficulty": 71
 }

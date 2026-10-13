@@ -3,25 +3,25 @@
   "id": 64,
   "date": "2027-01-03",
   "rows": [
-    "stat-speed-100",
-    "gen-4",
-    "size-height-50cm"
+    "evo-stone",
+    "stat-attack-100",
+    "evo-middle"
   ],
   "cols": [
-    "type-dark",
-    "type-electric",
-    "color-yellow"
+    "gen-3",
+    "type-psychic",
+    "color-blue"
   ],
   "cellSizes": [
+    7,
     3,
-    8,
-    12,
-    7,
-    7,
-    7,
-    4,
-    10,
-    11
+    3,
+    27,
+    9,
+    18,
+    17,
+    3,
+    15
   ],
-  "difficulty": 74
+  "difficulty": 69
 }

@@ -3,25 +3,25 @@
   "id": 32,
   "date": "2026-12-02",
   "rows": [
-    "color-yellow",
-    "type-bug",
-    "type-fighting"
+    "gen-1",
+    "evo-stone",
+    "gen-4"
   ],
   "cols": [
-    "stat-attack-100",
-    "gen-1",
-    "evo-base"
+    "type-normal",
+    "type-electric",
+    "name-has-ou"
   ],
   "cellSizes": [
-    5,
-    19,
-    13,
-    5,
-    12,
+    22,
+    9,
+    11,
+    3,
+    3,
+    4,
     17,
-    13,
-    8,
-    7
+    7,
+    14
   ],
-  "difficulty": 64
+  "difficulty": 70
 }

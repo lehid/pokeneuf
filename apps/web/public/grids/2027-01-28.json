@@ -3,25 +3,25 @@
   "id": 89,
   "date": "2027-01-28",
   "rows": [
-    "evo-middle",
-    "type-fighting",
-    "shape-quadruped"
+    "evo-base",
+    "stat-total-300",
+    "stat-speed-100"
   ],
   "cols": [
-    "status-starter",
-    "type-dual",
-    "name-double-letter"
+    "type-flying",
+    "shape-upright",
+    "type-ghost"
   ],
   "cellSizes": [
-    12,
-    29,
-    6,
-    4,
-    13,
-    4,
-    12,
-    25,
-    29
+    19,
+    26,
+    5,
+    10,
+    10,
+    3,
+    14,
+    18,
+    3
   ],
-  "difficulty": 59
+  "difficulty": 65
 }

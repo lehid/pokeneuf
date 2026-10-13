@@ -4,24 +4,24 @@
   "date": "2027-01-22",
   "rows": [
     "shape-wings",
-    "color-yellow",
-    "type-poison"
+    "evo-final",
+    "evo-middle"
   ],
   "cols": [
-    "stat-attack-100",
     "gen-1",
-    "name-long"
+    "type-ground",
+    "name-has-ou"
   ],
   "cellSizes": [
-    6,
     12,
-    8,
-    5,
-    19,
-    9,
-    5,
-    33,
-    12
+    3,
+    6,
+    57,
+    21,
+    10,
+    26,
+    7,
+    6
   ],
-  "difficulty": 63
+  "difficulty": 60
 }

@@ -3,25 +3,25 @@
   "id": 44,
   "date": "2026-12-14",
   "rows": [
-    "form-mega",
+    "status-legendary",
     "stat-total-300",
-    "type-mono"
+    "size-height-2m"
   ],
   "cols": [
-    "type-fairy",
-    "color-yellow",
-    "name-double-letter"
+    "type-dragon",
+    "type-mono",
+    "name-ends-a"
   ],
   "cellSizes": [
-    3,
-    4,
-    12,
-    9,
-    8,
-    17,
     6,
-    32,
-    44
+    14,
+    7,
+    3,
+    55,
+    7,
+    8,
+    22,
+    10
   ],
-  "difficulty": 62
+  "difficulty": 63
 }

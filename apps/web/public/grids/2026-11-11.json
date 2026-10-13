@@ -3,25 +3,25 @@
   "id": 11,
   "date": "2026-11-11",
   "rows": [
-    "type-dragon",
-    "form-mega",
-    "gen-4"
+    "evo-middle",
+    "stat-total-300",
+    "type-flying"
   ],
   "cols": [
-    "status-legendary",
-    "type-dual",
-    "name-has-y"
+    "type-normal",
+    "gen-1",
+    "shape-wings"
   ],
   "cellSizes": [
-    6,
-    15,
+    7,
+    26,
     3,
-    5,
-    39,
-    4,
-    9,
-    53,
-    8
+    19,
+    24,
+    8,
+    17,
+    19,
+    39
   ],
-  "difficulty": 64
+  "difficulty": 52
 }

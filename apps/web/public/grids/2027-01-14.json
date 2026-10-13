@@ -4,24 +4,24 @@
   "date": "2027-01-14",
   "rows": [
     "evo-base",
-    "stat-total-300",
-    "evo-gen4"
+    "gen-1",
+    "color-green"
   ],
   "cols": [
-    "type-fighting",
-    "shape-wings",
-    "type-poison"
+    "stat-speed-100",
+    "type-ground",
+    "name-short"
   ],
   "cellSizes": [
-    7,
+    3,
+    18,
+    20,
+    24,
+    14,
     13,
-    19,
     5,
-    8,
-    10,
-    5,
-    6,
-    5
+    4,
+    3
   ],
-  "difficulty": 71
+  "difficulty": 68
 }

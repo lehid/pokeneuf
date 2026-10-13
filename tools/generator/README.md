@@ -36,7 +36,8 @@ taille des cases et difficulté cohérentes avec les données.
 1. Lignes : 3 catégories tirées au poids (famille, rééquilibrage), hors cooldown.
 2. Colonnes : seules les catégories qui font 3 à 80 réponses avec **chacune** des 3 lignes, qui
    peuvent se croiser et dont la paire n'est pas en cooldown.
-3. Contrôles : variété de familles, cible de difficulté du jour, puis couplage parfait.
+3. Contrôles : variété de familles, niveau de difficulté accepté ce jour-là, grille jamais publiée
+   (même retournée), puis couplage parfait.
 4. Tant que ça échoue, nouveau tirage (400 par palier). Aucune grille invalide n'est jamais publiée :
    si rien ne marche, `GenerationError` liste les causes de rejet.
 
@@ -48,7 +49,7 @@ taille des cases et difficulté cohérentes avec les données.
 | `cooldown.minCategoryDays` | plancher du repli, voir plus bas |
 | `familyWeights`, `bonusWeight`, `categoryWeights` | fréquence relative des familles et des catégories (la part d'une famille est partagée entre ses catégories) |
 | `balanceWindowDays` | rééquilibrage de l'usage sur cette fenêtre (0 = off) |
-| `weekdayDifficulty` | plage de difficulté acceptée par jour (`mon`…`sun`), optionnelle |
+| `weekdayLevels` | niveaux de difficulté acceptés par jour (`mon`…`sun`), optionnels |
 | `attemptsPerStage` | tirages par palier de cooldown |
 
 **Pourquoi un cooldown « mou ».** 6 catégories par jour × 7 jours = 42 des 58 catégories : le
@@ -61,11 +62,20 @@ cooldown de 7 jours de la roadmap est à la limite du faisable. Deux parades :
 
 ## Difficulté
 
-Chaque case vaut 1 à 3 réponses et 0 à 80 (échelle log), la grille la moyenne, sur 0–100
-(`difficultyOf`). Cibles par défaut : lundi 40–62 … vendredi 52–80, week-end 62–90.
+Deux mesures, à ne pas confondre :
+- `difficulty` (dans le fichier de grille, 0–100) : la taille des cases seulement (`difficultyOf`, échelle log).
+- **Le niveau montré au joueur** (`gridDifficulty` dans `core`) : très facile / facile /
+  intermédiaire / difficile / très difficile, d'après la taille des cases (40 %), l'évidence de la
+  meilleure réponse de chaque case (30 %) et la part de notoriété que la case contient (30 %).
+  Formule et seuils fixes (`DIFFICULTY`), recalculés par le client.
+
+Calendrier par défaut (`weekdayLevels`) : lundi très facile ou facile, mardi facile, mercredi
+facile ou intermédiaire, jeudi intermédiaire, vendredi intermédiaire ou difficile, samedi difficile,
+dimanche très difficile : **une seule grille très difficile par semaine**. `grids:report` signale
+tout écart au calendrier et toute semaine avec plus d'une grille très difficile.
 
 ## Revue humaine
 
-`pnpm grids:report` : difficulté par jour de semaine, taille des cases, usage des catégories et des
+`pnpm grids:report` : niveau par jour de semaine, taille des cases, usage des catégories et des
 familles, cooldowns, jours manquants, cohérence de `index.json`. Il rejoue `checkGrid` sur chaque
 fichier : il sert aussi de garde-fou quand les catégories ou les données changent.

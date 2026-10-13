@@ -3,25 +3,25 @@
   "id": 12,
   "date": "2026-11-12",
   "rows": [
-    "evo-stage-3",
-    "stat-total-300",
-    "gen-2"
+    "type-steel",
+    "color-purple",
+    "size-height-50cm"
   ],
   "cols": [
-    "type-fighting",
-    "color-green",
-    "type-poison"
+    "evo-final",
+    "type-dual",
+    "evo-gen4"
   ],
   "cellSizes": [
-    5,
-    12,
-    10,
-    5,
-    10,
-    10,
-    3,
-    12,
-    4
+    11,
+    24,
+    6,
+    24,
+    27,
+    9,
+    4,
+    45,
+    3
   ],
-  "difficulty": 74
+  "difficulty": 58
 }

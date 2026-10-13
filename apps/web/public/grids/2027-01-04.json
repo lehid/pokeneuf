@@ -3,25 +3,25 @@
   "id": 65,
   "date": "2027-01-04",
   "rows": [
-    "evo-base",
-    "shape-wings",
-    "evo-gen4"
+    "type-bug",
+    "shape-upright",
+    "stat-total-500"
   ],
   "cols": [
-    "type-ground",
-    "type-dual",
-    "name-has-x"
+    "type-flying",
+    "evo-stage-3",
+    "color-green"
   ],
   "cellSizes": [
-    18,
-    68,
-    10,
-    3,
-    42,
-    3,
+    12,
+    4,
     8,
-    36,
-    6
+    5,
+    24,
+    8,
+    17,
+    44,
+    15
   ],
-  "difficulty": 56
+  "difficulty": 59
 }

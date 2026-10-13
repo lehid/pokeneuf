@@ -1,11 +1,16 @@
 import {
+  addDays,
   CATEGORIES,
   CATEGORY_FAMILIES,
   checkGrid,
   daysBetween,
+  DIFFICULTY_LEVELS,
+  gridDifficulty,
   type Category,
+  type DifficultyLevel,
   type Grid,
   type Memberships,
+  type Popularity,
 } from '@pokeneuf/core';
 import { WEEKDAYS, type GeneratorConfig } from './config';
 import { weekdayOf } from './generate';
@@ -76,6 +81,7 @@ export interface GridReport {
 export function analyzeGrids(
   grids: readonly Grid[],
   memberships: Memberships,
+  popularity: Popularity,
   config: GeneratorConfig,
   index: GridIndex | null,
   categories: readonly Category[] = CATEGORIES,
@@ -115,28 +121,49 @@ export function analyzeGrids(
   );
 
   if (sorted.length > 0) {
-    const difficulty = sorted.map((g) => g.difficulty);
+    const sizeDifficulty = sorted.map((g) => g.difficulty);
     lines.push(
       '',
-      `Difficulty (0 easy - 100 hard): min ${Math.min(...difficulty)}, average ${average(difficulty).toFixed(0)}, max ${Math.max(...difficulty)}`,
-      'By weekday:',
+      `Size difficulty (0 easy - 100 hard, number of answers only): min ${Math.min(...sizeDifficulty)}, average ${average(sizeDifficulty).toFixed(0)}, max ${Math.max(...sizeDifficulty)}`,
     );
+
+    // The level players see: size, obscurity and mass of the answers (see `gridDifficulty`).
+    const levels = new Map(
+      sorted.map((g) => [g.date, gridDifficulty(g, memberships, popularity).level]),
+    );
+    lines.push('', `Level by weekday (${DIFFICULTY_LEVELS.join(' / ')}):`);
     for (const day of [...WEEKDAYS.slice(1), WEEKDAYS[0]]) {
-      const values = sorted.filter((g) => weekdayOf(g.date) === day).map((g) => g.difficulty);
-      const target = config.weekdayDifficulty[day];
-      const outside = target ? values.filter((v) => v < target[0] || v > target[1]).length : 0;
+      const ofDay = sorted.filter((g) => weekdayOf(g.date) === day);
+      const counts = DIFFICULTY_LEVELS.map(
+        (level) => ofDay.filter((g) => levels.get(g.date) === level).length,
+      );
+      const accepted = config.weekdayLevels[day];
+      const outside = accepted
+        ? ofDay.filter((g) => !accepted.includes(levels.get(g.date) as DifficultyLevel)).length
+        : 0;
       if (outside > 0)
         problems.push(
-          `${outside} ${day} grid(s) outside the difficulty target ${target?.join('-')}`,
+          `${outside} ${day} grid(s) outside the accepted levels ${accepted?.join(', ')}`,
         );
       lines.push(
-        `  ${day}: ${values.length} grids, ` +
-          (values.length === 0
-            ? '-'
-            : `average ${average(values).toFixed(0)}, ${Math.min(...values)}-${Math.max(...values)}`) +
-          (target ? `  (target ${target[0]}-${target[1]})` : ''),
+        `  ${day}: ${ofDay.length} grids, ${counts.join(' / ')}` +
+          (accepted ? `  (accepted: ${accepted.join(', ')})` : ''),
       );
     }
+
+    // At most one very hard grid per calendar week (Monday to Sunday).
+    const veryHardPerWeek = new Map<string, number>();
+    for (const g of sorted) {
+      if (levels.get(g.date) !== 'veryHard') continue;
+      const monday = addDays(g.date, -((WEEKDAYS.indexOf(weekdayOf(g.date)) + 6) % 7));
+      veryHardPerWeek.set(monday, (veryHardPerWeek.get(monday) ?? 0) + 1);
+    }
+    for (const [monday, n] of veryHardPerWeek) {
+      if (n > 1) problems.push(`${n} very hard grids in the week of ${monday}`);
+    }
+    lines.push(
+      `Very hard grids: ${[...veryHardPerWeek.values()].reduce((a, b) => a + b, 0)}, at most one per week`,
+    );
 
     const sizes = sorted.flatMap((g) => g.cellSizes);
     lines.push(

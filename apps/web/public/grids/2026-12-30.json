@@ -3,25 +3,25 @@
   "id": 60,
   "date": "2026-12-30",
   "rows": [
-    "evo-final",
-    "gen-3",
-    "type-fighting"
+    "size-height-2m",
+    "stat-speed-100",
+    "type-dual"
   ],
   "cols": [
-    "form-mega",
-    "name-has-k",
-    "color-blue"
+    "type-poison",
+    "shape-wings",
+    "name-has-ou"
   ],
   "cellSizes": [
-    43,
-    29,
+    4,
+    7,
+    3,
+    3,
+    10,
+    3,
     37,
-    21,
-    25,
-    32,
-    5,
-    5,
-    7
+    42,
+    17
   ],
-  "difficulty": 47
+  "difficulty": 69
 }

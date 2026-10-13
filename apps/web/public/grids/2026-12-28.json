@@ -3,25 +3,25 @@
   "id": 58,
   "date": "2026-12-28",
   "rows": [
-    "gen-2",
-    "shape-quadruped",
-    "type-fire"
+    "status-starter",
+    "status-pseudo",
+    "type-mono"
   ],
   "cols": [
-    "evo-base",
-    "type-dual",
-    "name-has-ou"
+    "shape-upright",
+    "stat-total-500",
+    "name-double-letter"
   ],
   "cellSizes": [
-    36,
-    49,
-    10,
-    34,
-    25,
+    21,
     12,
-    11,
-    13,
-    3
+    10,
+    3,
+    5,
+    3,
+    70,
+    58,
+    44
   ],
-  "difficulty": 49
+  "difficulty": 53
 }

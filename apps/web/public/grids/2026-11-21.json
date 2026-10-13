@@ -3,25 +3,25 @@
   "id": 21,
   "date": "2026-11-21",
   "rows": [
-    "color-purple",
-    "evo-middle",
-    "size-height-50cm"
+    "evo-none",
+    "evo-stage-3",
+    "type-steel"
   ],
   "cols": [
-    "type-poison",
-    "shape-quadruped",
-    "type-bug"
+    "stat-total-500",
+    "type-electric",
+    "name-has-ch"
   ],
   "cellSizes": [
-    22,
-    7,
+    39,
     6,
-    9,
-    11,
     4,
-    10,
-    23,
-    11
+    44,
+    5,
+    4,
+    13,
+    3,
+    3
   ],
-  "difficulty": 64
+  "difficulty": 71
 }

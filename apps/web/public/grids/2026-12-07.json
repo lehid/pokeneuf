@@ -3,25 +3,25 @@
   "id": 37,
   "date": "2026-12-07",
   "rows": [
-    "type-grass",
-    "shape-wings",
-    "type-mono"
+    "size-height-2m",
+    "type-steel",
+    "evo-none"
   ],
   "cols": [
-    "evo-none",
-    "name-has-y",
-    "color-green"
+    "status-legendary",
+    "name-starts-vowel",
+    "type-psychic"
   ],
   "cellSizes": [
-    4,
-    4,
-    33,
-    12,
+    14,
+    6,
+    5,
     3,
     3,
-    44,
-    36,
-    20
+    6,
+    26,
+    8,
+    16
   ],
-  "difficulty": 61
+  "difficulty": 72
 }

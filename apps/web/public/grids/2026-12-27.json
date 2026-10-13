@@ -3,25 +3,25 @@
   "id": 57,
   "date": "2026-12-27",
   "rows": [
-    "stat-speed-100",
-    "size-height-50cm",
-    "type-psychic"
+    "type-dragon",
+    "type-water",
+    "evo-middle"
   ],
   "cols": [
-    "shape-wings",
-    "status-mythical",
-    "name-has-ch"
+    "stat-attack-100",
+    "color-green",
+    "name-ends-a"
   ],
   "cellSizes": [
+    8,
+    3,
+    5,
+    14,
+    4,
+    8,
+    3,
     10,
-    8,
-    4,
-    8,
-    5,
-    12,
-    5,
-    4,
-    4
+    5
   ],
-  "difficulty": 78
+  "difficulty": 80
 }

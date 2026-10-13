@@ -3,25 +3,25 @@
   "id": 69,
   "date": "2027-01-08",
   "rows": [
-    "gen-1",
-    "evo-none",
-    "stat-attack-100"
+    "gen-2",
+    "shape-wings",
+    "status-starter"
   ],
   "cols": [
-    "type-flying",
-    "type-normal",
-    "color-red"
+    "type-water",
+    "color-brown",
+    "name-starts-c"
   ],
   "cellSizes": [
-    19,
-    22,
-    16,
+    18,
     12,
-    16,
-    7,
+    13,
+    4,
     11,
-    10,
-    11
+    6,
+    12,
+    3,
+    4
   ],
-  "difficulty": 55
+  "difficulty": 71
 }
