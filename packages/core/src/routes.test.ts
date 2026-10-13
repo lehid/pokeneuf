@@ -11,6 +11,15 @@ describe('parseRoute', () => {
     expect(parseRoute('#/archive/2026-11-05')).toEqual({ kind: 'archive', date: '2026-11-05' });
   });
 
+  it('knows the info pages', () => {
+    expect(parseRoute('#/faq')).toEqual({ kind: 'faq' });
+    expect(parseRoute('#/changelog')).toEqual({ kind: 'changelog' });
+    expect(parseRoute('#/legal')).toEqual({ kind: 'legal' });
+    expect(parseRoute('#/faq?x=1')).toEqual({ kind: 'faq' });
+    expect(parseRoute('#/faqs')).toEqual({ kind: 'today' });
+    expect(parseRoute('#/faq/extra')).toEqual({ kind: 'today' });
+  });
+
   it('takes a bad page for the first one, and anything unknown for the page of the day', () => {
     for (const hash of [
       '#/archives?page=0',
@@ -39,6 +48,9 @@ describe('routeHash', () => {
       { kind: 'archives', page: 1 },
       { kind: 'archives', page: 4 },
       { kind: 'archive', date: '2027-01-02' },
+      { kind: 'faq' },
+      { kind: 'changelog' },
+      { kind: 'legal' },
     ];
     for (const route of routes) expect(parseRoute(routeHash(route))).toEqual(route);
     expect(routeHash({ kind: 'archives', page: 1 })).toBe('#/archives');

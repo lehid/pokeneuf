@@ -28,8 +28,10 @@ import { RarityChip } from './components/RarityChip';
 import { useScore, useStats } from './hooks';
 import { GuessSheet } from './components/GuessSheet';
 import { ArchivesPage } from './components/ArchivesPage';
+import { ChangelogPage, FaqPage, LegalPage } from './components/InfoPages';
 import { Modal } from './components/Modal';
 import { Notice, Shell } from './components/Shell';
+import { SiteFooter } from './components/SiteFooter';
 import { demoGrid, memberships, pokemonById, popularity } from './data';
 import { loadGrid, type GridLoad } from './gridLoader';
 import { GameStoreContext, useGame } from './GameContext';
@@ -185,7 +187,7 @@ function Game({ kind }: { kind: GameKind }) {
         )}
       </div>
 
-      <footer className="mt-auto pt-4 text-center text-xs text-lcd-soft">{fr.disclaimer}</footer>
+      <SiteFooter />
 
       <GuessSheet />
       {dialog === 'rules' && <RulesDialog />}
@@ -465,6 +467,9 @@ export function App({
 }: AppProps) {
   const demoStore = useMemo(() => demoStorage(storage), [storage]);
   const route = useRoute();
+  if (route.kind === 'faq') return <FaqPage />;
+  if (route.kind === 'changelog') return <ChangelogPage />;
+  if (route.kind === 'legal') return <LegalPage />;
   if (demo) return <GameSession grid={demoGrid} storage={demoStore} now={now} kind="demo" />;
   if (route.kind === 'archives') {
     return (

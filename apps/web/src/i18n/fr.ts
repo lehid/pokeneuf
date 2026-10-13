@@ -163,4 +163,152 @@ export const fr = {
   solutionsTitle: 'Bonnes réponses',
   solutionsSorted: 'Du plus connu au plus rare.',
   solutionsCount: (n: number) => `${n} réponse${n > 1 ? 's' : ''} possible${n > 1 ? 's' : ''}`,
+  footer: {
+    nav: 'Informations',
+    faq: 'FAQ',
+    changelog: 'Nouveautés',
+    legal: 'Mentions légales',
+    archives: 'Archives',
+    source: 'Code source',
+  },
+  backToGame: '← Retour au jeu',
+  homeLink: 'Retour à la grille du jour',
+
+  familyLabels: {
+    type: 'Types',
+    generation: 'Générations',
+    evolution: 'Évolution',
+    status: 'Statut',
+    form: 'Formes',
+    stats: 'Statistiques de base',
+    color: 'Couleur du Pokédex',
+    shape: 'Silhouette',
+    size: 'Taille',
+    name: 'Nom',
+  },
+
+  faq: {
+    title: 'Questions fréquentes',
+    intro:
+      'Les règles, les définitions de chaque catégorie, le calcul du score et l’origine des données.',
+    toc: 'Sommaire',
+    sections: {
+      play: {
+        title: 'Comment jouer ?',
+        paragraphs: [
+          'Chaque jour, une nouvelle grille de 3 lignes et 3 colonnes apparaît à minuit, heure de Paris. Chaque case attend un Pokémon qui répond à la fois au critère de sa ligne et à celui de sa colonne.',
+          'Touchez une case, tapez un nom (français ou anglais) ou un numéro de Pokédex, puis choisissez dans la liste. Un Pokémon ne peut servir qu’une fois dans la grille. À la troisième erreur, la partie est perdue.',
+          'Il n’y a qu’une partie par grille : pas de nouvel essai. Vous pouvez abandonner à tout moment, ou rejouer les grilles passées depuis les archives.',
+        ],
+      },
+      categories: {
+        title: 'Que veut dire chaque catégorie ?',
+        intro: (count: number) =>
+          `Voici les ${count} catégories qui peuvent apparaître. Cette liste est générée à partir du jeu lui-même : c’est exactement la définition utilisée pour valider vos réponses. Dans le jeu, touchez un intitulé pour la lire.`,
+        inGame:
+          'Toutes les définitions s’entendent « parmi les Pokémon du jeu » (générations 1 à 4).',
+      },
+      score: {
+        title: 'Comment est calculé le score ?',
+        main: (rules: { base: number; bonus: number; penalty: number; max: number }) =>
+          `Chaque bonne réponse rapporte ${rules.base} points, plus jusqu’à ${rules.bonus} points selon sa rareté : plus la réponse est rare parmi toutes celles possibles pour la case, plus elle rapporte. Chaque erreur retire ${rules.penalty} points. Le score est compris entre 0 et ${rules.max}.`,
+        paragraphs: [
+          'Le bonus de rareté n’est pas proportionnel : une réponse un peu moins courante rapporte déjà l’essentiel du bonus, et le haut du classement reste atteignable sans viser l’obscur à chaque case.',
+          'Le score donne aussi un titre :',
+        ],
+        titleLine: (title: string, from: number) =>
+          `${title} : à partir de ${from} point${from > 1 ? 's' : ''}`,
+      },
+      rarity: {
+        title: 'Que signifie la rareté estimée ?',
+        paragraphs: [
+          'Le site n’a pas de serveur et ne sait donc pas ce que les autres joueurs répondent : la rareté est une estimation de la notoriété d’un Pokémon (sa génération, s’il est un starter, un légendaire, un stade final, et une liste de Pokémon emblématiques établie à la main). Ce n’est pas un pourcentage de joueurs.',
+          'Pour chaque case, les réponses possibles sont classées du Pokémon le plus connu au plus obscur, et la rareté dépend de la place de votre réponse dans ce classement :',
+        ],
+        tierRules: [
+          'parmi le quart des réponses les plus connues de la case',
+          'entre 25 % et 50 % du classement',
+          'entre 50 % et 75 % du classement',
+          'parmi le quart des réponses les plus obscures',
+        ],
+      },
+      streak: {
+        title: 'À quoi servent la série et les statistiques ?',
+        paragraphs: [
+          'La série compte les jours de suite où vous avez terminé la grille du jour, gagnée ou perdue. Un jour sans partie, ou une partie abandonnée, remet la série à zéro.',
+          'Une partie ne compte dans la série et les statistiques que si elle se termine le jour de sa grille (heure de Paris). Une partie finie après minuit, ou depuis les archives, ne compte pas.',
+          'Tout reste dans votre navigateur : effacer les données du site efface vos statistiques et votre série.',
+        ],
+      },
+      data: {
+        title: 'D’où viennent les données ?',
+        paragraphs: [
+          'Les fiches (types, statistiques, taille, évolutions…) viennent de PokéAPI, complétées et corrigées à la main là où c’est nécessaire (starters, fossiles, légendaires, Méga-évolutions, Pokémon les plus connus…). Les noms affichés sont les noms français officiels ; la recherche accepte aussi les noms anglais et les numéros.',
+          'Une erreur, une définition discutable ? Signalez-la depuis le dépôt du projet : chaque correction est ajoutée aux données, avec un test pour ne pas la perdre.',
+        ],
+      },
+      generations: {
+        title: 'Pourquoi seulement les générations 1 à 4 ?',
+        text: (count: number) =>
+          `Le jeu couvre les ${count} premiers Pokémon (numéros 1 à ${count}, de Kanto à Sinnoh) : assez pour des grilles variées, assez peu pour que chacun puisse en connaître la plupart. Les générations suivantes pourront être ajoutées plus tard.`,
+      },
+      types: {
+        title: 'Quels types sont utilisés ?',
+        paragraphs: [
+          'Les types actuels, ceux des jeux récents, type Fée inclus : Mélofée est de type Fée, Marill est Eau/Fée et Togepi est Fée. Ils peuvent donc différer de ce que vous avez connu dans les premières versions des jeux.',
+        ],
+      },
+      evolutions: {
+        title: 'Comment sont comptées les évolutions ?',
+        paragraphs: [
+          'Les évolutions sont comptées parmi les Pokémon du jeu uniquement. Un « stade final » est un Pokémon qui n’évolue en aucun Pokémon des générations 1 à 4 : Colossinge est donc un stade final ici, même si Courrousinge existe dans une génération plus récente.',
+          'Les formes régionales (Alola, Galar, Hisui) n’existent pas dans le jeu. Les Méga-évolutions et formes Gigamax ne sont pas des entrées à part : « a une Méga-évolution » est simplement un critère possible.',
+        ],
+      },
+    },
+  },
+
+  legal: {
+    title: 'Mentions légales',
+    todoHint: (what: string) => `À compléter : ${what}`,
+    sections: {
+      publisher: {
+        title: 'Éditeur du site',
+        labels: {
+          name: 'Nom ou pseudonyme de l’éditeur',
+          status: 'Statut (particulier, association…)',
+          address: 'Adresse (ou mention de l’hébergeur si l’éditeur reste anonyme)',
+          director: 'Directeur de la publication',
+          contact: 'Adresse de contact',
+        },
+        contactIssues: 'Suivi des demandes et signalements',
+      },
+      host: {
+        title: 'Hébergeur',
+        text: 'Le site est hébergé par GitHub Pages, un service de GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.',
+        link: 'Site de GitHub',
+      },
+      affiliation: {
+        title: 'Propriété intellectuelle et non-affiliation',
+        paragraphs: [
+          'Ce site est un projet de fan, gratuit, sans publicité et non officiel. Il n’est ni affilié à, ni approuvé, ni sponsorisé par Nintendo, Game Freak, Creatures Inc. ou The Pokémon Company.',
+          'Pokémon et les noms des Pokémon sont des marques de leurs propriétaires respectifs. Le site n’utilise aucune image officielle : les pictogrammes et les couleurs sont dessinés pour ce projet.',
+          'Les données de référence proviennent de PokéAPI.',
+        ],
+      },
+      privacy: {
+        title: 'Données personnelles',
+        paragraphs: [
+          'Le site ne dépose aucun cookie, n’utilise aucun traceur ni aucune publicité, et ne vous demande aucun compte.',
+          'Votre progression, vos statistiques et vos préférences sont enregistrées uniquement dans le stockage local de votre navigateur. Elles ne sont jamais envoyées à un serveur et vous pouvez les effacer à tout moment depuis les réglages de votre navigateur.',
+          'Comme pour tout site web, l’hébergeur peut journaliser l’adresse IP des visites dans ses journaux techniques, selon sa propre politique de confidentialité.',
+        ],
+      },
+    },
+  },
+
+  changelog: {
+    title: 'Nouveautés',
+    intro: 'Ce qui change dans le jeu, version après version.',
+  },
 } as const;
