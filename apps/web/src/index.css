@@ -1,1 +1,185 @@
 @import 'tailwindcss';
+@import '@fontsource/press-start-2p/400.css';
+
+/*
+ * "Pokédex / Game Boy, revisited" (ROADMAP §2.5): flat LCD-green panels, thick ink borders, hard
+ * shadows, no gradients except on the type-coloured cells. The pixel font is for titles only.
+ */
+:root {
+  --lcd-bg: #c4cfa1;
+  --lcd-panel: #e7edcf;
+  --lcd-panel-2: #d6dfb6;
+  --lcd-ink: #1d2616;
+  --lcd-ink-soft: #4c5a3c;
+  --lcd-danger: #c0392b;
+  --lcd-ok: #2f7d32;
+  --lcd-focus: #1b4fd1;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --lcd-bg: #141a0f;
+    --lcd-panel: #232c19;
+    --lcd-panel-2: #2d3822;
+    --lcd-ink: #dbe7b5;
+    --lcd-ink-soft: #a3b27f;
+    --lcd-danger: #ff7a66;
+    --lcd-ok: #8fd694;
+    --lcd-focus: #8fb3ff;
+  }
+}
+
+@theme inline {
+  --color-lcd-bg: var(--lcd-bg);
+  --color-lcd-panel: var(--lcd-panel);
+  --color-lcd-panel-2: var(--lcd-panel-2);
+  --color-lcd-ink: var(--lcd-ink);
+  --color-lcd-soft: var(--lcd-ink-soft);
+  --color-lcd-danger: var(--lcd-danger);
+  --color-lcd-ok: var(--lcd-ok);
+  --font-pixel: 'Press Start 2P', ui-monospace, monospace;
+}
+
+html {
+  color-scheme: light dark;
+}
+body {
+  background: var(--lcd-bg);
+  color: var(--lcd-ink);
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  /* faint LCD pixel grid */
+  background-image:
+    linear-gradient(var(--lcd-panel-2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--lcd-panel-2) 1px, transparent 1px);
+  background-size: 6px 6px;
+  background-attachment: fixed;
+}
+
+:focus-visible {
+  outline: 3px solid var(--lcd-focus);
+  outline-offset: 2px;
+}
+
+@layer components {
+  .panel {
+    background: var(--lcd-panel);
+    border: 3px solid var(--lcd-ink);
+    box-shadow: 4px 4px 0 var(--lcd-ink);
+  }
+  .btn {
+    background: var(--lcd-panel);
+    color: var(--lcd-ink);
+    border: 3px solid var(--lcd-ink);
+    box-shadow: 3px 3px 0 var(--lcd-ink);
+    padding: 0.5rem 0.9rem;
+    min-height: 2.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 80ms;
+  }
+  .btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--lcd-ink);
+  }
+  .btn-primary {
+    background: var(--lcd-ink);
+    color: var(--lcd-panel);
+  }
+  .btn-danger {
+    color: var(--lcd-danger);
+  }
+  .title-pixel {
+    font-family: var(--font-pixel);
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+}
+
+dialog.modal {
+  background: var(--lcd-panel);
+  color: var(--lcd-ink);
+  border: 3px solid var(--lcd-ink);
+  box-shadow: 6px 6px 0 var(--lcd-ink);
+  padding: 0;
+  width: min(32rem, calc(100vw - 1.5rem));
+  max-height: calc(100dvh - 1.5rem);
+  margin: auto;
+  overflow: auto;
+}
+dialog.modal.sheet {
+  /* Anchored at the top so the on-screen keyboard never hides the suggestions. */
+  margin: 0.75rem auto auto;
+}
+dialog.modal::backdrop {
+  background: color-mix(in srgb, var(--lcd-ink) 55%, transparent);
+}
+
+@keyframes shake-a {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+@keyframes pop-a {
+  0% {
+    transform: scale(0.85);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes shake-b {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+@keyframes pop-b {
+  0% {
+    transform: scale(0.85);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.cell-wrong-a {
+  animation: shake-a 350ms ease-in-out;
+}
+.cell-wrong-b {
+  animation: shake-b 350ms ease-in-out;
+}
+.cell-correct-a {
+  animation: pop-a 200ms ease-out;
+}
+.cell-correct-b {
+  animation: pop-b 200ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cell-wrong-a,
+  .cell-wrong-b,
+  .cell-correct-a,
+  .cell-correct-b {
+    animation: none;
+  }
+}

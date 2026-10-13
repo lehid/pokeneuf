@@ -7,7 +7,7 @@ import {
   type PokemonType,
 } from './pokedex';
 import { normalize } from './search';
-import { TYPE_LABELS_FR } from './theme';
+import { POKEDEX_COLOR_SWATCHES, TYPE_COLORS, TYPE_LABELS_FR } from './theme';
 
 /**
  * Families of categories. The generator mixes families (ROADMAP §3.4) and never crosses a category
@@ -512,4 +512,14 @@ export function canCrossCategories(a: Category, b: Category): boolean {
 /** Same, by registry id. */
 export function canCross(a: CategoryRef, b: CategoryRef): boolean {
   return canCrossCategories(getCategory(a), getCategory(b));
+}
+
+/**
+ * Accent colour of a category header: the type colour, or the swatch of a Pokédex colour;
+ * `null` for every other family (they get their own picto instead).
+ */
+export function categoryAccent(category: Category): string | null {
+  if (category.type !== undefined) return TYPE_COLORS[category.type];
+  if (category.color !== undefined) return POKEDEX_COLOR_SWATCHES[category.color];
+  return null;
 }

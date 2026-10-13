@@ -1,8 +1,65 @@
 /** All French UI strings. Never hard-code UI text in components. */
 export const fr = {
-  comingSoon: 'bientôt',
   tagline: 'Chaque jour, une grille 3×3 à remplir avec les bons Pokémon.',
-  todayGrid: (n: number) => `Grille n° ${n}`,
+  gridTitle: (n: number) => `Grille n° ${n}`,
+  demoGrid: 'Grille de démonstration',
   disclaimer:
     'Projet de fan non officiel, non affilié à Nintendo, Game Freak ou The Pokémon Company.',
+
+  lives: (left: number, max: number) => `${left} vie${left > 1 ? 's' : ''} sur ${max}`,
+  errorsLabel: 'Erreurs',
+  rulesButton: 'Règles',
+  abandonButton: 'Abandonner',
+  resultButton: 'Résultat',
+  boardLabel: 'Grille de jeu',
+  cornerLabel: 'Lignes et colonnes',
+  rowHeader: (label: string) => `Ligne : ${label}`,
+  colHeader: (label: string) => `Colonne : ${label}`,
+  emptyCell: (row: string, col: string) => `Case vide, ${row} et ${col}`,
+  filledCell: (name: string, number: string, row: string, col: string) =>
+    `${name}, ${number}, ${row} et ${col}`,
+  unfoundCell: (row: string, col: string) =>
+    `Case non trouvée, ${row} et ${col}. Voir les réponses`,
+  reviewHint: 'Touchez une case pour voir toutes les bonnes réponses.',
+
+  definition: 'Définition',
+  close: 'Fermer',
+
+  guessTitle: (row: string, col: string) => `${row} × ${col}`,
+  guessLabel: 'Nom ou numéro du Pokémon',
+  guessPlaceholder: 'Nom, nom anglais ou n°…',
+  noResult: 'Aucun Pokémon trouvé.',
+  alreadyUsed: 'déjà utilisé',
+
+  announceCorrect: (name: string) => `Correct : ${name}.`,
+  announceWrong: (name: string, left: number) =>
+    `Raté : ${name} ne convient pas. ${left === 0 ? 'Plus de vie.' : `Il reste ${left} vie${left > 1 ? 's' : ''}.`}`,
+
+  rulesTitle: 'Comment jouer',
+  rules: [
+    'Remplissez les 9 cases avec un Pokémon qui correspond à la ligne ET à la colonne.',
+    'Chaque Pokémon ne peut être utilisé qu’une seule fois.',
+    '3 erreurs maximum : à la troisième, la partie est perdue.',
+    'Touchez un intitulé pour lire sa définition exacte.',
+    'Générations 1 à 4 seulement (493 Pokémon), avec les types actuels (Fée incluse).',
+  ],
+  hideRules: 'Ne plus afficher',
+  play: 'Jouer',
+
+  abandonTitle: 'Abandonner ?',
+  abandonQuestion: 'Voulez-vous vraiment abandonner ?',
+  abandonYes: 'Oui, abandonner',
+  abandonNo: 'Continuer à jouer',
+
+  endWon: 'Bravo, grille complète !',
+  endLost: 'Perdu…',
+  endAbandoned: 'Partie abandonnée',
+  endFound: (found: number, errors: number) =>
+    `${found}/9 trouvés · ${errors} erreur${errors > 1 ? 's' : ''}`,
+  endScore: 'Score provisoire',
+  endScoreNote: 'Le calcul définitif du score arrive bientôt.',
+  seeSolutions: 'Voir les solutions',
+
+  solutionsTitle: 'Bonnes réponses',
+  solutionsCount: (n: number) => `${n} réponse${n > 1 ? 's' : ''} possible${n > 1 ? 's' : ''}`,
 } as const;
