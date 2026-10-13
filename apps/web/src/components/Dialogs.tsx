@@ -1,12 +1,21 @@
 import {
-  foundCount,
+  APP_NAME,
+  DISTRIBUTION_STEP,
   getCategory,
-  provisionalScore,
+  MAX_SCORE,
+  rankScore,
+  rarityTier,
+  shareCells,
+  shareText,
   solutionsFor,
+  sortByPopularity,
   type GameState,
 } from '@pokeneuf/core';
 import { useState } from 'react';
-import { memberships, pokemonById } from '../data';
+import { memberships, pokemonById, popularity } from '../data';
+import { useScore, useStats } from '../hooks';
+import { browserShareEnv, shareResult } from '../share';
+import { RarityChip } from './RarityChip';
 import { formatNumber } from '../format';
 import { useGame } from '../GameContext';
 import { fr } from '../i18n/fr';
@@ -63,18 +72,74 @@ const END_TITLES: Record<Exclude<GameState['status'], 'playing'>, string> = {
   abandoned: fr.endAbandoned,
 };
 
+function ShareButton() {
+  const grid = useGame((s) => s.grid);
+  const game = useGame((s) => s.game);
+  const showToast = useGame((s) => s.showToast);
+  const score = useScore();
+  const stats = useStats();
+
+  const share = async () => {
+    const text = shareText({
+      appName: APP_NAME,
+      gridId: grid.id,
+      score: score.total,
+      maxScore: MAX_SCORE,
+      streak: stats.streak,
+      cells: shareCells(
+        game,
+        score.cells.map((c) => c?.tier ?? null),
+      ),
+      url: `${window.location.origin}${import.meta.env.BASE_URL}`,
+    });
+    const outcome = await shareResult(text, browserShareEnv());
+    if (outcome === 'copied') showToast(fr.copied);
+    else if (outcome === 'shared') showToast(fr.shared);
+    else if (outcome === 'failed') showToast(fr.shareFailed);
+  };
+
+  return (
+    <button type="button" className="btn flex-1" onClick={() => void share()} data-testid="share">
+      {fr.share}
+    </button>
+  );
+}
+
 export function EndDialog() {
   const game = useGame((s) => s.game);
   const closeDialog = useGame((s) => s.closeDialog);
+  const openStats = useGame((s) => s.openStats);
+  const score = useScore();
   if (game.status === 'playing') return null;
+  const rarest = score.rarestCell === null ? null : (game.cells[score.rarestCell] ?? null);
+  const rarestTier =
+    score.rarestCell === null ? null : (score.cells[score.rarestCell]?.tier ?? null);
   return (
     <Modal title={END_TITLES[game.status]} onClose={closeDialog} testId="end-dialog">
-      <p className="mb-1">{fr.endFound(foundCount(game), game.errors)}</p>
+      <p className="mb-1">{fr.endFound(score.found, game.errors)}</p>
       <p className="mb-1 text-xs font-bold tracking-wide uppercase text-lcd-soft">{fr.endScore}</p>
-      <p className="title-pixel mb-1 text-2xl" data-testid="score">
-        {provisionalScore(game)}
+      <p className="title-pixel mb-2 text-2xl" data-testid="score">
+        {score.total}
+        <span className="text-sm text-lcd-soft">/{MAX_SCORE}</span>
       </p>
-      <p className="mb-4 text-xs text-lcd-soft">{fr.endScoreNote}</p>
+      {rarest !== null && rarestTier !== null && (
+        <p className="mb-1 text-sm" data-testid="rarest">
+          {fr.rarestAnswer} : <strong>{pokemonById(rarest).nameFr}</strong>{' '}
+          <RarityChip tier={rarestTier} />
+        </p>
+      )}
+      <p className="mb-4 text-xs text-lcd-soft">{fr.rarityEstimated}</p>
+      <div className="mb-3 flex gap-3">
+        <ShareButton />
+        <button
+          type="button"
+          className="btn flex-1"
+          onClick={openStats}
+          data-testid="open-stats-end"
+        >
+          {fr.statsButton}
+        </button>
+      </div>
       <button
         type="button"
         className="btn btn-primary w-full"
@@ -82,6 +147,61 @@ export function EndDialog() {
         data-testid="see-solutions"
       >
         {fr.seeSolutions}
+      </button>
+    </Modal>
+  );
+}
+
+export function StatsDialog() {
+  const closeDialog = useGame((s) => s.closeDialog);
+  const stats = useStats();
+  const peak = Math.max(1, ...stats.distribution);
+  const figures: [string, string][] = [
+    [fr.statsPlayed, String(stats.played)],
+    [fr.statsWinRate, `${stats.winRate} %`],
+    [fr.statsAverage, String(stats.averageScore)],
+    [fr.statsBest, String(stats.bestScore)],
+    [fr.statsStreak, String(stats.streak)],
+    [fr.statsMaxStreak, String(stats.maxStreak)],
+  ];
+  return (
+    <Modal title={fr.statsTitle} onClose={closeDialog} testId="stats-dialog">
+      {stats.played === 0 && <p className="mb-3 text-sm text-lcd-soft">{fr.statsEmpty}</p>}
+      <dl className="mb-4 grid grid-cols-3 gap-2 text-center">
+        {figures.map(([label, value]) => (
+          <div key={label} className="border-2 border-lcd-ink bg-lcd-bg p-2">
+            <dd className="title-pixel text-base whitespace-nowrap" data-testid={`stat-${label}`}>
+              {value}
+            </dd>
+            <dt className="mt-1 text-[0.65rem] leading-tight text-lcd-soft">{label}</dt>
+          </div>
+        ))}
+      </dl>
+      <h3 className="mb-2 text-xs font-bold tracking-wide uppercase text-lcd-soft">
+        {fr.statsDistribution}
+      </h3>
+      <ol className="mb-4 space-y-1" data-testid="distribution">
+        {stats.distribution.map((count, bucket) => {
+          const from = bucket * DISTRIBUTION_STEP;
+          const to =
+            bucket === stats.distribution.length - 1 ? MAX_SCORE : from + DISTRIBUTION_STEP - 1;
+          return (
+            <li key={from} className="flex items-center gap-2 text-xs" data-count={count}>
+              <span className="w-16 shrink-0 tabular-nums">{fr.statsBucket(from, to)}</span>
+              {count > 0 && (
+                <span
+                  className="h-4 border-2 border-lcd-ink bg-lcd-ink"
+                  style={{ width: `${Math.max(4, (100 * count) / peak)}%` }}
+                  aria-hidden="true"
+                />
+              )}
+              <span className="tabular-nums">{count}</span>
+            </li>
+          );
+        })}
+      </ol>
+      <button type="button" className="btn btn-primary w-full" onClick={closeDialog}>
+        {fr.close}
       </button>
     </Modal>
   );
@@ -96,14 +216,17 @@ export function SolutionsDialog() {
 
   const row = getCategory(grid.rows[Math.floor(cell / 3)] ?? '').label.fr;
   const col = getCategory(grid.cols[cell % 3] ?? '').label.fr;
-  const answers = solutionsFor(grid, memberships, cell);
+  const answers = sortByPopularity(solutionsFor(grid, memberships, cell), popularity);
   const placed = game.cells[cell] ?? null;
   return (
     <Modal title={`${row} × ${col}`} onClose={closeSolutions} testId="solutions-dialog">
-      <p className="mb-2 text-sm text-lcd-soft">{fr.solutionsCount(answers.length)}</p>
+      <p className="mb-2 text-sm text-lcd-soft">
+        {fr.solutionsCount(answers.length)}. {fr.solutionsSorted}
+      </p>
       <ul className="mb-4 max-h-[50dvh] space-y-1 overflow-y-auto">
         {answers.map((id) => {
           const p = pokemonById(id);
+          const tier = rarityTier(rankScore(id, answers, popularity));
           return (
             <li
               key={id}
@@ -121,6 +244,7 @@ export function SolutionsDialog() {
                   <TypeBadge key={type} type={type} />
                 ))}
               </span>
+              <RarityChip tier={tier} compact />
             </li>
           );
         })}

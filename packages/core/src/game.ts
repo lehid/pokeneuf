@@ -15,10 +15,6 @@ export interface GameState {
 
 export type GuessResult = 'correct' | 'wrong' | 'ignored';
 
-/** Score weights: PLACEHOLDER until the real score (phase 7). */
-export const PROVISIONAL_POINTS_PER_FOUND = 115;
-export const PROVISIONAL_PENALTY_PER_ERROR = 20;
-
 export function newGame(grid: Pick<Grid, 'id'>): GameState {
   return {
     gridId: grid.id,
@@ -38,14 +34,6 @@ export function foundCount(state: GameState): number {
 
 export function isOver(state: GameState): boolean {
   return state.status !== 'playing';
-}
-
-/** Placeholder score: 115 per Pokémon found, minus 20 per error, never below 0. */
-export function provisionalScore(state: GameState): number {
-  return Math.max(
-    0,
-    PROVISIONAL_POINTS_PER_FOUND * foundCount(state) - PROVISIONAL_PENALTY_PER_ERROR * state.errors,
-  );
 }
 
 export function livesLeft(state: GameState): number {

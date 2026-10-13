@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MAX_ERRORS, STORAGE_PREFIX } from './config';
+import { MAX_ERRORS, MAX_SCORE, STORAGE_PREFIX } from './config';
 import { CELLS, type Grid } from './grid';
 import { cellCategories, type GameState } from './game';
 import type { Memberships } from './memberships';
@@ -11,7 +11,7 @@ import type { Memberships } from './memberships';
  */
 export const GAME_STORAGE_VERSION = 1;
 export const SETTINGS_STORAGE_VERSION = 1;
-export const HISTORY_STORAGE_VERSION = 1;
+export const HISTORY_STORAGE_VERSION = 2;
 
 export const gameKey = (gridId: number): string => `${STORAGE_PREFIX}game:${gridId}`;
 export const SETTINGS_KEY = `${STORAGE_PREFIX}settings`;
@@ -92,13 +92,18 @@ export function parseSettings(raw: string | null): Settings {
   return { hideRules: parsed.data.hideRules };
 }
 
-/** One finished game, kept in `history` (today's grid only in v1: archives never count). */
+/**
+ * One finished game, kept in `history` (today's grid only: archives never count, ROADMAP §3.5).
+ * `score` is frozen at the end of the game, so later changes to the data never rewrite it.
+ */
 const historyEntrySchema = z.object({
   gridId: z.number().int(),
+  /** Paris date of the grid: the streak is computed from it. */
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   status: z.enum(['won', 'lost', 'abandoned']),
   found: z.number().int().min(0).max(CELLS),
   errors: z.number().int().min(0).max(MAX_ERRORS),
-  score: z.number().int().min(0),
+  score: z.number().int().min(0).max(MAX_SCORE),
 });
 export type HistoryEntry = z.infer<typeof historyEntrySchema>;
 
@@ -107,6 +112,10 @@ const historySchema = z.object({
   entries: z.array(historyEntrySchema),
 });
 
+/**
+ * Migration: version 1 (phase 4) had no date and a placeholder score, and was written while the
+ * game only had its demo grid. Those entries are not real games: they are dropped, not converted.
+ */
 export function parseHistory(raw: string | null): HistoryEntry[] {
   const parsed = historySchema.safeParse(parseJson(raw));
   return parsed.success ? parsed.data.entries : [];

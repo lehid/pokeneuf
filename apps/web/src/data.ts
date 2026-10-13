@@ -4,6 +4,7 @@ import {
   type Grid,
   type MembershipsFile,
   type Pokedex,
+  type Popularity,
   type Pokemon,
 } from '@pokeneuf/core';
 import membershipsJson from '@data/memberships.json';
@@ -18,6 +19,9 @@ if (memberships.count !== pokedex.meta.count) {
 }
 
 export const search = createSearch(pokedex.pokemon);
+
+/** v1 rarity: the estimated popularity of the Pokédex. In v2, a live share takes its place here. */
+export const popularity: Popularity = (id) => pokemonById(id).pop;
 
 const byId = new Map<number, Pokemon>(pokedex.pokemon.map((p) => [p.id, p]));
 export function pokemonById(id: number): Pokemon {

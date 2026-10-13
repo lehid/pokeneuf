@@ -46,6 +46,7 @@ export function pokemon(overrides: Overrides = {}): Pokemon {
     shape: 'ball',
     heightDm: 10,
     weightHg: 100,
+    pop: 0.5,
     hasMega: false,
     hasGmax: false,
     ...rest,

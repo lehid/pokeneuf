@@ -379,6 +379,7 @@ describe('manual lists', () => {
           pseudoLegendaries: [3],
           mega: [1, 2],
           gmax: [3],
+          popular: [],
           aliases: { 2: ['Deux', 'Two'] },
         },
       }),

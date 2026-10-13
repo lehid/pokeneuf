@@ -80,7 +80,14 @@ describe('settings', () => {
 });
 
 describe('history', () => {
-  const entry = { gridId: 1, status: 'won', found: 9, errors: 1, score: 1015 } as const;
+  const entry = {
+    gridId: 1,
+    date: '2026-11-01',
+    status: 'won',
+    found: 9,
+    errors: 1,
+    score: 684,
+  } as const;
 
   it('keeps one entry per grid', () => {
     const first = serializeHistory([], entry);
@@ -91,9 +98,23 @@ describe('history', () => {
     expect(parseHistory(other)).toHaveLength(2);
   });
 
+  it('drops a version 1 history: no date, placeholder scores, written while only the demo existed', () => {
+    const v1 = { gridId: 1, status: 'won', found: 9, errors: 1, score: 1015 };
+    expect(parseHistory(JSON.stringify({ version: 1, entries: [v1] }))).toEqual([]);
+  });
+
+  it('refuses a score above the maximum, or a bad date', () => {
+    expect(
+      parseHistory(JSON.stringify({ version: 2, entries: [{ ...entry, score: 901 }] })),
+    ).toEqual([]);
+    expect(
+      parseHistory(JSON.stringify({ version: 2, entries: [{ ...entry, date: 'demain' }] })),
+    ).toEqual([]);
+  });
+
   it('is empty when missing, corrupt or from another version', () => {
     expect(parseHistory(null)).toEqual([]);
     expect(parseHistory('{')).toEqual([]);
-    expect(parseHistory(JSON.stringify({ version: 2, entries: [entry] }))).toEqual([]);
+    expect(parseHistory(JSON.stringify({ version: 3, entries: [entry] }))).toEqual([]);
   });
 });

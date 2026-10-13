@@ -13,6 +13,7 @@ import { LANGUAGE_IDS, POKEAPI_REPO, SCHEMA_VERSION } from './config';
 import type { CsvRow } from './csv';
 import type { RawTables } from './download';
 import type { ManualLists, Override } from './manual';
+import { addPopularity } from './popularity';
 import { parsePokedex } from './schema';
 
 export interface BuildOptions {
@@ -240,6 +241,7 @@ export function buildPokedex(tables: RawTables, options: BuildOptions): Pokedex 
     pseudoLegendaries: new Set(manual.pseudoLegendaries),
     mega: new Set(manual.mega),
     gmax: new Set(manual.gmax),
+    popular: new Set(manual.popular),
   };
   for (const [name, ids] of Object.entries(lists)) {
     const source = manual[name as keyof typeof lists];
@@ -261,7 +263,7 @@ export function buildPokedex(tables: RawTables, options: BuildOptions): Pokedex 
   }
 
   // --- Entries. ---------------------------------------------------------------------------------
-  const entries: Pokemon[] = species.map(({ id, generation, row }) => {
+  const unscored: Omit<Pokemon, 'pop'>[] = species.map(({ id, generation, row }) => {
     const who = `species ${id}`;
     const form = defaultForms.get(id);
     if (!form) throw new Error(`${who}: no default form in pokemon.csv`);
@@ -351,6 +353,8 @@ export function buildPokedex(tables: RawTables, options: BuildOptions): Pokedex 
       hasGmax: lists.gmax.has(id),
     };
   });
+
+  const entries = addPopularity(unscored, manual.popular);
 
   const raw = applyOverrides(
     {

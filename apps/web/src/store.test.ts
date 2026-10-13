@@ -6,10 +6,11 @@ import {
   SETTINGS_KEY,
   solutionsFor,
   findSolution,
+  scoreGame,
   checkGrid,
 } from '@pokeneuf/core';
 import { describe, expect, it } from 'vitest';
-import { demoGrid, memberships } from './data';
+import { demoGrid, memberships, popularity } from './data';
 import { memoryStorage } from './storage';
 import { createGameStore } from './store';
 
@@ -22,7 +23,7 @@ const WRONG = (cell: number): number => {
 
 function setup(initial: Record<string, string> = {}) {
   const storage = memoryStorage(initial);
-  const store = createGameStore({ grid: demoGrid, memberships, storage });
+  const store = createGameStore({ grid: demoGrid, memberships, popularity, storage });
   const play = (cell: number, id: number) => {
     store.getState().selectCell(cell);
     store.getState().guess(id);
@@ -61,14 +62,38 @@ describe('game store', () => {
     expect(setup(Object.fromEntries(first.storage.data)).state().dialog).toBe('rules');
   });
 
-  it('wins a game and records it', () => {
+  it('wins a game, freezes its score and records it with its date', () => {
     const { state, play, storage } = setup();
     solution.forEach((id, cell) => play(cell, id));
     expect(state().game.status).toBe('won');
     expect(state().dialog).toBe('end');
-    expect(parseHistory(storage.get(HISTORY_KEY))).toEqual([
-      { gridId: demoGrid.id, status: 'won', found: 9, errors: 0, score: 1035 },
+    const score = scoreGame(state().game, demoGrid, memberships, popularity).total;
+    expect(score).toBeGreaterThan(0);
+    expect(score).toBeLessThanOrEqual(900);
+    const entries = parseHistory(storage.get(HISTORY_KEY));
+    expect(entries).toEqual([
+      { gridId: demoGrid.id, date: demoGrid.date, status: 'won', found: 9, errors: 0, score },
     ]);
+    expect(state().history).toEqual(entries);
+  });
+
+  it('keeps one history entry per grid and feeds the streak and the stats', () => {
+    const first = setup();
+    first.state().askAbandon();
+    first.state().confirmAbandon();
+    expect(first.state().history).toHaveLength(1);
+    expect(first.state().history[0]?.status).toBe('abandoned');
+    // The history survives a refresh.
+    const second = setup(Object.fromEntries(first.storage.data));
+    expect(second.state().history).toEqual(first.state().history);
+  });
+
+  it('shows and clears a toast', () => {
+    const { state } = setup();
+    state().showToast('Copié');
+    expect(state().toast?.text).toBe('Copié');
+    state().clearToast();
+    expect(state().toast).toBeNull();
   });
 
   it('loses after three wrong answers and leaves the cell empty', () => {

@@ -94,6 +94,17 @@ export const POKEDEX_COLOR_SWATCHES: Readonly<Record<PokedexColor, string>> = {
   yellow: '#F2C94C',
 };
 
+/**
+ * Colour of each rarity tier, the same as the squares of the shared text (🟩 🟨 🟧 🟪).
+ * Typed by tier name here to keep `theme` free of the scoring module.
+ */
+export const RARITY_COLORS = {
+  common: '#3FA34D',
+  uncommon: '#F2C94C',
+  rare: '#EE8130',
+  veryRare: '#8A4FC7',
+} as const;
+
 export const BLACK = '#000000';
 export const WHITE = '#FFFFFF';
 

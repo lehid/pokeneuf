@@ -57,6 +57,7 @@ const pokemonSchema = z.strictObject({
   shape: z.enum(POKEDEX_SHAPES),
   heightDm: positiveInt,
   weightHg: positiveInt,
+  pop: z.number().min(0).max(1),
   hasMega: z.boolean(),
   hasGmax: z.boolean(),
 });

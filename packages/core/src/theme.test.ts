@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { POKEDEX_COLORS, POKEMON_TYPES } from './pokedex';
+import { RARITY_TIERS } from './scoring';
 import {
   BLACK,
   cellBackground,
@@ -7,6 +8,7 @@ import {
   cellTextContrast,
   contrastRatio,
   POKEDEX_COLOR_SWATCHES,
+  RARITY_COLORS,
   readableTextColor,
   relativeLuminance,
   TYPE_COLORS,
@@ -143,5 +145,14 @@ describe('type pictograms', () => {
 
   it('gives every type a different drawing', () => {
     expect(new Set(Object.values(TYPE_ICON_PATHS)).size).toBe(POKEMON_TYPES.length);
+  });
+});
+
+describe('rarity colours', () => {
+  it('has one readable colour per tier, matching the tiers of the scoring module', () => {
+    expect(Object.keys(RARITY_COLORS)).toEqual([...RARITY_TIERS]);
+    for (const color of Object.values(RARITY_COLORS)) {
+      expect(contrastRatio(readableTextColor(color), color)).toBeGreaterThanOrEqual(WCAG_AA);
+    }
   });
 });

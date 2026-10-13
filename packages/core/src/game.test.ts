@@ -5,7 +5,6 @@ import {
   foundCount,
   livesLeft,
   newGame,
-  provisionalScore,
   solutionsFor,
   usedPokemon,
   type GameState,
@@ -79,16 +78,10 @@ describe('applyGuess', () => {
   });
 });
 
-describe('abandon and score', () => {
+describe('abandon', () => {
   it('abandons only a game in progress', () => {
     expect(abandon(newGame(grid)).status).toBe('abandoned');
     expect(abandon({ ...solved(9), status: 'won' }).status).toBe('won');
-  });
-
-  it('scores 115 per Pokémon and -20 per error, never below 0', () => {
-    expect(provisionalScore({ ...solved(3), errors: 1 })).toBe(325);
-    expect(provisionalScore(solved(9))).toBe(1035);
-    expect(provisionalScore({ ...newGame(grid), errors: 3 })).toBe(0);
   });
 });
 

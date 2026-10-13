@@ -6,14 +6,25 @@ import {
   LAUNCH_DATE,
   livesLeft,
   MAX_ERRORS,
+  MAX_SCORE,
+  RARITY_TIERS,
   type GridDate,
 } from '@pokeneuf/core';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Board } from './components/Board';
-import { AbandonDialog, EndDialog, RulesDialog, SolutionsDialog } from './components/Dialogs';
+import {
+  AbandonDialog,
+  EndDialog,
+  RulesDialog,
+  SolutionsDialog,
+  StatsDialog,
+} from './components/Dialogs';
+import { Toast } from './components/Toast';
+import { RarityChip } from './components/RarityChip';
+import { useScore, useStats } from './hooks';
 import { GuessSheet } from './components/GuessSheet';
 import { Modal } from './components/Modal';
-import { demoGrid, memberships, pokemonById } from './data';
+import { demoGrid, memberships, pokemonById, popularity } from './data';
 import { loadDailyGrid, type GridLoad } from './gridLoader';
 import { GameStoreContext, useGame } from './GameContext';
 import { fr } from './i18n/fr';
@@ -39,6 +50,18 @@ function Lives() {
         />
       ))}
     </div>
+  );
+}
+
+/** What the colours under the answers mean. */
+function RarityLegend() {
+  return (
+    <p className="flex flex-wrap items-center justify-center gap-1 text-xs" data-testid="legend">
+      <span className="text-lcd-soft">{fr.rarityEstimated} :</span>
+      {RARITY_TIERS.map((tier) => (
+        <RarityChip key={tier} tier={tier} compact />
+      ))}
+    </p>
   );
 }
 
@@ -68,6 +91,9 @@ function Game({ demo }: { demo: boolean }) {
   const openRules = useGame((s) => s.openRules);
   const askAbandon = useGame((s) => s.askAbandon);
   const openEnd = useGame((s) => s.openEnd);
+  const openStats = useGame((s) => s.openStats);
+  const score = useScore();
+  const stats = useStats();
   const over = isOver(game);
 
   return (
@@ -80,12 +106,25 @@ function Game({ demo }: { demo: boolean }) {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <div className="text-right" data-testid="header-score" data-score={score.total}>
+            <p className="title-pixel text-sm">
+              {score.total}
+              <span className="text-[0.6rem] text-lcd-soft">/{MAX_SCORE}</span>
+            </p>
+            {stats.streak > 0 && (
+              <p className="text-[0.65rem] text-lcd-soft" data-testid="streak">
+                <span aria-hidden="true">🔥 </span>
+                {fr.streakLabel(stats.streak)}
+              </p>
+            )}
+          </div>
           <span className="sr-only">{fr.errorsLabel}</span>
           <Lives />
         </div>
       </header>
 
       <Board />
+      {score.found > 0 && <RarityLegend />}
       <Announcer />
 
       {over && (
@@ -97,6 +136,9 @@ function Game({ demo }: { demo: boolean }) {
       <div className="flex flex-wrap justify-center gap-3">
         <button type="button" className="btn" onClick={openRules} data-testid="open-rules">
           {fr.rulesButton}
+        </button>
+        <button type="button" className="btn" onClick={openStats} data-testid="open-stats">
+          {fr.statsButton}
         </button>
         {demo && (
           <a className="btn" href={import.meta.env.BASE_URL} data-testid="back-to-today">
@@ -130,7 +172,9 @@ function Game({ demo }: { demo: boolean }) {
       {dialog === 'rules' && <RulesDialog />}
       {dialog === 'abandon' && <AbandonDialog />}
       {dialog === 'end' && <EndDialog />}
+      {dialog === 'stats' && <StatsDialog />}
       <SolutionsDialog />
+      <Toast />
     </main>
   );
 }
@@ -302,7 +346,10 @@ function GameSession({
   demo: boolean;
   children?: ReactNode;
 }) {
-  const store = useMemo(() => createGameStore({ grid, memberships, storage }), [grid, storage]);
+  const store = useMemo(
+    () => createGameStore({ grid, memberships, popularity, storage }),
+    [grid, storage],
+  );
   return (
     <GameStoreContext.Provider value={store}>
       <Game demo={demo} />
