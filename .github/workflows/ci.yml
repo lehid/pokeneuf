@@ -24,6 +24,9 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
+      # Every committed grid, past ones included, must still be valid: a category that disappears or
+      # a data fix that changes an answer would break the history of the game.
+      - run: pnpm grids:report
       - run: pnpm build
       - run: pnpm --filter @pokeneuf/web exec playwright install --with-deps chromium
       - run: pnpm e2e

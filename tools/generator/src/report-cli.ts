@@ -1,5 +1,5 @@
 import { parseArgs } from 'node:util';
-import { loadMemberships, loadPopularity } from './cli-common';
+import { fromWhereTyped, loadMemberships, loadPopularity } from './cli-common';
 import { loadConfig } from './config';
 import { GRIDS_DIR, MEMBERSHIPS_PATH, readGrids, readIndex } from './files';
 import { analyzeGrids } from './report';
@@ -11,12 +11,13 @@ const { values } = parseArgs({
   },
 });
 
+const dir = fromWhereTyped(values.dir);
 const [memberships, popularity, config, grids, index] = await Promise.all([
-  loadMemberships(values.memberships),
+  loadMemberships(fromWhereTyped(values.memberships)),
   loadPopularity(),
   loadConfig(),
-  readGrids(values.dir),
-  readIndex(values.dir),
+  readGrids(dir),
+  readIndex(dir),
 ]);
 
 const { text, problems } = analyzeGrids(grids, memberships, popularity, config, index);

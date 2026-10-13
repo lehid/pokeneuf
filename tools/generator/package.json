@@ -10,7 +10,8 @@
     "grids:report": "tsx src/report-cli.ts",
     "test": "vitest run",
     "grids:stock": "tsx src/stock-cli.ts",
-    "score:simulate": "tsx src/simulate-cli.ts"
+    "score:simulate": "tsx src/simulate-cli.ts",
+    "grids:publish": "tsx src/publish-cli.ts"
   },
   "dependencies": {
     "@pokeneuf/core": "workspace:*",

@@ -11,12 +11,16 @@ const run = promisify(execFile);
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 
 /** Runs a CLI the way `pnpm grids:*` does (tsx), without failing on a non-zero exit. */
-async function cli(script: 'generate-cli' | 'report-cli', args: string[]) {
+async function cli(
+  script: 'generate-cli' | 'report-cli' | 'publish-cli',
+  args: string[],
+  env: Record<string, string> = {},
+) {
   try {
     const { stdout, stderr } = await run(
       process.execPath,
       ['--import', 'tsx', path.join('src', `${script}.ts`), ...args],
-      { cwd: ROOT, timeout: 120_000 },
+      { cwd: ROOT, timeout: 120_000, env: { ...process.env, ...env } },
     );
     return { code: 0, stdout, stderr };
   } catch (error) {
@@ -95,11 +99,64 @@ describe('pnpm grids:generate', () => {
       '--days',
       '3',
       '--force',
+      '--today',
+      '2026-10-01', // before these days: nothing is published yet
       '--out',
       dir,
     ]);
     expect(out.stdout).toContain('3 generated, 0 kept');
     expect(await readFile(path.join(dir, '2026-11-02.json'), 'utf8')).toBe(before);
+  }, 180_000);
+
+  it('never rewrites a published grid: --force refuses today and the days before', async () => {
+    await cli('generate-cli', ['--from', '2026-11-01', '--days', '4', '--out', dir]);
+    const before = await Promise.all(
+      (await files()).map((f) => readFile(path.join(dir, f), 'utf8')),
+    );
+    const force = (today: string) =>
+      cli('generate-cli', [
+        '--from',
+        '2026-11-01',
+        '--days',
+        '4',
+        '--force',
+        '--today',
+        today,
+        '--out',
+        dir,
+      ]);
+
+    const refused = await force('2026-11-02'); // the 1st and the 2nd are published
+    expect(refused.code).toBe(2);
+    expect(refused.stderr).toMatch(
+      /--force would rewrite published grids \(2026-11-01, 2026-11-02\)/,
+    );
+    expect(refused.stderr).toContain('history');
+    const sameDay = await force('2026-11-01'); // today's grid is public too
+    expect(sameDay.code).toBe(2);
+    expect(
+      await Promise.all((await files()).map((f) => readFile(path.join(dir, f), 'utf8'))),
+    ).toEqual(before);
+
+    expect((await force('2026-10-31')).code).toBe(0); // nothing published yet: allowed
+  }, 180_000);
+
+  it('can still add missing days after published ones, without touching them', async () => {
+    await cli('generate-cli', ['--from', '2026-11-01', '--days', '2', '--out', dir]);
+    const first = await readFile(path.join(dir, '2026-11-01.json'), 'utf8');
+    const out = await cli('generate-cli', [
+      '--from',
+      '2026-11-01',
+      '--days',
+      '4',
+      '--today',
+      '2026-11-03',
+      '--out',
+      dir,
+    ]);
+    expect(out.code).toBe(0);
+    expect(out.stdout).toContain('2 generated, 2 kept');
+    expect(await readFile(path.join(dir, '2026-11-01.json'), 'utf8')).toBe(first);
   }, 180_000);
 
   it.each([
@@ -156,4 +213,88 @@ describe('pnpm grids:report', () => {
     expect(out.code).toBe(1);
     expect(out.stdout).toMatch(/missing days: 2026-11-02 → 2026-11-04/);
   }, 180_000);
+});
+
+describe('pnpm grids:publish', () => {
+  it('keeps today and the past in the built site, and drops the grids of the days to come', async () => {
+    await cli('generate-cli', ['--from', '2026-11-01', '--days', '6', '--out', dir]);
+    const out = await cli('publish-cli', ['--dir', dir, '--today', '2026-11-03']);
+    expect(out.code).toBe(0);
+    expect(out.stdout).toContain('Published 3 grid(s) up to 2026-11-03 (2026-11-01 to 2026-11-03)');
+    expect(out.stdout).toContain('3 grid(s) of the days to come');
+    expect(await files()).toEqual([
+      '2026-11-01.json',
+      '2026-11-02.json',
+      '2026-11-03.json',
+      'index.json',
+    ]);
+    const index = JSON.parse(await readFile(path.join(dir, 'index.json'), 'utf8'));
+    expect(index.grids.map((g: { date: string }) => g.date)).toEqual([
+      '2026-11-01',
+      '2026-11-02',
+      '2026-11-03',
+    ]);
+
+    // The published folder is still a valid, complete one.
+    const report = await cli('report-cli', ['--dir', dir]);
+    expect(report.code).toBe(0);
+  }, 180_000);
+
+  it('publishes nothing before the launch, and says so', async () => {
+    await cli('generate-cli', ['--from', '2026-11-01', '--days', '3', '--out', dir]);
+    const out = await cli('publish-cli', ['--dir', dir, '--today', '2026-10-13']);
+    expect(out.code).toBe(0);
+    expect(out.stdout).toContain('Published 0 grid(s) up to 2026-10-13');
+    expect(await files()).toEqual(['index.json']);
+    const index = JSON.parse(await readFile(path.join(dir, 'index.json'), 'utf8'));
+    expect(index.grids).toEqual([]);
+  }, 180_000);
+
+  it('keeps every grid when they are all past, and can be run twice', async () => {
+    await cli('generate-cli', ['--from', '2026-11-01', '--days', '3', '--out', dir]);
+    await cli('publish-cli', ['--dir', dir, '--today', '2026-12-01']);
+    const once = await Promise.all((await files()).map((f) => readFile(path.join(dir, f), 'utf8')));
+    expect((await cli('publish-cli', ['--dir', dir, '--today', '2026-12-01'])).code).toBe(0);
+    const twice = await Promise.all(
+      (await files()).map((f) => readFile(path.join(dir, f), 'utf8')),
+    );
+    expect(twice).toEqual(once);
+    expect(await files()).toHaveLength(4);
+  }, 180_000);
+
+  it('refuses to prune the source grids of the repository', async () => {
+    const out = await cli('publish-cli', ['--dir', path.join(ROOT, '../../apps/web/public/grids')]);
+    expect(out.code).toBe(1);
+    expect(out.stderr).toContain('Refusing to prune');
+    expect(out.stderr).toContain('source grids');
+  }, 60_000);
+
+  it('reads a relative folder from where the command was typed, as `pnpm` from the root needs', async () => {
+    // pnpm runs the script in tools/generator but names the real place in INIT_CWD.
+    await cli('generate-cli', ['--from', '2026-11-01', '--days', '3', '--out', dir]);
+    const out = await cli('publish-cli', ['--dir', path.basename(dir), '--today', '2026-11-02'], {
+      INIT_CWD: path.dirname(dir),
+    });
+    expect(out.code).toBe(0);
+    expect(out.stdout).toContain('Published 2 grid(s)');
+    expect(await files()).toEqual(['2026-11-01.json', '2026-11-02.json', 'index.json']);
+  }, 180_000);
+
+  it('fails, and creates nothing, when the folder is wrong', async () => {
+    const out = await cli('publish-cli', ['--dir', 'no/such/place', '--today', '2026-11-02'], {
+      INIT_CWD: dir,
+    });
+    expect(out.code).toBe(1);
+    expect(out.stderr).toContain('does not exist');
+    expect(await files()).toEqual([]);
+  }, 60_000);
+
+  it('wants a folder and a valid date', async () => {
+    const noDir = await cli('publish-cli', []);
+    expect(noDir.code).toBe(2);
+    expect(noDir.stderr).toContain('--dir is required');
+    const badDate = await cli('publish-cli', ['--dir', dir, '--today', 'demain']);
+    expect(badDate.code).toBe(2);
+    expect(badDate.stderr).toContain('--today must be YYYY-MM-DD');
+  }, 60_000);
 });

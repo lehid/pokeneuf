@@ -8,6 +8,7 @@ pnpm data:build                                          # prérequis : dist/mem
 pnpm grids:generate --from 2026-11-01 --days 90          # → apps/web/public/grids/
 pnpm grids:report                                        # revue avant commit ; code 1 si problème
 pnpm grids:stock                                         # code 1 s'il reste moins de 30 jours de grilles
+pnpm grids:publish --dir apps/web/dist/grids             # site construit : retire les grilles des jours à venir
 pnpm score:simulate                                      # scores de joueurs simulés, par niveau, vs la bande visée
 pnpm --filter @pokeneuf/generator test
 ```
@@ -88,3 +89,17 @@ affiche trouvées / victoires / score moyen par niveau de difficulté, puis les 
 visée : médiane du profil *regular* entre 450 et 600, 99ᵉ centile du *fan* à 700 ou plus (sous 900).
 À relancer après tout changement de `SCORING` ou de `POPULARITY_WEIGHTS` (dans `core` et `data`). Les
 joueurs simulés ne sont qu'un modèle : à confirmer avec de vraies parties.
+
+## Publication et historique
+
+Le dépôt garde **90 jours d'avance** (`public/grids`), mais le site déployé ne montre jamais demain :
+- `pnpm grids:publish --dir apps/web/dist/grids` travaille sur la **copie construite** : il garde
+  les grilles d'aujourd'hui (date de Paris) et du passé, supprime les autres et réécrit
+  `index.json`. Il refuse de toucher `apps/web/public/grids`.
+- Le workflow de déploiement le lance à chaque build, et un déclencheur planifié reconstruit le
+  site juste après minuit (22:03 et 23:03 UTC : minuit à Paris en heure d'été et d'hiver). Le
+  client réessaie toutes les minutes pendant une heure si la grille du jour n'est pas encore là.
+- Une grille publiée est de l'**histoire** : `grids:generate --force` refuse de réécrire une grille
+  d'aujourd'hui ou du passé (`--today` sert aux tests), et la CI rejoue `grids:report` sur toutes
+  les grilles. Une catégorie utilisée par une grille passée ne se supprime donc pas : on la garde
+  dans le registre, quitte à ne plus la tirer (`categoryWeights`).

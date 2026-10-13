@@ -13,7 +13,7 @@ import {
   type GridDate,
   type Route,
 } from '@pokeneuf/core';
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Board } from './components/Board';
 import { DifficultyBadge } from './components/DifficultyBadge';
 import {
@@ -200,6 +200,9 @@ function Game({ kind }: { kind: GameKind }) {
 
 const systemNow = () => new Date();
 
+const RETRY_EVERY_MS = 60_000;
+const RETRY_LIMIT = 60;
+
 export interface AppProps {
   storage?: KeyValueStorage;
   /** The clock, injectable for tests. */
@@ -221,11 +224,14 @@ function useDailyGrid(
   const [load, setLoad] = useState<GridLoad | null>(null);
   const [offer, setOffer] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  // An automatic retry replaces the grid without flashing the loading screen again.
+  const silent = useRef(false);
 
   useEffect(() => {
     if (!enabled) return;
     let cancelled = false;
-    setLoad(null);
+    if (!silent.current) setLoad(null);
+    silent.current = false;
     void loadGrid(date, {
       memberships,
       baseUrl,
@@ -237,6 +243,20 @@ function useDailyGrid(
       cancelled = true;
     };
   }, [date, attempt, baseUrl, fetchImpl, enabled]);
+
+  // The grid of the day is published just after midnight (a scheduled deploy): when it is not there
+  // yet, ask again every minute, for an hour at most, instead of leaving the player on a dead end.
+  const waiting = load?.kind === 'missing' && !load.beforeLaunch;
+  useEffect(() => {
+    if (!enabled || !waiting) return;
+    let tries = 0;
+    const timer = window.setInterval(() => {
+      if (++tries > RETRY_LIMIT) return window.clearInterval(timer);
+      silent.current = true;
+      setAttempt((n) => n + 1);
+    }, RETRY_EVERY_MS);
+    return () => window.clearInterval(timer);
+  }, [enabled, waiting, date]);
 
   const ready = load?.kind === 'ready';
   useEffect(() => {
@@ -291,6 +311,7 @@ function DailyApp({
           <p data-testid="no-grid">
             {load.beforeLaunch ? fr.notLaunched(fr.launchDate(LAUNCH_DATE)) : fr.noGrid}
           </p>
+          {!load.beforeLaunch && <p className="text-xs text-lcd-soft">{fr.noGridRetry}</p>}
           {load.beforeLaunch && (
             <a className="btn btn-primary" href="?demo" data-testid="try-demo">
               {fr.tryDemo}
