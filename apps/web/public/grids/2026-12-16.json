@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 46,
+  "date": "2026-12-16",
+  "rows": [
+    "gen-1",
+    "stat-attack-100",
+    "form-gmax"
+  ],
+  "cols": [
+    "status-starter",
+    "type-water",
+    "name-long"
+  ],
+  "cellSizes": [
+    9,
+    32,
+    31,
+    5,
+    14,
+    17,
+    3,
+    3,
+    4
+  ],
+  "difficulty": 67
+}

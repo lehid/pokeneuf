@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 33,
+  "date": "2026-12-03",
+  "rows": [
+    "type-fire",
+    "type-psychic",
+    "stat-speed-100"
+  ],
+  "cols": [
+    "gen-4",
+    "stat-total-500",
+    "name-short"
+  ],
+  "cellSizes": [
+    5,
+    14,
+    3,
+    9,
+    21,
+    8,
+    17,
+    38,
+    4
+  ],
+  "difficulty": 64
+}

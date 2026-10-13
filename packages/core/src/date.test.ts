@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, daysBetween, gridDateFor, gridNumber } from './date';
+import {
+  addDays,
+  daysBetween,
+  gridDateFor,
+  gridNumber,
+  gridUrl,
+  hasNewGrid,
+  isBeforeLaunch,
+} from './date';
 
 describe('gridDateFor (Europe/Paris)', () => {
   it('switches at Paris midnight in summer time (UTC+2)', () => {
@@ -49,5 +57,44 @@ describe('date helpers', () => {
 
   it('rejects malformed dates', () => {
     expect(() => daysBetween('2026-1-1', '2026-01-02')).toThrow();
+  });
+});
+
+describe('a tab left open across Paris midnight', () => {
+  it('offers the new grid exactly at midnight, in summer and winter time', () => {
+    expect(hasNewGrid('2026-11-05', new Date('2026-11-05T22:59:59Z'))).toBe(false); // 23:59:59 Paris
+    expect(hasNewGrid('2026-11-05', new Date('2026-11-05T23:00:01Z'))).toBe(true); // 00:00:01 Paris
+    expect(hasNewGrid('2026-08-05', new Date('2026-08-05T21:59:59Z'))).toBe(false);
+    expect(hasNewGrid('2026-08-05', new Date('2026-08-05T22:00:00Z'))).toBe(true);
+  });
+
+  it('is not fooled by the 25-hour day of the October DST change', () => {
+    expect(hasNewGrid('2026-10-25', new Date('2026-10-25T22:59:59Z'))).toBe(false); // 23:59:59 CET
+    expect(hasNewGrid('2026-10-25', new Date('2026-10-25T23:00:00Z'))).toBe(true);
+    expect(hasNewGrid('2026-10-25', new Date('2026-10-25T00:30:00Z'))).toBe(false); // 02:30 CEST
+  });
+
+  it('is not fooled by the 23-hour day of the March DST change', () => {
+    expect(hasNewGrid('2027-03-28', new Date('2027-03-28T21:59:59Z'))).toBe(false); // 23:59:59 CEST
+    expect(hasNewGrid('2027-03-28', new Date('2027-03-28T22:00:00Z'))).toBe(true);
+  });
+
+  it('does not offer anything while the date is unchanged, whatever the local time zone', () => {
+    expect(hasNewGrid('2026-11-05', new Date('2026-11-05T11:00:00Z'))).toBe(false);
+  });
+});
+
+describe('launch and grid files', () => {
+  it('knows the game has not launched before LAUNCH_DATE', () => {
+    expect(isBeforeLaunch('2026-10-31')).toBe(true);
+    expect(isBeforeLaunch('2026-11-01')).toBe(false);
+    expect(isBeforeLaunch('2026-11-02', '2026-11-03')).toBe(true);
+  });
+
+  it('finds grid files under the base path, with or without a trailing slash', () => {
+    expect(gridUrl('2026-11-05', '/')).toBe('/grids/2026-11-05.json');
+    expect(gridUrl('2026-11-05', '/pokeneuf/')).toBe('/pokeneuf/grids/2026-11-05.json');
+    expect(gridUrl('2026-11-05', '/pokeneuf')).toBe('/pokeneuf/grids/2026-11-05.json');
+    expect(() => gridUrl('05/11/2026', '/')).toThrow();
   });
 });

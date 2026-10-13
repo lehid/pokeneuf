@@ -16,3 +16,8 @@ export function pokemonById(id: number) {
   if (!found) throw new Error(`Unknown Pokémon number: ${id}`);
   return found;
 }
+
+/** The committed grid of a day (`public/grids/{date}.json`). */
+export function gridOn(date: string): Grid {
+  return read(`../public/grids/${date}.json`) as Grid;
+}

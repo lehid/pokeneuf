@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 11,
+  "date": "2026-11-11",
+  "rows": [
+    "type-dragon",
+    "form-mega",
+    "gen-4"
+  ],
+  "cols": [
+    "status-legendary",
+    "type-dual",
+    "name-has-y"
+  ],
+  "cellSizes": [
+    6,
+    15,
+    3,
+    5,
+    39,
+    4,
+    9,
+    53,
+    8
+  ],
+  "difficulty": 64
+}

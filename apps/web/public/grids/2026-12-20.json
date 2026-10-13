@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 50,
+  "date": "2026-12-20",
+  "rows": [
+    "type-flying",
+    "color-green",
+    "size-height-50cm"
+  ],
+  "cols": [
+    "stat-speed-100",
+    "evo-middle",
+    "type-psychic"
+  ],
+  "cellSizes": [
+    14,
+    5,
+    3,
+    5,
+    10,
+    5,
+    7,
+    4,
+    13
+  ],
+  "difficulty": 77
+}

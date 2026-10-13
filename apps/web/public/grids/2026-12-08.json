@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 38,
+  "date": "2026-12-08",
+  "rows": [
+    "evo-final",
+    "type-rock",
+    "evo-stage-3"
+  ],
+  "cols": [
+    "gen-3",
+    "type-steel",
+    "name-long"
+  ],
+  "cellSizes": [
+    45,
+    11,
+    31,
+    12,
+    6,
+    5,
+    15,
+    4,
+    13
+  ],
+  "difficulty": 58
+}

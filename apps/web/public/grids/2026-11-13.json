@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 13,
+  "date": "2026-11-13",
+  "rows": [
+    "shape-upright",
+    "evo-middle",
+    "size-height-50cm"
+  ],
+  "cols": [
+    "type-water",
+    "type-fairy",
+    "color-purple"
+  ],
+  "cellSizes": [
+    20,
+    6,
+    8,
+    9,
+    5,
+    4,
+    20,
+    7,
+    9
+  ],
+  "difficulty": 68
+}

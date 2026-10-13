@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { canCrossCategories, CATEGORIES, type Category, type CategoryFamily } from './categories';
 import { LAUNCH_DATE } from './config';
 import { gridNumber, type GridDate } from './date';
@@ -41,6 +42,30 @@ export interface Grid {
   cellSizes: number[];
   /** 0 (easiest) to 100 (hardest): see `difficultyOf`. */
   difficulty: number;
+}
+
+const gridDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+const categoryIdSchema = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+
+/** Shape of a grid file (`apps/web/public/grids/YYYY-MM-DD.json`). */
+export const gridSchema = z.strictObject({
+  version: z.literal(GRID_VERSION),
+  id: z.number().int(),
+  date: gridDateSchema,
+  rows: z.tuple([categoryIdSchema, categoryIdSchema, categoryIdSchema]),
+  cols: z.tuple([categoryIdSchema, categoryIdSchema, categoryIdSchema]),
+  cellSizes: z.array(z.number().int().min(0)).length(GRID_SIZE * GRID_SIZE),
+  difficulty: z.number().int().min(0).max(100),
+});
+
+// Compile-time guard: the file schema and the `Grid` type describe the same thing.
+type Same<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
+export type SchemaMatchesGrid = Same<z.infer<typeof gridSchema>, Grid> extends true ? true : never;
+
+/** A grid read from untrusted JSON, or `null` if it is not one (wrong shape or other version). */
+export function parseGrid(raw: unknown): Grid | null {
+  const parsed = gridSchema.safeParse(raw);
+  return parsed.success ? parsed.data : null;
 }
 
 export function cellIndex(row: number, col: number): number {

@@ -27,3 +27,5 @@ jobs:
       - run: pnpm build
       - run: pnpm --filter @pokeneuf/web exec playwright install --with-deps chromium
       - run: pnpm e2e
+      # Same game, served under /<repo>/ like on GitHub Pages (the custom-domain case is the run above).
+      - run: E2E_BASE=/pokeneuf/ pnpm e2e --project=mobile-375

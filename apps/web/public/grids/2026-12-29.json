@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 59,
+  "date": "2026-12-29",
+  "rows": [
+    "color-brown",
+    "color-purple",
+    "type-normal"
+  ],
+  "cols": [
+    "evo-middle",
+    "type-mono",
+    "name-ends-a"
+  ],
+  "cellSizes": [
+    7,
+    48,
+    7,
+    4,
+    25,
+    6,
+    7,
+    49,
+    3
+  ],
+  "difficulty": 62
+}

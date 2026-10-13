@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 64,
+  "date": "2027-01-03",
+  "rows": [
+    "stat-speed-100",
+    "gen-4",
+    "size-height-50cm"
+  ],
+  "cols": [
+    "type-dark",
+    "type-electric",
+    "color-yellow"
+  ],
+  "cellSizes": [
+    3,
+    8,
+    12,
+    7,
+    7,
+    7,
+    4,
+    10,
+    11
+  ],
+  "difficulty": 74
+}

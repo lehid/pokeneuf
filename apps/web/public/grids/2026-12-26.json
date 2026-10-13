@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 56,
+  "date": "2026-12-26",
+  "rows": [
+    "type-dark",
+    "type-rock",
+    "color-red"
+  ],
+  "cols": [
+    "stat-total-500",
+    "shape-upright",
+    "name-has-y"
+  ],
+  "cellSizes": [
+    7,
+    3,
+    3,
+    7,
+    9,
+    5,
+    11,
+    9,
+    12
+  ],
+  "difficulty": 76
+}

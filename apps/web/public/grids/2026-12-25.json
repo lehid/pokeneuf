@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 55,
+  "date": "2026-12-25",
+  "rows": [
+    "size-height-2m",
+    "gen-4",
+    "type-ground"
+  ],
+  "cols": [
+    "status-starter",
+    "evo-stage-3",
+    "type-dragon"
+  ],
+  "cellSizes": [
+    3,
+    11,
+    8,
+    9,
+    16,
+    6,
+    3,
+    9,
+    5
+  ],
+  "difficulty": 75
+}

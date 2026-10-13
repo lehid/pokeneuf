@@ -20,3 +20,4 @@ export {
   type GeneratorContext,
 } from './generate';
 export { analyzeGrids, cooldownFindings, type GridReport } from './report';
+export { MIN_STOCK_DAYS, stockDays, stockEnd } from './stock';

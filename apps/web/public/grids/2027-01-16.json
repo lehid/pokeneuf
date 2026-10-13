@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 77,
+  "date": "2027-01-16",
+  "rows": [
+    "type-bug",
+    "color-purple",
+    "color-green"
+  ],
+  "cols": [
+    "evo-none",
+    "type-flying",
+    "name-short"
+  ],
+  "cellSizes": [
+    5,
+    12,
+    4,
+    7,
+    9,
+    5,
+    6,
+    7,
+    3
+  ],
+  "difficulty": 79
+}

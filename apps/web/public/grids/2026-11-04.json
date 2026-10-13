@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 4,
+  "date": "2026-11-04",
+  "rows": [
+    "form-mega",
+    "status-legendary",
+    "type-dual"
+  ],
+  "cols": [
+    "gen-2",
+    "type-steel",
+    "shape-wings"
+  ],
+  "cellSizes": [
+    9,
+    8,
+    7,
+    5,
+    3,
+    7,
+    49,
+    24,
+    42
+  ],
+  "difficulty": 60
+}

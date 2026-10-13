@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 16,
+  "date": "2026-11-16",
+  "rows": [
+    "size-height-2m",
+    "type-ground",
+    "shape-wings"
+  ],
+  "cols": [
+    "stat-attack-100",
+    "color-brown",
+    "color-blue"
+  ],
+  "cellSizes": [
+    28,
+    7,
+    10,
+    17,
+    14,
+    10,
+    6,
+    11,
+    7
+  ],
+  "difficulty": 61
+}

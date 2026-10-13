@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 28,
+  "date": "2026-11-28",
+  "rows": [
+    "size-height-50cm",
+    "evo-middle",
+    "gen-2"
+  ],
+  "cols": [
+    "type-electric",
+    "type-grass",
+    "name-has-ou"
+  ],
+  "cellSizes": [
+    10,
+    18,
+    18,
+    5,
+    10,
+    6,
+    8,
+    10,
+    10
+  ],
+  "difficulty": 64
+}

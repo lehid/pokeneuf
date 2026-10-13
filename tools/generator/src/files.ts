@@ -1,29 +1,16 @@
 import { mkdir, readdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GRID_SIZE, GRID_VERSION, type Grid, type GridDate } from '@pokeneuf/core';
+import { GRID_VERSION, gridSchema, type Grid, type GridDate } from '@pokeneuf/core';
 import { z } from 'zod';
 
 const ROOT = fileURLToPath(new URL('../../../', import.meta.url));
 export const GRIDS_DIR = path.join(ROOT, 'apps/web/public/grids');
 export const MEMBERSHIPS_PATH = path.join(ROOT, 'packages/data/dist/memberships.json');
 
+export { gridSchema };
+
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
-const categoryId = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
-
-export const gridSchema = z.strictObject({
-  version: z.literal(GRID_VERSION),
-  id: z.number().int(),
-  date,
-  rows: z.tuple([categoryId, categoryId, categoryId]),
-  cols: z.tuple([categoryId, categoryId, categoryId]),
-  cellSizes: z.array(z.number().int().min(0)).length(GRID_SIZE * GRID_SIZE),
-  difficulty: z.number().int().min(0).max(100),
-});
-
-// Compile-time guard: the file schema and the shared `Grid` type describe the same thing.
-type Same<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
-export type SchemaMatchesGrid = Same<z.infer<typeof gridSchema>, Grid> extends true ? true : never;
 
 export const indexSchema = z.strictObject({
   version: z.literal(GRID_VERSION),

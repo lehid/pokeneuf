@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 54,
+  "date": "2026-12-24",
+  "rows": [
+    "evo-gen4",
+    "evo-none",
+    "status-legendary"
+  ],
+  "cols": [
+    "stat-attack-100",
+    "type-steel",
+    "color-yellow"
+  ],
+  "cellSizes": [
+    22,
+    6,
+    3,
+    29,
+    6,
+    12,
+    14,
+    3,
+    5
+  ],
+  "difficulty": 69
+}

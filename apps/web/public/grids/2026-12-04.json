@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 34,
+  "date": "2026-12-04",
+  "rows": [
+    "status-fossil",
+    "stat-total-300",
+    "size-height-2m"
+  ],
+  "cols": [
+    "name-ends-a",
+    "type-dual",
+    "shape-upright"
+  ],
+  "cellSizes": [
+    3,
+    11,
+    4,
+    7,
+    38,
+    10,
+    10,
+    26,
+    11
+  ],
+  "difficulty": 63
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 39,
+  "date": "2026-12-09",
+  "rows": [
+    "name-has-ch",
+    "color-purple",
+    "stat-attack-100"
+  ],
+  "cols": [
+    "evo-base",
+    "gen-1",
+    "type-normal"
+  ],
+  "cellSizes": [
+    13,
+    10,
+    4,
+    17,
+    23,
+    5,
+    4,
+    29,
+    10
+  ],
+  "difficulty": 63
+}

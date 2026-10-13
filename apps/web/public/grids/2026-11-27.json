@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 27,
+  "date": "2026-11-27",
+  "rows": [
+    "status-starter",
+    "status-legendary",
+    "evo-none"
+  ],
+  "cols": [
+    "shape-upright",
+    "type-dual",
+    "name-double-letter"
+  ],
+  "cellSizes": [
+    21,
+    12,
+    10,
+    6,
+    12,
+    3,
+    16,
+    33,
+    6
+  ],
+  "difficulty": 61
+}

@@ -1,13 +1,17 @@
 import { findSolution, solutionsFor, type Pokemon } from '@pokeneuf/core';
 import { expect, test, type Page } from '@playwright/test';
-import { demoGrid, memberships, pokemonById } from '../src/node-data';
+import { gridOn, memberships, pokemonById } from '../src/node-data';
 
-const solution = findSolution(demoGrid, memberships) ?? [];
+// Every test plays the real grid of this day: the clock is fixed to it (noon in Paris).
+const DAY = '2026-11-05';
+const dayGrid = gridOn(DAY);
+
+const solution = findSolution(dayGrid, memberships) ?? [];
 const name = (id: number): string => pokemonById(id).nameFr;
 
 /** A Pokémon that fits neither the row nor the column of a cell. */
 function wrongFor(cell: number): Pokemon {
-  const ok = new Set(solutionsFor(demoGrid, memberships, cell));
+  const ok = new Set(solutionsFor(dayGrid, memberships, cell));
   const found = [1, 25, 133, 150, 151, 249].map(pokemonById).find((p) => !ok.has(p.id));
   if (!found) throw new Error('no wrong Pokémon');
   return found;
@@ -22,13 +26,14 @@ async function play(page: Page, cell: number, pokemon: string): Promise<void> {
 }
 
 test.beforeEach(async ({ page }) => {
+  await page.clock.setFixedTime(new Date(`${DAY}T12:00:00+01:00`));
   // Skip the rules popup except in the test about it.
   await page.addInitScript(() => {
     if (!window.localStorage.getItem('pokeneuf:v1:settings') && !window.name.includes('rules')) {
       window.localStorage.setItem('pokeneuf:v1:settings', '{"version":1,"hideRules":true}');
     }
   });
-  await page.goto('/');
+  await page.goto('./');
 });
 
 test('won game: nine correct answers, end screen, solutions', async ({ page }) => {
@@ -42,7 +47,7 @@ test('won game: nine correct answers, end screen, solutions', async ({ page }) =
   await page.getByTestId('cell-0-0').click();
   await expect(page.getByTestId('solutions-dialog')).toBeVisible();
   await expect(page.getByTestId('solutions-dialog').locator('li')).toHaveCount(
-    demoGrid.cellSizes[0] ?? -1,
+    dayGrid.cellSizes[0] ?? -1,
   );
 });
 
@@ -112,7 +117,7 @@ test('the combobox works with the keyboard and shows names, numbers and types', 
 });
 
 test('a header explains its category', async ({ page }) => {
-  await page.getByTestId(`col-header-${demoGrid.cols[0]}`).click();
+  await page.getByTestId(`col-header-${dayGrid.cols[0]}`).click();
   await expect(page.getByText('Définition')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.getByText('Définition')).toBeHidden();

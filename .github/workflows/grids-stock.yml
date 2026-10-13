@@ -1,0 +1,37 @@
+name: Grid stock
+
+# Every week: fail and open an issue when fewer than 30 days of grids are left (ROADMAP phase 5).
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  stock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - id: stock
+        run: pnpm grids:stock --min 30
+      - name: Open an issue when the stock is low
+        if: failure() && steps.stock.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          label="grids-stock"
+          gh label create "$label" --description "Fewer than 30 days of grids left" --color D93F0B 2>/dev/null || true
+          if [ -z "$(gh issue list --label "$label" --state open --json number --jq '.[].number')" ]; then
+            gh issue create --label "$label" \
+              --title "Grid stock below 30 days" \
+              --body "The weekly check found fewer than 30 days of grids from today. Generate more with \`pnpm grids:generate --from <first missing date> --days 90\`, review \`pnpm grids:report\`, and commit them. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          fi

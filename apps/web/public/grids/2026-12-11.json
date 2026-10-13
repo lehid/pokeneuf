@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 41,
+  "date": "2026-12-11",
+  "rows": [
+    "name-has-x",
+    "stat-total-500",
+    "type-poison"
+  ],
+  "cols": [
+    "gen-4",
+    "type-bug",
+    "size-height-2m"
+  ],
+  "cellSizes": [
+    7,
+    4,
+    4,
+    41,
+    6,
+    36,
+    8,
+    9,
+    4
+  ],
+  "difficulty": 68
+}

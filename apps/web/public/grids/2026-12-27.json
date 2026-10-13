@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 57,
+  "date": "2026-12-27",
+  "rows": [
+    "stat-speed-100",
+    "size-height-50cm",
+    "type-psychic"
+  ],
+  "cols": [
+    "shape-wings",
+    "status-mythical",
+    "name-has-ch"
+  ],
+  "cellSizes": [
+    10,
+    8,
+    4,
+    8,
+    5,
+    12,
+    5,
+    4,
+    4
+  ],
+  "difficulty": 78
+}

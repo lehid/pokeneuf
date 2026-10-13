@@ -11,6 +11,7 @@
     "data:build": "pnpm --filter @pokeneuf/data data:build",
     "grids:generate": "pnpm --filter @pokeneuf/generator grids:generate",
     "grids:report": "pnpm --filter @pokeneuf/generator grids:report",
+    "grids:stock": "pnpm --filter @pokeneuf/generator grids:stock",
     "build": "pnpm -r build",
     "e2e": "pnpm --filter @pokeneuf/web e2e",
     "test": "pnpm -r test",

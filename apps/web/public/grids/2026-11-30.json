@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 30,
+  "date": "2026-11-30",
+  "rows": [
+    "type-rock",
+    "gen-3",
+    "type-mono"
+  ],
+  "cols": [
+    "shape-quadruped",
+    "evo-trade",
+    "name-has-k"
+  ],
+  "cellSizes": [
+    5,
+    3,
+    7,
+    20,
+    3,
+    25,
+    67,
+    11,
+    47
+  ],
+  "difficulty": 58
+}

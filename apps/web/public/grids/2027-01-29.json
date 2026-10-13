@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 90,
+  "date": "2027-01-29",
+  "rows": [
+    "stat-attack-100",
+    "type-ground",
+    "shape-wings"
+  ],
+  "cols": [
+    "form-mega",
+    "type-dragon",
+    "name-starts-vowel"
+  ],
+  "cellSizes": [
+    24,
+    8,
+    12,
+    4,
+    5,
+    5,
+    7,
+    4,
+    7
+  ],
+  "difficulty": 74
+}

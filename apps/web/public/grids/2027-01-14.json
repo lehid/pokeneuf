@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 75,
+  "date": "2027-01-14",
+  "rows": [
+    "evo-base",
+    "stat-total-300",
+    "evo-gen4"
+  ],
+  "cols": [
+    "type-fighting",
+    "shape-wings",
+    "type-poison"
+  ],
+  "cellSizes": [
+    7,
+    13,
+    19,
+    5,
+    8,
+    10,
+    5,
+    6,
+    5
+  ],
+  "difficulty": 71
+}

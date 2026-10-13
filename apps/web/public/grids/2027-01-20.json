@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "id": 81,
+  "date": "2027-01-20",
+  "rows": [
+    "type-water",
+    "type-electric",
+    "gen-2"
+  ],
+  "cols": [
+    "evo-middle",
+    "form-mega",
+    "shape-quadruped"
+  ],
+  "cellSizes": [
+    9,
+    7,
+    7,
+    5,
+    3,
+    11,
+    10,
+    9,
+    22
+  ],
+  "difficulty": 70
+}
