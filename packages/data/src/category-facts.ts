@@ -85,7 +85,6 @@ export const CATEGORY_FACTS: Record<string, CategoryFact> = {
   'shape-upright': { in: [4, 64, 160, 240, 312], out: [1, 25, 133, 129] },
   'size-height-2m': { in: [95, 130, 143, 321, 384], out: [1, 25, 92, 133] },
   'size-height-50cm': { in: [7, 98, 182, 270, 343], out: [1, 4, 6, 150] }, // Bulbizarre is 70 cm
-  'size-weight-100kg': { in: [95, 143, 321, 384, 493], out: [1, 25, 92, 133] },
 
   // --- Names (French, accents ignored) --------------------------------------------------------
   'name-starts-c': { in: [7, 8, 10, 57, 83], out: [1, 25, 133, 6] },

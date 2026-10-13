@@ -447,15 +447,6 @@ const sizeCategories: Category[] = [
     exclusiveWith: ['size'],
     bonus: false,
   },
-  {
-    id: 'size-weight-100kg',
-    family: 'size',
-    label: { fr: 'Poids ≥ 100 kg', en: 'Weight ≥ 100 kg' },
-    definition: { fr: 'Pokémon pesant 100 kilogrammes ou plus.' },
-    predicate: (p) => p.weightHg >= 1000,
-    exclusiveWith: ['size'],
-    bonus: false,
-  },
 ];
 
 const FR_ONLY = 'Dépend de la langue : nom français uniquement.';

@@ -186,13 +186,11 @@ describe('predicates', () => {
     expect(holds('stat-speed-100', pokemon({ baseStats: { speed: 99 } }))).toBe(false);
   });
 
-  it('applies the size thresholds inclusively (decimetres and hectograms)', () => {
+  it('applies the size thresholds inclusively (decimetres)', () => {
     expect(holds('size-height-2m', pokemon({ heightDm: 20 }))).toBe(true);
     expect(holds('size-height-2m', pokemon({ heightDm: 19 }))).toBe(false);
     expect(holds('size-height-50cm', pokemon({ heightDm: 5 }))).toBe(true);
     expect(holds('size-height-50cm', pokemon({ heightDm: 6 }))).toBe(false);
-    expect(holds('size-weight-100kg', pokemon({ weightHg: 1000 }))).toBe(true);
-    expect(holds('size-weight-100kg', pokemon({ weightHg: 999 }))).toBe(false);
   });
 
   it('ignores accents in the first letter of the name', () => {

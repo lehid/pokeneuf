@@ -136,7 +136,6 @@ describe('sizes', () => {
         "shape-wings": 42,
         "size-height-2m": 48,
         "size-height-50cm": 108,
-        "size-weight-100kg": 77,
         "stat-attack-100": 100,
         "stat-speed-100": 63,
         "stat-total-300": 93,
