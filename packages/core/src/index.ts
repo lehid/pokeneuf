@@ -5,6 +5,7 @@ export * from './date';
 export * from './difficulty';
 export * from './game';
 export * from './grid';
+export * from './markdown';
 export * from './matching';
 export * from './memberships';
 export * from './pokedex';

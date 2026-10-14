@@ -1,6 +1,7 @@
 import { APP_NAME } from '@pokeneuf/core';
 import type { ReactNode } from 'react';
 import { fr } from '../i18n/fr';
+import { SiteFooter } from './SiteFooter';
 
 /** Page frame for every screen that is not the game itself. */
 export function Shell({ children }: { children: ReactNode }) {
@@ -11,7 +12,7 @@ export function Shell({ children }: { children: ReactNode }) {
         <p className="mt-1 text-xs text-lcd-soft">{fr.tagline}</p>
       </header>
       {children}
-      <footer className="mt-auto pt-4 text-center text-xs text-lcd-soft">{fr.disclaimer}</footer>
+      <SiteFooter />
     </main>
   );
 }

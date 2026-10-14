@@ -27,8 +27,15 @@ Jeu web quotidien : grille 3×3 à remplir avec des Pokémon qui vérifient un c
 
 ## Commandes
 - `pnpm dev`, `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm build`
+- `pnpm assets:build` : redessine icônes PWA, favicon et image Open Graph (`apps/web/public/`, PNG commités ; couleurs via `TYPE_COLORS`)
 - `pnpm data:build` : régénère pokedex.json + memberships
 - `pnpm grids:generate --from YYYY-MM-DD --days N`, `pnpm grids:report`, `pnpm grids:stock` (échoue s'il reste moins de 30 jours de grilles), `pnpm grids:publish --dir apps/web/dist/grids` (retire du site construit les grilles des jours à venir), `pnpm score:simulate` (scores de joueurs simulés par niveau de difficulté, à comparer à la bande visée)
+
+## Contenu, PWA, SEO
+- Pages `#/faq`, `#/changelog`, `#/legal` (routes dans `packages/core/src/routes.ts`). Le footer (`SiteFooter`) est sur toutes les pages. La FAQ est **générée** (catégories, score) : ne jamais recopier une définition ou une constante.
+- Mentions légales : les faits de l'éditeur vivent dans `apps/web/src/content/legal.ts` ; un `null` s'affiche « À compléter ». Ne pas inventer ces informations.
+- Nom du site dans le HTML/manifest : placeholders `%APP_NAME%`… remplis par `apps/web/site.config.ts` (lu depuis `APP_NAME`). Ne jamais l'écrire en dur dans `index.html`.
+- PWA : app shell uniquement (`pwaOptions` dans `site.config.ts`), `grids/**` jamais précaché et en `NetworkOnly`. Les e2e bloquent le service worker, sauf `pwa.spec.ts`.
 
 ## À ne pas faire
 - Ne pas mettre « Pokémon » en toutes lettres dans le nom du site, le domaine ou le logo ; pas de Poké Ball ni d'icônes officielles.

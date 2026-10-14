@@ -1,0 +1,3 @@
+# Everything may be crawled; the game is a single page.
+User-agent: *
+Allow: /

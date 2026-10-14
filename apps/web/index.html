@@ -3,15 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta
-      name="description"
-      content="Chaque jour, remplissez une grille 3×3 avec les bons Pokémon."
-    />
-    <meta name="theme-color" content="#f4f7fb" />
-    <title>PokéNeuf</title>
+    <title>%SITE_TITLE%</title>
+    <meta name="description" content="%SITE_DESCRIPTION%" />
+    <meta name="theme-color" content="%THEME_LIGHT%" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="%THEME_DARK%" media="(prefers-color-scheme: dark)" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="%APP_NAME%" />
+
+    <!-- Open Graph, Twitter and canonical tags: injected by `socialTags` (site.config.ts). -->
   </head>
   <body>
     <div id="root"></div>
+    <noscript>%APP_NAME% a besoin de JavaScript pour afficher la grille du jour.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

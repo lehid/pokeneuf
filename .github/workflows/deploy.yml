@@ -39,6 +39,8 @@ jobs:
         env:
           # Served under https://<user>.github.io/<repo>/. Use "/" with a custom domain.
           VITE_BASE: /${{ github.event.repository.name }}/
+          # Absolute address for the link previews (og:image, canonical). With a custom domain, set it to that domain.
+          VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
       # The repository holds the next 90 days of grids; the site only gets today's and the past ones.
       - run: pnpm grids:publish --dir apps/web/dist/grids
       - uses: actions/upload-pages-artifact@v3
