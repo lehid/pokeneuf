@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { SCORE_TITLES, TITLE_FLOORS, titleFor, type ScoreTitle } from './titles';
+import {
+  SCORE_TITLES,
+  scoreShare,
+  TITLE_FLOORS,
+  titleFor,
+  titleMarks,
+  type ScoreTitle,
+} from './titles';
 
 describe('titleFor', () => {
   it('cuts at 300, 500, 700 and 850, each floor belonging to its own title', () => {
@@ -29,5 +36,24 @@ describe('titleFor', () => {
     expect([...floors].sort((a, b) => a - b)).toEqual(floors);
     expect(new Set(floors).size).toBe(floors.length);
     expect(Math.max(...floors)).toBeLessThan(900);
+  });
+});
+
+describe('scoreShare and titleMarks', () => {
+  it('place a score on the 0–900 scale, clamped', () => {
+    expect(scoreShare(0)).toBe(0);
+    expect(scoreShare(450)).toBe(0.5);
+    expect(scoreShare(900)).toBe(1);
+    expect(scoreShare(-20)).toBe(0);
+    expect(scoreShare(1200)).toBe(1);
+  });
+
+  it('mark where every title starts, in order, from 0', () => {
+    const marks = titleMarks();
+    expect(marks.map((m) => m.title)).toEqual([...SCORE_TITLES]);
+    expect(marks[0]?.share).toBe(0);
+    expect(marks.map((m) => m.share)).toEqual([...marks.map((m) => m.share)].sort((a, b) => a - b));
+    expect(marks.find((m) => m.title === 'trainer')?.share).toBeCloseTo(300 / 900);
+    expect(marks.find((m) => m.title === 'legend')?.share).toBeCloseTo(850 / 900);
   });
 });

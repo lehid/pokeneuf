@@ -18,6 +18,7 @@ import { App } from './App';
 import { act } from '@testing-library/react';
 import { vi } from 'vitest';
 import { demoGrid, memberships, pokedex, pokemonById, popularity } from './data';
+import { fr } from './i18n/fr';
 import { memoryStorage } from './storage';
 
 const solution = findSolution(demoGrid, memberships) ?? [];
@@ -328,7 +329,7 @@ describe('rarity, score, stats and sharing', () => {
     start();
     finishWon();
     const dialog = screen.getByTestId('end-dialog');
-    expect(within(dialog).getByText('Bravo, grille complète !')).toBeTruthy();
+    expect(dialog.textContent).toContain(fr.endWon);
     expect(within(dialog).getByText(/9\/9 trouvés/)).toBeTruthy();
     expect(within(dialog).getByTestId('score').textContent).toMatch(/^\d+\/900$/);
     expect(within(dialog).getByTestId('rarest').textContent).toContain('Réponse la plus rare');
@@ -343,6 +344,36 @@ describe('rarity, score, stats and sharing', () => {
         legend: 'Légende',
       }[titleFor(total)],
     );
+  });
+
+  it('recaps the game at the end: one coloured square per found cell, and a gauge up to the score', () => {
+    start();
+    finishWon();
+    const dialog = screen.getByTestId('end-dialog');
+    const squares = within(dialog).getByTestId('result-grid').children;
+    expect(squares).toHaveLength(9);
+    expect([...squares].every((square) => square.getAttribute('data-tier') !== null)).toBe(true);
+    const total = Number(within(dialog).getByTestId('score').textContent?.split('/')[0]);
+    expect(
+      Number(
+        within(dialog).getByTestId('score-gauge').firstElementChild?.getAttribute('data-share'),
+      ),
+    ).toBeCloseTo(total / 900);
+    expect(
+      within(dialog).getByTestId('title').querySelector('svg')?.getAttribute('data-title'),
+    ).toBe(titleFor(total));
+  });
+
+  it('hatches the cells nobody found in the recap, and on the board', () => {
+    start();
+    fireEvent.click(screen.getByTestId('abandon'));
+    fireEvent.click(screen.getByText(fr.abandonYes));
+    const dialog = screen.getByTestId('end-dialog');
+    const squares = [...within(dialog).getByTestId('result-grid').children];
+    expect(squares.every((square) => square.classList.contains('missed'))).toBe(true);
+    expect(squares.every((square) => square.getAttribute('data-tier') === null)).toBe(true);
+    fireEvent.click(within(dialog).getByTestId('see-solutions'));
+    expect(screen.getByTestId('cell-0-0').classList.contains('missed')).toBe(true);
   });
 
   it('lists the solutions of a cell from the best known to the rarest, each with its tier', () => {

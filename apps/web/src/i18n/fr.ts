@@ -65,7 +65,7 @@ export const fr = {
   tryDemo: 'Essayer la grille de démonstration',
   loadError: 'Impossible de charger la grille du jour.',
   retry: 'Réessayer',
-  newGridTitle: 'Nouvelle grille !',
+  newGridTitle: 'Nouvelle grille\u00A0!',
   newGridText: 'Un nouveau jour a commencé : la grille du jour a changé.',
   newGridPlay: 'Jouer la nouvelle grille',
   newGridLater: 'Plus tard',
@@ -113,12 +113,12 @@ export const fr = {
   hideRules: 'Ne plus afficher',
   play: 'Jouer',
 
-  abandonTitle: 'Abandonner ?',
+  abandonTitle: 'Abandonner\u00A0?',
   abandonQuestion: 'Voulez-vous vraiment abandonner ?',
   abandonYes: 'Oui, abandonner',
   abandonNo: 'Continuer à jouer',
 
-  endWon: 'Bravo, grille complète !',
+  endWon: 'Bravo, grille complète\u00A0!',
   endLost: 'Perdu…',
   endAbandoned: 'Partie abandonnée',
   endFound: (found: number, errors: number) =>

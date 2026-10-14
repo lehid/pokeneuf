@@ -52,7 +52,10 @@ export function Cell({ index }: { index: number }) {
         onClick={() => selectCell(index)}
       >
         <span
-          className="max-w-full rounded-sm px-1 text-xs leading-tight font-bold break-words sm:text-base"
+          className={`max-w-full rounded-sm px-1 leading-tight font-bold break-words sm:text-base ${
+            // On a phone, ten letters ("Ectoplasma") no longer fit a cell: step down, never cut a name.
+            p.nameFr.length >= 10 ? 'text-[0.65rem]' : 'text-xs'
+          }`}
           style={
             plate
               ? {
@@ -78,7 +81,7 @@ export function Cell({ index }: { index: number }) {
   return (
     <button
       type="button"
-      className={`${base} ${over ? 'bg-lcd-panel-2' : 'hover:bg-lcd-panel-2'}`}
+      className={`${base} ${over ? 'missed' : 'hover:bg-lcd-panel-2'}`}
       aria-label={over ? fr.unfoundCell(row, col) : fr.emptyCell(row, col)}
       data-testid={testId}
       data-state="empty"
