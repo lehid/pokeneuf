@@ -22,6 +22,8 @@ import { formatNumber } from '../format';
 import { useGame } from '../GameContext';
 import { fr } from '../i18n/fr';
 import { Modal } from './Modal';
+import { ResultGrid, ScoreGauge } from './ResultVisuals';
+import { TitleIcon } from './TitleIcon';
 import { TypeBadge } from './TypeBadge';
 
 export function RulesDialog() {
@@ -118,20 +120,32 @@ export function EndDialog() {
   const score = useScore();
   if (game.status === 'playing') return null;
   const countsAsDaily = endedOnItsDay(finishedOn, grid.date);
+  const endTitle = titleFor(score.total);
   const rarest = score.rarestCell === null ? null : (game.cells[score.rarestCell] ?? null);
   const rarestTier =
     score.rarestCell === null ? null : (score.cells[score.rarestCell]?.tier ?? null);
   return (
     <Modal title={END_TITLES[game.status]} onClose={closeDialog} testId="end-dialog">
-      <p className="mb-1">{fr.endFound(score.found, game.errors)}</p>
-      <p className="mb-1 text-xs font-bold tracking-wide uppercase text-lcd-soft">{fr.endScore}</p>
-      <p className="title-pixel mb-2 text-2xl" data-testid="score">
-        {score.total}
-        <span className="text-sm text-lcd-soft">/{MAX_SCORE}</span>
-      </p>
-      <p className="mb-2 text-sm" data-testid="title">
-        {fr.titleLabel} : <strong>{fr.titles[titleFor(score.total)]}</strong>
-      </p>
+      <div className="mb-3 flex items-center gap-4">
+        <ResultGrid />
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-bold tracking-wide uppercase text-lcd-soft">{fr.endScore}</p>
+          <p className="title-pixel text-2xl" data-testid="score">
+            {score.total}
+            <span className="text-sm text-lcd-soft">/{MAX_SCORE}</span>
+          </p>
+          <p className="mt-1 flex items-center gap-2 text-sm" data-testid="title">
+            <TitleIcon title={endTitle} />
+            <span>
+              {fr.titleLabel} : <strong>{fr.titles[endTitle]}</strong>
+            </span>
+          </p>
+        </div>
+      </div>
+      <div className="mb-3">
+        <ScoreGauge score={score.total} />
+      </div>
+      <p className="mb-2">{fr.endFound(score.found, game.errors)}</p>
       {rarest !== null && rarestTier !== null && (
         <p className="mb-1 text-sm" data-testid="rarest">
           {fr.rarestAnswer} : <strong>{pokemonById(rarest).nameFr}</strong>{' '}

@@ -183,3 +183,33 @@ dialog.modal::backdrop {
     animation: none;
   }
 }
+
+/* End screen: the gauge fills and the result squares appear step by step, like an LCD. */
+.gauge-fill {
+  width: var(--gauge);
+  animation: gauge-fill 700ms steps(18) both;
+}
+@keyframes gauge-fill {
+  from {
+    width: 0;
+  }
+}
+.result-cell {
+  animation: result-cell 240ms steps(3) both;
+  animation-delay: calc(var(--i) * 70ms);
+}
+@keyframes result-cell {
+  from {
+    transform: scale(0);
+  }
+}
+/* A cell nobody found: hatched, to tell it from a cell still to play. */
+.missed {
+  background: repeating-linear-gradient(45deg, var(--lcd-panel-2) 0 4px, var(--lcd-panel) 4px 8px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .gauge-fill,
+  .result-cell {
+    animation: none;
+  }
+}

@@ -24,3 +24,13 @@ export function titleFor(score: number): ScoreTitle {
   }
   return title;
 }
+
+/** Where a score sits on the 0–`maxScore` scale, from 0 to 1 (for the gauge of the end screen). */
+export function scoreShare(score: number): number {
+  return Math.min(1, Math.max(0, score / SCORING.maxScore));
+}
+
+/** Where each title starts on that scale, from 0 to 1, lowest title first. */
+export function titleMarks(): { title: ScoreTitle; share: number }[] {
+  return SCORE_TITLES.map((title) => ({ title, share: scoreShare(TITLE_FLOORS[title]) }));
+}
