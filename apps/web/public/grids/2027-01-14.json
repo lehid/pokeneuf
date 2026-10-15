@@ -3,25 +3,25 @@
   "id": 75,
   "date": "2027-01-14",
   "rows": [
-    "evo-base",
-    "gen-1",
-    "color-green"
+    "type-ghost",
+    "status-starter",
+    "evo-friendship"
   ],
   "cols": [
-    "stat-speed-100",
-    "type-ground",
-    "name-short"
+    "gen-1",
+    "size-height-50cm",
+    "type-mono"
   ],
   "cellSizes": [
     3,
-    18,
-    20,
+    3,
+    7,
+    9,
+    8,
     24,
-    14,
-    13,
-    5,
-    4,
-    3
+    3,
+    9,
+    9
   ],
-  "difficulty": 68
+  "difficulty": 76
 }

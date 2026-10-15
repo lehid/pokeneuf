@@ -3,25 +3,25 @@
   "id": 18,
   "date": "2026-11-18",
   "rows": [
-    "gen-1",
-    "type-psychic",
-    "status-fossil"
+    "type-fairy",
+    "evo-middle",
+    "shape-wings"
   ],
   "cols": [
-    "shape-upright",
-    "type-water",
-    "name-has-k"
+    "size-height-50cm",
+    "type-normal",
+    "gen-1"
   ],
   "cellSizes": [
-    34,
-    32,
-    22,
-    11,
+    7,
     4,
-    12,
+    5,
     4,
-    4,
-    4
+    7,
+    26,
+    8,
+    15,
+    16
   ],
-  "difficulty": 64
+  "difficulty": 69
 }

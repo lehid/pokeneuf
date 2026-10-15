@@ -3,25 +3,25 @@
   "id": 27,
   "date": "2026-11-27",
   "rows": [
-    "stat-attack-100",
-    "type-dual",
-    "type-rock"
+    "evo-middle",
+    "evo-base",
+    "stat-total-500"
   ],
   "cols": [
-    "evo-trade",
-    "status-fossil",
-    "name-long"
+    "color-red",
+    "type-electric",
+    "type-rock"
   ],
   "cellSizes": [
-    3,
+    4,
     5,
-    17,
-    6,
-    11,
-    30,
-    3,
+    4,
+    15,
+    8,
     13,
-    5
+    11,
+    7,
+    7
   ],
-  "difficulty": 71
+  "difficulty": 72
 }

@@ -152,6 +152,27 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
     );
   }
 
+  const familyOf = new Map(categories.map((c) => [c.id, c.family]));
+
+  /** Families whose cap (`familyWindow`: at most `max` grids in the `windowDays` centred on `date`) is reached. */
+  function capped(date: GridDate, history: readonly Grid[]): Set<CategoryFamily> {
+    const out = new Set<CategoryFamily>();
+    for (const [family, rule] of Object.entries(config.familyWindow) as [
+      CategoryFamily,
+      { windowDays: number; max: number },
+    ][]) {
+      const used = history.filter(
+        (g) =>
+          g.date !== date &&
+          Math.abs(daysBetween(g.date, date)) <= Math.floor(rule.windowDays / 2) &&
+          [...g.rows, ...g.cols].some((id) => familyOf.get(id) === family),
+      ).length;
+      // `max` counts the grid being drawn too: the others in the window must leave room for it.
+      if (used >= rule.max - 1) out.add(family);
+    }
+    return out;
+  }
+
   return ({ date, seed = seedFromDate(date), history }) => {
     const candidate = (
       rows: readonly Category[],
@@ -200,7 +221,14 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
       for (const g of history) {
         if (near(g, cooldown)) for (const id of [...g.rows, ...g.cols]) recentCategories.add(id);
       }
-      const eligible = categories.filter((c) => !recentCategories.has(c.id));
+      // Family caps are a target too: they give way at the last stage, with the category cooldown.
+      const cappedFamilies =
+        cooldown > config.cooldown.minCategoryDays
+          ? capped(date, history)
+          : new Set<CategoryFamily>();
+      const eligible = categories.filter(
+        (c) => !recentCategories.has(c.id) && !cappedFamilies.has(c.family),
+      );
 
       for (let attempt = 1; attempt <= config.attemptsPerStage; attempt++) {
         attempts++;
@@ -225,7 +253,9 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
                 canCrossCategories(r, c) &&
                 !recentPairs.has(pairKey(r.id, c.id)) &&
                 pairs.size(r.id, c.id) >= minAnswers &&
-                pairs.size(r.id, c.id) <= maxAnswers,
+                pairs.size(r.id, c.id) <= maxAnswers &&
+                // Not a cell where one criterion implies the other (every legendary × "500+ stats").
+                pairs.size(r.id, c.id) < Math.min(pairs.size(r.id, r.id), pairs.size(c.id, c.id)),
             ),
         );
         const cols = draw(

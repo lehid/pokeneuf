@@ -3,25 +3,25 @@
   "id": 90,
   "date": "2027-01-29",
   "rows": [
-    "status-fossil",
+    "stat-total-300",
     "type-electric",
-    "type-grass"
+    "gen-3"
   ],
   "cols": [
-    "evo-final",
-    "gen-1",
-    "name-starts-vowel"
+    "evo-middle",
+    "shape-upright",
+    "color-red"
   ],
   "cellSizes": [
+    7,
+    27,
     6,
     5,
-    4,
-    9,
-    9,
-    6,
-    22,
-    14,
-    3
+    8,
+    3,
+    17,
+    51,
+    13
   ],
-  "difficulty": 73
+  "difficulty": 62
 }

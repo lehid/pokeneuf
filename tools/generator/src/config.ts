@@ -43,6 +43,18 @@ const configSchema = z.strictObject({
    * always the rarest ones, which cannot make a valid grid. 0 turns it off.
    */
   balanceWindowDays: days,
+  /**
+   * Caps how often a family may appear: at most `max` grids among the `windowDays` days centred on a
+   * date contain a category of that family. Families whose categories cross almost
+   * everything (spelling) would otherwise fill every column that nothing else can fill, whatever
+   * their weight. Relaxed, like the category cooldown, when it leaves no valid grid.
+   */
+  familyWindow: z
+    .partialRecord(
+      z.enum(CATEGORY_FAMILIES),
+      z.strictObject({ windowDays: z.number().int().positive(), max: z.number().int().min(0) }),
+    )
+    .default({}),
   /** Draws tried at each cooldown length before shortening it. */
   attemptsPerStage: z.number().int().positive(),
 });

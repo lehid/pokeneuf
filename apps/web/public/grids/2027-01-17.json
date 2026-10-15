@@ -3,25 +3,25 @@
   "id": 78,
   "date": "2027-01-17",
   "rows": [
-    "gen-3",
-    "status-fossil",
-    "stat-total-300"
+    "type-ground",
+    "evo-none",
+    "gen-3"
   ],
   "cols": [
-    "type-water",
     "type-rock",
-    "name-has-k"
+    "color-purple",
+    "color-yellow"
   ],
   "cellSizes": [
-    28,
-    12,
-    25,
+    9,
     4,
-    13,
-    4,
-    12,
     3,
-    13
+    7,
+    7,
+    12,
+    12,
+    7,
+    10
   ],
-  "difficulty": 64
+  "difficulty": 73
 }

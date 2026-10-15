@@ -3,25 +3,25 @@
   "id": 51,
   "date": "2026-12-21",
   "rows": [
-    "type-ground",
-    "color-brown",
-    "evo-middle"
+    "type-grass",
+    "stat-speed-100",
+    "name-same-ends"
   ],
   "cols": [
-    "shape-upright",
-    "name-has-ch",
-    "type-mono"
+    "gen-1",
+    "type-mono",
+    "color-red"
   ],
   "cellSizes": [
-    16,
+    14,
+    21,
+    3,
+    24,
+    35,
+    5,
     8,
-    12,
-    19,
-    6,
-    48,
-    20,
-    7,
-    30
+    10,
+    3
   ],
-  "difficulty": 51
+  "difficulty": 64
 }

@@ -3,25 +3,25 @@
   "id": 66,
   "date": "2027-01-05",
   "rows": [
-    "evo-final",
-    "evo-base",
-    "type-normal"
+    "type-grass",
+    "color-red",
+    "shape-wings"
   ],
   "cols": [
-    "name-long",
-    "color-purple",
-    "type-fairy"
+    "evo-stage-3",
+    "evo-base",
+    "type-flying"
   ],
   "cellSizes": [
-    31,
-    24,
-    7,
-    23,
-    17,
-    7,
-    13,
+    11,
+    19,
+    4,
     5,
-    4
+    15,
+    6,
+    9,
+    15,
+    49
   ],
-  "difficulty": 59
+  "difficulty": 60
 }

@@ -3,25 +3,25 @@
   "id": 82,
   "date": "2027-01-21",
   "rows": [
-    "type-flying",
-    "stat-speed-100",
-    "evo-base"
+    "gen-1",
+    "status-starter",
+    "evo-middle"
   ],
   "cols": [
     "color-red",
-    "type-grass",
-    "name-starts-c"
+    "type-fighting",
+    "type-grass"
   ],
   "cellSizes": [
-    6,
-    4,
+    16,
     8,
-    5,
-    4,
+    14,
     6,
-    15,
-    19,
-    18
+    4,
+    12,
+    4,
+    3,
+    10
   ],
-  "difficulty": 71
+  "difficulty": 73
 }

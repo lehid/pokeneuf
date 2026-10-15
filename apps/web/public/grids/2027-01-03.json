@@ -3,25 +3,25 @@
   "id": 64,
   "date": "2027-01-03",
   "rows": [
-    "evo-stone",
-    "stat-attack-100",
-    "evo-middle"
+    "evo-trade",
+    "type-ice",
+    "type-dark"
   ],
   "cols": [
+    "stat-attack-100",
     "gen-3",
-    "type-psychic",
-    "color-blue"
+    "shape-upright"
   ],
   "cellSizes": [
-    7,
     3,
     3,
-    27,
-    9,
-    18,
-    17,
+    8,
     3,
-    15
+    6,
+    8,
+    8,
+    10,
+    8
   ],
-  "difficulty": 69
+  "difficulty": 80
 }

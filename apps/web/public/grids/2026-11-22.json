@@ -3,25 +3,25 @@
   "id": 22,
   "date": "2026-11-22",
   "rows": [
-    "size-height-2m",
-    "type-fairy",
-    "shape-wings"
+    "type-ice",
+    "type-bug",
+    "evo-none"
   ],
   "cols": [
-    "color-blue",
-    "type-normal",
-    "name-has-ou"
+    "color-brown",
+    "shape-upright",
+    "color-blue"
   ],
   "cellSizes": [
-    10,
-    5,
     3,
-    3,
-    4,
+    8,
+    7,
     3,
     7,
-    15,
-    6
+    3,
+    10,
+    30,
+    10
   ],
-  "difficulty": 83
+  "difficulty": 75
 }

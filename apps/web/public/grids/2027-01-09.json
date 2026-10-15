@@ -3,25 +3,25 @@
   "id": 70,
   "date": "2027-01-09",
   "rows": [
-    "size-height-50cm",
-    "type-steel",
-    "form-mega"
+    "evo-middle",
+    "gen-2",
+    "stat-total-300"
   ],
   "cols": [
-    "evo-gen4",
-    "shape-quadruped",
-    "name-has-ch"
+    "color-green",
+    "type-normal",
+    "type-ground"
   ],
   "cellSizes": [
-    3,
-    23,
+    10,
+    7,
+    7,
     12,
-    6,
-    6,
-    3,
-    8,
-    8,
-    3
+    15,
+    10,
+    10,
+    19,
+    11
   ],
-  "difficulty": 77
+  "difficulty": 61
 }

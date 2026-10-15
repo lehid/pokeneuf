@@ -3,25 +3,25 @@
   "id": 7,
   "date": "2026-11-07",
   "rows": [
-    "type-ground",
-    "type-fighting",
-    "status-legendary"
+    "type-ghost",
+    "status-starter",
+    "type-dark"
   ],
   "cols": [
+    "evo-final",
     "stat-total-500",
-    "color-brown",
-    "name-starts-c"
+    "evo-gen4"
   ],
   "cellSizes": [
-    14,
-    14,
-    5,
     7,
-    8,
-    6,
-    26,
     3,
+    4,
+    12,
+    12,
+    6,
+    12,
+    7,
     4
   ],
-  "difficulty": 71
+  "difficulty": 76
 }

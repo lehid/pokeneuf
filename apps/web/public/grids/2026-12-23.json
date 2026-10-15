@@ -3,25 +3,25 @@
   "id": 53,
   "date": "2026-12-23",
   "rows": [
-    "type-fighting",
-    "type-fire",
-    "size-height-2m"
+    "size-height-50cm",
+    "stat-total-300",
+    "gen-4"
   ],
   "cols": [
-    "gen-3",
-    "gen-4",
-    "name-long"
+    "type-flying",
+    "type-dual",
+    "color-brown"
   ],
   "cellSizes": [
-    7,
-    7,
-    3,
-    6,
-    5,
-    5,
-    13,
-    13,
-    6
+    11,
+    45,
+    20,
+    10,
+    38,
+    20,
+    14,
+    53,
+    17
   ],
-  "difficulty": 76
+  "difficulty": 40
 }

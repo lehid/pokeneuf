@@ -3,25 +3,25 @@
   "id": 33,
   "date": "2026-12-03",
   "rows": [
-    "color-yellow",
-    "type-flying",
-    "type-dark"
+    "shape-wings",
+    "type-bug",
+    "type-psychic"
   ],
   "cols": [
-    "gen-2",
-    "evo-base",
-    "form-mega"
+    "stat-total-500",
+    "evo-gen4",
+    "evo-base"
   ],
   "cellSizes": [
-    12,
-    13,
-    4,
-    19,
-    19,
+    16,
     10,
+    15,
     6,
-    6,
-    6
+    5,
+    17,
+    21,
+    4,
+    15
   ],
-  "difficulty": 66
+  "difficulty": 62
 }

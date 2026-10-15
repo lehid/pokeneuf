@@ -3,25 +3,25 @@
   "id": 74,
   "date": "2027-01-13",
   "rows": [
-    "evo-friendship",
-    "evo-stone",
-    "size-height-2m"
+    "size-height-2m",
+    "type-grass",
+    "type-psychic"
   ],
   "cols": [
-    "type-dual",
-    "name-double-letter",
-    "type-normal"
+    "gen-4",
+    "stat-speed-100",
+    "name-ends-a"
   ],
   "cellSizes": [
-    4,
-    4,
-    7,
-    12,
-    4,
-    3,
-    26,
+    13,
     9,
-    5
+    10,
+    14,
+    4,
+    6,
+    9,
+    13,
+    8
   ],
-  "difficulty": 77
+  "difficulty": 67
 }
