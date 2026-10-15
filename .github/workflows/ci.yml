@@ -27,7 +27,7 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       # PokeAPI / Showdown files are pinned to a commit: the cache is keyed on the pins themselves.
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: packages/data/.cache
           key: data-${{ hashFiles('packages/data/src/config.ts') }}
