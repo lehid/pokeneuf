@@ -1,4 +1,8 @@
 /** All French UI strings. Never hard-code UI text in components. */
+
+/** Intl writes « 1 novembre »: the first of the month takes an ordinal in French (« 1er novembre »). */
+const FIRST_OF_MONTH = /^(\D*)1 /;
+
 export const fr = {
   tagline: 'Chaque jour, une grille 3×3 à remplir avec les bons Pokémon.',
   ogTagline: 'Une grille 3×3 à remplir, chaque jour.',
@@ -11,7 +15,9 @@ export const fr = {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
-    }).format(new Date(`${isoDate}T12:00:00Z`)),
+    })
+      .format(new Date(`${isoDate}T12:00:00Z`))
+      .replace(FIRST_OF_MONTH, (_, before: string) => `${before}1er `),
 
   difficultyLabel: 'Difficulté',
   difficulty: {
@@ -61,7 +67,9 @@ export const fr = {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-    }).format(new Date(`${isoDate}T12:00:00Z`)),
+    })
+      .format(new Date(`${isoDate}T12:00:00Z`))
+      .replace(FIRST_OF_MONTH, (_, before: string) => `${before}1er `),
   tryDemo: 'Essayer la grille de démonstration',
   loadError: 'Impossible de charger la grille du jour.',
   retry: 'Réessayer',
@@ -72,19 +80,21 @@ export const fr = {
   backToToday: 'Grille du jour',
   /** Another tab played this grid further; the game on screen has been brought up to date. */
   syncedProgress:
-    'Cette grille a avancé dans un autre onglet : la partie a été mise à jour. Votre dernière réponse n’a pas été jouée.',
+    'Cette grille a avancé dans un autre onglet\u00A0: la partie a été mise à jour. Votre dernière réponse n’a pas été jouée.',
   syncedFinished:
-    'Cette partie a été terminée dans un autre onglet : voici son résultat. Votre dernière réponse n’a pas été jouée.',
-  syncedProgressQuiet: 'Cette grille a avancé dans un autre onglet : la partie a été mise à jour.',
-  syncedFinishedQuiet: 'Cette partie a été terminée dans un autre onglet : voici son résultat.',
+    'Cette partie a été terminée dans un autre onglet\u00A0: voici son résultat. Votre dernière réponse n’a pas été jouée.',
+  syncedProgressQuiet:
+    'Cette grille a avancé dans un autre onglet\u00A0: la partie a été mise à jour.',
+  syncedFinishedQuiet:
+    'Cette partie a été terminée dans un autre onglet\u00A0: voici son résultat.',
 
   crashTitle: 'Un problème est survenu',
   crashText:
-    'Le jeu a rencontré une erreur inattendue. Vous pouvez réessayer ; si le problème persiste, effacer les données du jeu le règle presque toujours.',
+    'Le jeu a rencontré une erreur inattendue. Vous pouvez réessayer\u00A0; si le problème persiste, effacer les données du jeu le règle presque toujours.',
   crashRetry: 'Réessayer',
   crashClear: 'Effacer les données du jeu',
   crashClearWarning:
-    'Cela efface votre progression, vos statistiques et votre série, sur cet appareil. Cette action est définitive.',
+    'Cela efface votre progression, vos statistiques et votre série sur cet appareil. Cette action est définitive.',
   crashClearConfirm: 'Oui, tout effacer',
   crashClearCancel: 'Non, garder mes données',
   disclaimer:

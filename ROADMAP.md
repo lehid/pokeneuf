@@ -62,7 +62,7 @@
 - Méga / Gigamax : pas d'entrées distinctes. Ce sont des critères possibles (« possède une Méga-évolution »).
 - Noms officiels **français** en affichage. Recherche tolérante sur FR + EN + numéro de Pokédex.
 
-### 2.2 Familles de catégories (v1 ≈ 40–50 catégories sur 493 Pokémon)
+### 2.2 Familles de catégories (plan initial : ≈ 40–50 catégories ; livré en v1 : 69 sur 493 Pokémon)
 | Famille | Exemples | Note |
 |---|---|---|
 | Type | Feu, Eau… (18) ; « monotype » ; « double type » | Types actuels (Fée inclus) |
@@ -74,6 +74,8 @@
 | Physique | Couleur Pokédex, taille ≥ 2 m, poids ≤ 1 kg, forme (shape) | Données PokeAPI |
 | Talents | Lévitation, Intimidation, Glissade… | Talents cachés inclus ? Définir |
 | Nom | Commence par une lettre, ≤ 5 lettres | **Dépend de la langue** → FR uniquement, à documenter |
+
+Le tableau ci-dessus est le plan de départ. La v1 livrée (`CATEGORIES` dans `packages/core/src/categories.ts`, 69 catégories en 10 familles) n'a ni catégorie de talent, ni « évolution ramifiée », ni seuil de PV ou de poids ; elle ajoute en revanche des catégories de nom (13), de couleur (6) et de silhouette (3).
 
 Chaque catégorie a : `id`, `label` FR/EN, `family`, `definition` (texte visible au clic sur l'en-tête), `predicate`, `exclusiveWith` (familles incompatibles).
 

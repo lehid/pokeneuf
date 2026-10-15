@@ -82,4 +82,5 @@ Le build échoue si une catégorie n'a aucun membre.
   `src/category-facts.ts`, mise à jour du snapshot de tailles, `pnpm data:build`, `pnpm test`.
   Un id n'est jamais réutilisé ni renommé : les grilles déjà générées le référencent.
 - **Définitions** : celles des catégories d'évolution précisent « parmi les Pokémon du jeu (Gén 1 à 4) ».
-  Les talents comptent les talents cachés ; les catégories de nom ne valent que pour le français.
+  Les catégories de nom ne valent que pour le français. Les talents (cachés marqués `isHidden`) sont dans
+  `pokedex.json`, mais aucune catégorie de talent n’existe en v1.
