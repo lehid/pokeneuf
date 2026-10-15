@@ -30,29 +30,35 @@ export async function loadGrid(
   date: GridDate,
   { memberships, baseUrl, fetchImpl = fetch }: LoadOptions,
 ): Promise<GridLoad> {
-  const missing: GridLoad = { kind: 'missing', beforeLaunch: isBeforeLaunch(date) };
-  let response: Response;
+  // Everything is inside the try: a date that is not a real day makes `gridUrl` and `isBeforeLaunch`
+  // throw, and a promise that rejects here would leave the page on "Chargement…" forever.
   try {
-    response = await fetchImpl(gridUrl(date, baseUrl), { cache: 'no-cache' });
+    const missing: GridLoad = { kind: 'missing', beforeLaunch: isBeforeLaunch(date) };
+    let response: Response;
+    try {
+      response = await fetchImpl(gridUrl(date, baseUrl), { cache: 'no-cache' });
+    } catch {
+      return { kind: 'error' };
+    }
+    if (response.status === 404) return missing;
+    if (!response.ok) return { kind: 'error' };
+
+    let raw: unknown;
+    try {
+      raw = await response.json();
+    } catch {
+      // Some servers answer a missing file with their HTML page and a 200.
+      const html = response.headers.get('content-type')?.includes('text/html') ?? false;
+      return html ? missing : { kind: 'error' };
+    }
+
+    const grid = parseGrid(raw);
+    if (grid === null || grid.date !== date) return { kind: 'error' };
+    if (checkGrid(grid, memberships).length > 0) return { kind: 'error' };
+    return { kind: 'ready', grid };
   } catch {
     return { kind: 'error' };
   }
-  if (response.status === 404) return missing;
-  if (!response.ok) return { kind: 'error' };
-
-  let raw: unknown;
-  try {
-    raw = await response.json();
-  } catch {
-    // Some servers answer a missing file with their HTML page and a 200.
-    const html = response.headers.get('content-type')?.includes('text/html') ?? false;
-    return html ? missing : { kind: 'error' };
-  }
-
-  const grid = parseGrid(raw);
-  if (grid === null || grid.date !== date) return { kind: 'error' };
-  if (checkGrid(grid, memberships).length > 0) return { kind: 'error' };
-  return { kind: 'ready', grid };
 }
 
 export type IndexLoad =

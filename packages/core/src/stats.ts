@@ -27,10 +27,17 @@ function streakDates(entries: readonly HistoryEntry[]): Set<GridDate> {
   return new Set(entries.filter((e) => e.status !== 'abandoned').map((e) => e.date));
 }
 
-/** The current streak. It survives until the end of today: yesterday played, today not yet. */
+/**
+ * The current streak, as of `today`. It survives until the end of today: yesterday played and
+ * today not yet is still a streak. But once today has a game in the history, today decides: a game
+ * played to its end extends the chain, a game abandoned today ends it at once (it is 0 now, not
+ * "2 until tomorrow"): what the header shows is what tomorrow will confirm.
+ */
 export function currentStreak(entries: readonly HistoryEntry[], today: GridDate): number {
   const days = streakDates(entries);
-  let day = days.has(today) ? today : addDays(today, -1);
+  const playedToday = entries.some((e) => e.date === today);
+  if (playedToday && !days.has(today)) return 0; // abandoned today
+  let day = playedToday ? today : addDays(today, -1);
   let streak = 0;
   while (days.has(day)) {
     streak++;

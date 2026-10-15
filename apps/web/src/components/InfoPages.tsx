@@ -17,6 +17,7 @@ import { pokedex } from '../data';
 import { fr } from '../i18n/fr';
 import { FamilyIcon } from './FamilyIcon';
 import { Markdown } from './Markdown';
+import { PageHeading } from './PageHeading';
 import { RarityChip } from './RarityChip';
 import { Shell } from './Shell';
 
@@ -47,7 +48,9 @@ function InfoLayout({
         {fr.backToGame}
       </a>
       <article className="panel flex flex-col gap-4 p-4 sm:p-6">
-        <h2 className="title-pixel text-sm leading-relaxed sm:text-base">{title}</h2>
+        <PageHeading className="title-pixel text-sm leading-relaxed sm:text-base">
+          {title}
+        </PageHeading>
         {intro !== undefined && <p className="text-lcd-soft">{intro}</p>}
         {children}
       </article>

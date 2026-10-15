@@ -70,6 +70,23 @@ export const fr = {
   newGridPlay: 'Jouer la nouvelle grille',
   newGridLater: 'Plus tard',
   backToToday: 'Grille du jour',
+  /** Another tab played this grid further; the game on screen has been brought up to date. */
+  syncedProgress:
+    'Cette grille a avancé dans un autre onglet : la partie a été mise à jour. Votre dernière réponse n’a pas été jouée.',
+  syncedFinished:
+    'Cette partie a été terminée dans un autre onglet : voici son résultat. Votre dernière réponse n’a pas été jouée.',
+  syncedProgressQuiet: 'Cette grille a avancé dans un autre onglet : la partie a été mise à jour.',
+  syncedFinishedQuiet: 'Cette partie a été terminée dans un autre onglet : voici son résultat.',
+
+  crashTitle: 'Un problème est survenu',
+  crashText:
+    'Le jeu a rencontré une erreur inattendue. Vous pouvez réessayer ; si le problème persiste, effacer les données du jeu le règle presque toujours.',
+  crashRetry: 'Réessayer',
+  crashClear: 'Effacer les données du jeu',
+  crashClearWarning:
+    'Cela efface votre progression, vos statistiques et votre série, sur cet appareil. Cette action est définitive.',
+  crashClearConfirm: 'Oui, tout effacer',
+  crashClearCancel: 'Non, garder mes données',
   disclaimer:
     'Projet de fan non officiel, non affilié à Nintendo, Game Freak ou The Pokémon Company.',
 
@@ -96,6 +113,11 @@ export const fr = {
   guessLabel: 'Nom ou numéro du Pokémon',
   guessPlaceholder: 'Nom, nom anglais ou n°…',
   noResult: 'Aucun Pokémon trouvé.',
+  /** Spoken when the list of suggestions changes (the visual list is not enough for a screen reader). */
+  suggestionsStatus: (count: number) =>
+    count === 0
+      ? 'Aucun Pokémon trouvé.'
+      : `${count} Pokémon trouvé${count > 1 ? 's' : ''}. Flèches haut et bas pour choisir, Entrée pour valider.`,
   alreadyUsed: 'déjà utilisé',
 
   announceCorrect: (name: string) => `Correct\u00A0: ${name}.`,
