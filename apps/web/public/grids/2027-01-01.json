@@ -3,25 +3,25 @@
   "id": 62,
   "date": "2027-01-01",
   "rows": [
-    "gen-2",
-    "stat-total-300",
-    "type-dark"
+    "name-has-ch",
+    "evo-gen4",
+    "evo-final"
   ],
   "cols": [
-    "shape-quadruped",
-    "type-grass",
-    "name-has-y"
+    "type-fighting",
+    "type-fire",
+    "color-brown"
   ],
   "cellSizes": [
-    22,
+    5,
+    4,
+    6,
+    5,
+    3,
     10,
     14,
-    16,
-    9,
-    11,
-    8,
-    3,
-    3
+    12,
+    30
   ],
-  "difficulty": 67
+  "difficulty": 71
 }

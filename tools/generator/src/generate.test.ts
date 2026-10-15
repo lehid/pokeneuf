@@ -54,6 +54,24 @@ describe(`${DAYS} consecutive grids on the real data`, () => {
     }
   });
 
+  it('never make a cell where one criterion implies the other', () => {
+    const size = (id: string) => memberships.answersFor(id, id).length;
+    for (const g of grids) {
+      g.cellSizes.forEach((n, i) => {
+        const row = g.rows[Math.floor(i / 3)] as string;
+        const col = g.cols[i % 3] as string;
+        expect(n, `grid ${g.id} cell ${i}`).toBeLessThan(Math.min(size(row), size(col)));
+      });
+    }
+  });
+
+  it('keep the spelling family to a minority of the grids (its weight alone does not)', () => {
+    const withName = grids.filter((g) =>
+      [...g.rows, ...g.cols].some((id) => id.startsWith('name-')),
+    );
+    expect(withName.length / grids.length).toBeLessThan(0.4);
+  });
+
   it('keep every cell between the answer bounds', () => {
     const sizes = grids.flatMap((g) => g.cellSizes);
     expect(Math.min(...sizes)).toBeGreaterThanOrEqual(GRID_RULES.minAnswers);

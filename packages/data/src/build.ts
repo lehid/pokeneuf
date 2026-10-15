@@ -115,8 +115,27 @@ const OTHER_FLAG_COLUMNS = [
   'near_special_rock',
 ] as const;
 
+/**
+ * PokeAPI `items.id` of the evolution stones that matter in Gen 1–4: Sun, Moon, Fire, Thunder,
+ * Water and Leaf Stones, Shiny, Dusk and Dawn Stones, Ice Stone. Any other item used to evolve
+ * (Galarica Cuff / Wreath, Sweet Apple…) is "something else", not a stone.
+ */
+const STONE_ITEM_IDS: ReadonlySet<string> = new Set([
+  '80',
+  '81',
+  '82',
+  '83',
+  '84',
+  '85',
+  '107',
+  '108',
+  '109',
+  '885',
+]);
+
 function classifyEvolution(row: CsvRow, trigger: string): EvolutionMethod {
-  if (trigger === 'use-item') return 'stone';
+  if (trigger === 'use-item')
+    return STONE_ITEM_IDS.has(cell(row, 'trigger_item_id')) ? 'stone' : 'other';
   if (trigger === 'trade') return 'trade';
   if (trigger !== 'level-up') return 'other'; // shed (Shedinja), spin, tower of darkness…
 
@@ -178,6 +197,16 @@ export function buildPokedex(tables: RawTables, options: BuildOptions): Pokedex 
   const abilitySlugs = indexBy(tables.abilities, 'id');
   const triggerSlugs = indexBy(tables.evolution_triggers, 'id');
   const formsById = indexBy(tables.pokemon_forms, 'id');
+  // `pokemon_forms.is_default` is "default form OF ITS OWN pokemon", so a regional form (Alolan
+  // Sandslash, pokemon 10102) is "default" too. What decides is the `pokemon` the form belongs to.
+  const defaultPokemonIds = new Set(
+    tables.pokemon.filter((row) => cell(row, 'is_default') === '1').map((row) => cell(row, 'id')),
+  );
+  const isSpeciesDefaultForm = (formId: string): boolean => {
+    if (formId === '') return true;
+    const form = formsById.get(formId);
+    return form === undefined || defaultPokemonIds.has(cell(form, 'pokemon_id'));
+  };
 
   const typesByPokemon = groupBy(tables.pokemon_types, 'pokemon_id');
   const statsByPokemon = groupBy(tables.pokemon_stats, 'pokemon_id');
@@ -208,8 +237,10 @@ export function buildPokedex(tables: RawTables, options: BuildOptions): Pokedex 
   function defaultFormRows(speciesId: number): CsvRow[] {
     return (evolutionsInto.get(String(speciesId)) ?? []).filter((row) => {
       if (filled(row, 'region_id')) return false; // Alola / Galar / Hisui variants
-      const target = formsById.get(cell(row, 'evolved_pokemon_form_id'));
-      return target === undefined || cell(target, 'is_default') === '1';
+      return (
+        isSpeciesDefaultForm(cell(row, 'evolved_pokemon_form_id')) &&
+        isSpeciesDefaultForm(cell(row, 'required_pokemon_form_id'))
+      );
     });
   }
 

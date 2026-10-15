@@ -3,25 +3,25 @@
   "id": 61,
   "date": "2026-12-31",
   "rows": [
-    "evo-gen4",
-    "color-red",
-    "gen-1"
+    "shape-quadruped",
+    "gen-1",
+    "type-water"
   ],
   "cols": [
-    "type-fighting",
-    "type-fire",
-    "name-has-ch"
+    "stat-total-300",
+    "color-green",
+    "type-ground"
   ],
   "cellSizes": [
-    5,
-    3,
-    8,
-    3,
+    16,
+    13,
+    11,
+    24,
+    9,
     14,
-    3,
-    8,
     12,
-    10
+    4,
+    7
   ],
-  "difficulty": 78
+  "difficulty": 60
 }

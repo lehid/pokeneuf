@@ -3,25 +3,25 @@
   "id": 3,
   "date": "2026-11-03",
   "rows": [
-    "type-dual",
-    "color-green",
-    "gen-1"
+    "evo-none",
+    "type-bug",
+    "color-red"
   ],
   "cols": [
-    "shape-wings",
-    "evo-stone",
-    "stat-speed-100"
+    "size-height-50cm",
+    "stat-attack-100",
+    "shape-wings"
   ],
   "cellSizes": [
-    42,
+    19,
+    29,
     12,
-    28,
-    3,
-    3,
+    11,
     5,
-    12,
-    18,
-    24
+    16,
+    7,
+    11,
+    8
   ],
   "difficulty": 59
 }

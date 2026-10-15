@@ -19,6 +19,7 @@
   "bonusWeight": 0.3,
   "categoryWeights": {},
   "balanceWindowDays": 60,
+  "familyWindow": { "name": { "windowDays": 5, "max": 2 } },
   "weekdayLevels": {
     "mon": ["veryEasy", "easy"],
     "tue": ["easy"],

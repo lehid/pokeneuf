@@ -3,25 +3,25 @@
   "id": 56,
   "date": "2026-12-26",
   "rows": [
-    "status-legendary",
-    "size-height-50cm",
-    "evo-baby"
+    "gen-3",
+    "evo-middle",
+    "status-legendary"
   ],
   "cols": [
+    "type-dragon",
     "type-psychic",
-    "color-blue",
-    "name-starts-vowel"
+    "shape-wings"
   ],
   "cellSizes": [
-    8,
-    6,
+    9,
+    20,
+    14,
+    4,
     3,
-    13,
-    21,
-    13,
     4,
-    4,
-    3
+    6,
+    8,
+    7
   ],
-  "difficulty": 76
+  "difficulty": 74
 }

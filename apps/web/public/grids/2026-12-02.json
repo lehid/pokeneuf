@@ -3,25 +3,25 @@
   "id": 32,
   "date": "2026-12-02",
   "rows": [
+    "status-legendary",
     "gen-1",
-    "evo-stone",
-    "gen-4"
+    "gen-3"
   ],
   "cols": [
-    "type-normal",
-    "type-electric",
-    "name-has-ou"
+    "color-brown",
+    "type-fire",
+    "name-has-k"
   ],
   "cellSizes": [
-    22,
-    9,
-    11,
-    3,
     3,
     4,
-    17,
-    7,
-    14
+    5,
+    35,
+    12,
+    22,
+    15,
+    6,
+    25
   ],
-  "difficulty": 70
+  "difficulty": 63
 }

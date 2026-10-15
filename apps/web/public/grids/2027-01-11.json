@@ -3,25 +3,25 @@
   "id": 72,
   "date": "2027-01-11",
   "rows": [
-    "form-gmax",
-    "type-dark",
+    "form-mega",
+    "type-steel",
     "stat-attack-100"
   ],
   "cols": [
-    "type-mono",
-    "stat-total-500",
-    "shape-upright"
+    "type-dual",
+    "evo-none",
+    "evo-gen4"
   ],
   "cellSizes": [
-    7,
-    7,
-    3,
-    5,
-    7,
-    3,
-    54,
-    61,
-    32
+    39,
+    14,
+    8,
+    24,
+    6,
+    6,
+    46,
+    29,
+    22
   ],
-  "difficulty": 62
+  "difficulty": 47
 }

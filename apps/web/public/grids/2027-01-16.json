@@ -3,25 +3,25 @@
   "id": 77,
   "date": "2027-01-16",
   "rows": [
-    "evo-none",
-    "type-fighting",
-    "size-height-50cm"
+    "color-green",
+    "stat-total-300",
+    "evo-final"
   ],
   "cols": [
-    "type-fire",
-    "color-brown",
-    "name-ends-a"
+    "type-poison",
+    "shape-wings",
+    "name-short"
   ],
   "cellSizes": [
-    5,
+    12,
+    7,
+    3,
     10,
-    10,
-    4,
     8,
-    5,
-    4,
+    9,
     20,
-    6
+    27,
+    5
   ],
-  "difficulty": 74
+  "difficulty": 66
 }

@@ -3,25 +3,25 @@
   "id": 69,
   "date": "2027-01-08",
   "rows": [
-    "gen-2",
-    "shape-wings",
-    "status-starter"
+    "form-gmax",
+    "type-rock",
+    "color-purple"
   ],
   "cols": [
-    "type-water",
-    "color-brown",
-    "name-starts-c"
+    "shape-quadruped",
+    "evo-final",
+    "type-water"
   ],
   "cellSizes": [
-    18,
-    12,
-    13,
     4,
-    11,
-    6,
-    12,
+    8,
     3,
-    4
+    5,
+    13,
+    6,
+    7,
+    24,
+    7
   ],
-  "difficulty": 71
+  "difficulty": 74
 }

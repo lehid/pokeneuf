@@ -3,25 +3,25 @@
   "id": 63,
   "date": "2027-01-02",
   "rows": [
-    "gen-4",
-    "color-yellow",
-    "type-ground"
+    "gen-2",
+    "type-normal",
+    "evo-middle"
   ],
   "cols": [
-    "form-mega",
-    "size-height-50cm",
-    "name-starts-vowel"
+    "color-yellow",
+    "type-fairy",
+    "color-blue"
   ],
   "cellSizes": [
-    9,
-    32,
-    11,
-    4,
-    11,
+    12,
     8,
+    15,
     4,
-    9,
-    5
+    4,
+    6,
+    4,
+    5,
+    15
   ],
-  "difficulty": 69
+  "difficulty": 74
 }

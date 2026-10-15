@@ -56,6 +56,8 @@ export function fakeTables(species: FakeSpecies[], evolutions: FakeEvolution[] =
         id: i + 1,
         evolved_species_id: evolution.into,
         evolution_trigger_id: TRIGGERS.indexOf(evolution.trigger ?? 'level-up') + 1,
+        // A `use-item` row is a Thunder Stone unless the test says otherwise.
+        ...(evolution.trigger === 'use-item' ? { trigger_item_id: 83 } : {}),
         ...evolution.columns,
       }),
     ),

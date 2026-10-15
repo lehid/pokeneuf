@@ -3,25 +3,25 @@
   "id": 35,
   "date": "2026-12-05",
   "rows": [
-    "color-green",
-    "stat-total-500",
+    "stat-speed-100",
+    "form-mega",
     "evo-middle"
   ],
   "cols": [
-    "type-rock",
+    "gen-2",
     "type-poison",
-    "name-has-k"
+    "type-grass"
   ],
   "cellSizes": [
+    10,
     3,
-    12,
-    5,
-    7,
-    9,
-    21,
     4,
     9,
-    7
+    4,
+    5,
+    10,
+    9,
+    10
   ],
-  "difficulty": 73
+  "difficulty": 77
 }

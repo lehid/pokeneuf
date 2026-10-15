@@ -3,25 +3,25 @@
   "id": 36,
   "date": "2026-12-06",
   "rows": [
-    "shape-wings",
-    "stat-total-300",
-    "name-has-y"
+    "status-starter",
+    "color-blue",
+    "type-ice"
   ],
   "cols": [
+    "size-height-2m",
     "type-ground",
-    "color-purple",
-    "type-water"
+    "name-starts-c"
   ],
   "cellSizes": [
     3,
-    6,
+    3,
     4,
+    10,
+    10,
     11,
-    7,
-    12,
     3,
     3,
-    13
+    3
   ],
-  "difficulty": 80
+  "difficulty": 86
 }

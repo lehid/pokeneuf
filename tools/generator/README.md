@@ -103,3 +103,13 @@ Le dépôt garde **90 jours d'avance** (`public/grids`), mais le site déployé 
   d'aujourd'hui ou du passé (`--today` sert aux tests), et la CI rejoue `grids:report` sur toutes
   les grilles. Une catégorie utilisée par une grille passée ne se supprime donc pas : on la garde
   dans le registre, quitte à ne plus la tirer (`categoryWeights`).
+
+## Équilibrage de la famille des noms et cases triviales
+
+- `familyWindow` (config) plafonne une famille : au plus `max` grilles sur `windowDays` jours
+  centrés sur la date en contiennent une catégorie (`name` : 2 sur 5). Sans cela, les catégories
+  d'orthographe, qui croisent tout, remplissaient les colonnes que rien d'autre ne pouvait remplir
+  (64 % des grilles, pour un poids de 0,1). Le plafond cède, comme le cooldown de catégorie, au
+  dernier palier si aucune grille valide n'existe.
+- Une case où un critère implique l'autre (toutes les réponses d'une catégorie, ex. légendaire ×
+  « 500+ de stats ») n'est jamais tirée.

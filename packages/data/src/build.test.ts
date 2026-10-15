@@ -162,6 +162,8 @@ describe('evolution methods', () => {
       ['level'],
     ],
     ['a stone', { trigger: 'use-item', columns: { trigger_item_id: '83' } }, ['stone']],
+    ['Ice Stone', { trigger: 'use-item', columns: { trigger_item_id: '885' } }, ['stone']],
+    ['Galarica Cuff', { trigger: 'use-item', columns: { trigger_item_id: '1633' } }, ['other']],
     ['a trade', { trigger: 'trade' }, ['trade']],
     ['a trade with a held item', { trigger: 'trade', columns: { held_item_id: '198' } }, ['trade']],
     ['friendship', { columns: { minimum_happiness: '220' } }, ['friendship']],
@@ -232,7 +234,25 @@ describe('evolution methods', () => {
       expect(entry(pokemon, 1).evolution.methods).toEqual(['level']);
     });
 
-    it('ignores rows that evolve into a non-default form, keeps those into the default one', () => {
+    // Like PokeAPI: a regional form is the DEFAULT form of its own `pokemon` (10102 = Alolan
+    // Sandslash), so `pokemon_forms.is_default` alone cannot tell it from the real species.
+    const addRegionalForm = (tables: ReturnType<typeof fakeTables>, speciesId: string) => {
+      tables.pokemon.push({
+        id: '10100',
+        species_id: speciesId,
+        height: '1',
+        weight: '1',
+        is_default: '0',
+      });
+      tables.pokemon_forms.push({
+        id: '10100',
+        pokemon_id: '10100',
+        is_default: '1',
+        is_mega: '0',
+      });
+    };
+
+    it('ignores rows that evolve into a regional form, keeps those into the default one', () => {
       const tables = fakeTables(
         [{ id: 1 }, { id: 2, from: 1 }],
         [
@@ -241,10 +261,25 @@ describe('evolution methods', () => {
           { into: 2, trigger: 'trade', columns: { evolved_pokemon_form_id: '2' } },
         ],
       );
-      // Form 10100 is an alternate form of species 2; form 2 is its default form.
-      tables.pokemon_forms.push({ id: '10100', pokemon_id: '2', is_default: '0', is_mega: '0' });
+      addRegionalForm(tables, '2');
       const { pokemon } = buildPokedex(tables, buildOptions());
       expect(entry(pokemon, 1).evolution.methods).toEqual(['level', 'trade']);
+    });
+
+    it('also ignores rows that REQUIRE a regional form (Alolan Meowth → Alolan Persian)', () => {
+      const tables = fakeTables(
+        [{ id: 1 }, { id: 2, from: 1 }],
+        [
+          level(2),
+          {
+            into: 2,
+            columns: { minimum_happiness: '160', required_pokemon_form_id: '10100' },
+          },
+        ],
+      );
+      addRegionalForm(tables, '1');
+      const { pokemon } = buildPokedex(tables, buildOptions());
+      expect(entry(pokemon, 1).evolution.methods).toEqual(['level']);
     });
 
     it('fails loudly when every row of an evolution is a variant', () => {

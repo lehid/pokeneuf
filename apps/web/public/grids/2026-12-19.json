@@ -3,25 +3,25 @@
   "id": 49,
   "date": "2026-12-19",
   "rows": [
-    "shape-quadruped",
-    "evo-stone",
-    "size-height-50cm"
+    "status-legendary",
+    "type-rock",
+    "type-fighting"
   ],
   "cols": [
-    "color-green",
-    "type-water",
-    "type-poison"
+    "form-mega",
+    "gen-2",
+    "color-blue"
   ],
   "cellSizes": [
-    13,
-    7,
-    9,
+    5,
+    5,
+    6,
     3,
+    7,
+    4,
     5,
-    5,
-    15,
-    20,
-    10
+    3,
+    7
   ],
-  "difficulty": 69
+  "difficulty": 86
 }

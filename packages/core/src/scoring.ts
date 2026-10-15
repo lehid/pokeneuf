@@ -37,8 +37,10 @@ export const SCORING = {
 
 /**
  * 0 for the most popular valid answer of a cell, 1 for the most obscure. Answers with the same
- * popularity share a rank (the number of answers strictly more popular), so the order of the list
- * never matters. A cell with a single answer is 0.
+ * popularity share the MIDDLE of their group's ranks (the popularity data has far fewer distinct
+ * values than Pokémon: with "the number of answers strictly more popular", a whole tied group sat
+ * at its best rank and a cell where everyone ties made every answer "common"), so the order of
+ * the list never matters. A cell with a single answer is 0.
  */
 export function rankScore(
   pokemonId: number,
@@ -47,8 +49,16 @@ export function rankScore(
 ): number {
   if (answers.length <= 1) return 0;
   const own = popularity(pokemonId);
-  const moreKnown = answers.filter((id) => popularity(id) > own).length;
-  return moreKnown / (answers.length - 1);
+  let moreKnown = 0;
+  let tied = 0;
+  for (const id of answers) {
+    const other = popularity(id);
+    if (other > own) moreKnown++;
+    else if (other === own) tied++;
+  }
+  // `own` is among `answers` when the answer is valid: `tied` counts it. For an id outside the
+  // list (never played), it still gives a sensible rank.
+  return (moreKnown + Math.max(0, tied - 1) / 2) / (answers.length - 1);
 }
 
 export function rarityTier(score: number): RarityTier {

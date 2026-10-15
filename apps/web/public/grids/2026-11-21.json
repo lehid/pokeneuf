@@ -3,25 +3,25 @@
   "id": 21,
   "date": "2026-11-21",
   "rows": [
-    "evo-none",
-    "evo-stage-3",
-    "type-steel"
+    "gen-2",
+    "status-starter",
+    "stat-total-300"
   ],
   "cols": [
-    "stat-total-500",
-    "type-electric",
-    "name-has-ch"
+    "color-green",
+    "type-poison",
+    "type-grass"
   ],
   "cellSizes": [
-    39,
-    6,
+    12,
     4,
-    44,
-    5,
-    4,
-    13,
+    10,
+    12,
     3,
-    3
+    12,
+    10,
+    10,
+    9
   ],
-  "difficulty": 71
+  "difficulty": 69
 }

@@ -3,25 +3,25 @@
   "id": 43,
   "date": "2026-12-13",
   "rows": [
-    "type-ground",
-    "type-bug",
-    "color-purple"
+    "form-mega",
+    "evo-baby",
+    "evo-base"
   ],
   "cols": [
-    "stat-total-500",
-    "evo-middle",
-    "name-has-k"
+    "type-fairy",
+    "type-normal",
+    "color-blue"
   ],
   "cellSizes": [
-    14,
+    3,
+    4,
+    13,
+    5,
+    4,
+    4,
     7,
-    6,
-    6,
-    4,
-    6,
-    12,
-    4,
-    5
+    26,
+    33
   ],
-  "difficulty": 77
+  "difficulty": 72
 }

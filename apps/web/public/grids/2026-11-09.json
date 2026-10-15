@@ -3,25 +3,25 @@
   "id": 9,
   "date": "2026-11-09",
   "rows": [
-    "gen-2",
-    "gen-3",
+    "stat-total-300",
+    "status-legendary",
     "type-psychic"
   ],
   "cols": [
-    "type-fairy",
-    "form-mega",
-    "name-double-letter"
+    "gen-2",
+    "type-flying",
+    "shape-upright"
   ],
   "cellSizes": [
-    8,
-    9,
-    16,
-    5,
     21,
-    20,
+    10,
+    27,
     5,
-    11,
-    11
+    6,
+    10,
+    10,
+    3,
+    28
   ],
   "difficulty": 62
 }

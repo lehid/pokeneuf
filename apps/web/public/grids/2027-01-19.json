@@ -3,25 +3,25 @@
   "id": 80,
   "date": "2027-01-19",
   "rows": [
-    "type-fairy",
-    "gen-4",
-    "evo-gen4"
+    "color-brown",
+    "evo-stage-3",
+    "type-dual"
   ],
   "cols": [
-    "color-blue",
-    "type-mono",
-    "shape-upright"
+    "stat-total-500",
+    "type-bug",
+    "name-starts-c"
   ],
   "cellSizes": [
+    12,
     3,
-    6,
-    6,
-    23,
-    54,
-    26,
-    13,
-    26,
-    17
+    8,
+    44,
+    4,
+    3,
+    64,
+    33,
+    30
   ],
-  "difficulty": 53
+  "difficulty": 56
 }

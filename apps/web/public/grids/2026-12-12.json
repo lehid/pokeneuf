@@ -3,25 +3,25 @@
   "id": 42,
   "date": "2026-12-12",
   "rows": [
-    "color-green",
-    "type-poison",
-    "type-fighting"
+    "gen-2",
+    "evo-middle",
+    "status-legendary"
   ],
   "cols": [
-    "stat-attack-100",
-    "evo-base",
-    "name-starts-c"
+    "type-dual",
+    "type-steel",
+    "name-double-letter"
   ],
   "cellSizes": [
-    12,
-    17,
-    9,
-    5,
-    19,
+    49,
     4,
-    13,
-    7,
-    6
+    16,
+    29,
+    3,
+    6,
+    12,
+    3,
+    3
   ],
-  "difficulty": 67
+  "difficulty": 69
 }

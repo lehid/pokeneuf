@@ -73,6 +73,12 @@ export const GOLDEN_FACTS: GoldenFact[] = [
   [25, 'evolution.evolvesFromId', 172],
   [25, 'evolution.evolvesToIds', [26]],
   [25, 'evolution.methods', ['stone']],
+  // Regional-form evolutions (Alola, Galar, Hisui) are ignored: they do NOT count for the species.
+  [27, 'evolution.methods', ['level']], // not Alolan Sandshrew's Ice Stone
+  [52, 'evolution.methods', ['level']], // not Alolan Meowth's friendship
+  [79, 'evolution.methods', ['level', 'trade']], // not Galarian Slowpoke's Galarica items
+  [100, 'evolution.methods', ['level']], // not Hisuian Voltorb's Leaf Stone
+  [58, 'evolution.methods', ['stone']], // Growlithe: Fire Stone, Hisuian line ignored too
   [25, 'evolution.evolutionAddedInGen', 2],
   [26, 'evolution.isFinal', true],
   [26, 'evolution.stage', 3],
