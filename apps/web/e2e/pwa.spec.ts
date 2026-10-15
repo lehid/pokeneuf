@@ -63,6 +63,10 @@ test('after a first visit the app shell opens offline, and no grid is ever cache
   await page.reload();
 
   await context.setOffline(true);
+  // `setOffline` does not reach the network requests the service worker itself makes (Playwright
+  // limitation): without this, the worker would still fetch the grid and this test could not tell
+  // "never cached" from "fetched live". Cut the grid requests of the worker too.
+  await context.route('**/grids/**', (route) => route.abort('internetdisconnected'));
   await page.goto('./#/faq');
   await page.reload();
   await expect(page.getByRole('heading', { level: 2, name: 'Questions fréquentes' })).toBeVisible();
