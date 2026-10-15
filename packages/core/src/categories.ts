@@ -97,7 +97,7 @@ const typeCategories: Category[] = POKEMON_TYPES.map((type) => ({
   family: 'type',
   label: { fr: `Type ${TYPE_LABELS_FR[type]}`, en: `${TYPE_EN[type]} type` },
   definition: {
-    fr: `Pokémon dont l'un des types est ${TYPE_LABELS_FR[type]}. Types actuels des jeux récents (type Fée inclus).`,
+    fr: `Pokémon dont l’un des types est ${TYPE_LABELS_FR[type]}. Types actuels des jeux récents (type Fée inclus).`,
   },
   predicate: (p) => p.types.includes(type),
   exclusiveWith: [],
@@ -110,7 +110,7 @@ const typeCountCategories: Category[] = [
     id: 'type-mono',
     family: 'type',
     label: { fr: 'Monotype', en: 'Single type' },
-    definition: { fr: "Pokémon qui n'a qu'un seul type (types actuels, type Fée inclus)." },
+    definition: { fr: 'Pokémon qui n’a qu’un seul type (types actuels, type Fée inclus).' },
     predicate: (p) => p.types.length === 1,
     exclusiveWith: [],
     bonus: false,
@@ -127,10 +127,10 @@ const typeCountCategories: Category[] = [
 ];
 
 const GENERATIONS: [number, string, string][] = [
-  [1, 'Kanto', 'n° 1 à 151'],
-  [2, 'Johto', 'n° 152 à 251'],
-  [3, 'Hoenn', 'n° 252 à 386'],
-  [4, 'Sinnoh', 'n° 387 à 493'],
+  [1, 'Kanto', 'n°\u00A01 à 151'],
+  [2, 'Johto', 'n°\u00A0152 à 251'],
+  [3, 'Hoenn', 'n°\u00A0252 à 386'],
+  [4, 'Sinnoh', 'n°\u00A0387 à 493'],
 ];
 
 const generationCategories: Category[] = GENERATIONS.map(([generation, region, range]) => ({
@@ -151,7 +151,7 @@ const evolutionCategories: Category[] = [
     family: 'evolution',
     label: { fr: 'Stade de base', en: 'Basic stage' },
     definition: {
-      fr: `Premier stade d'une famille d'évolution de deux stades ou plus, ${IN_GAME}. Un bébé est un stade de base.`,
+      fr: `Premier stade d’une famille d’évolution de deux stades ou plus, ${IN_GAME}. Un bébé est un stade de base.`,
     },
     predicate: (p) => p.evolution.stage === 1 && !p.evolution.isFinal,
     exclusiveWith: ['evolution'],
@@ -173,7 +173,7 @@ const evolutionCategories: Category[] = [
     family: 'evolution',
     label: { fr: 'Stade final', en: 'Final stage' },
     definition: {
-      fr: `Dernier stade d'une famille d'évolution de deux stades ou plus, ${IN_GAME}. Un Pokémon qui n'évolue en aucun Pokémon du jeu est au stade final, même s'il évolue dans un jeu plus récent (Colossinge). Les Pokémon sans évolution ne sont pas concernés : voir « N'évolue pas ».`,
+      fr: `Dernier stade d’une famille d’évolution de deux stades ou plus, ${IN_GAME}. Un Pokémon qui n’évolue en aucun Pokémon du jeu est au stade final, même s’il évolue dans un jeu plus récent (Colossinge). Les Pokémon sans évolution ne sont pas concernés\u00A0: voir «\u00A0N’évolue pas\u00A0».`,
     },
     predicate: (p) => p.evolution.stage >= 2 && p.evolution.isFinal,
     exclusiveWith: ['evolution'],
@@ -182,7 +182,7 @@ const evolutionCategories: Category[] = [
   {
     id: 'evo-none',
     family: 'evolution',
-    label: { fr: "N'évolue pas", en: 'Does not evolve' },
+    label: { fr: 'N’évolue pas', en: 'Does not evolve' },
     definition: {
       fr: `Pokémon sans pré-évolution ni évolution, ${IN_GAME} (Métamorph, Canarticho…).`,
     },
@@ -195,7 +195,7 @@ const evolutionCategories: Category[] = [
     family: 'evolution',
     label: { fr: 'Troisième stade', en: 'Third stage' },
     definition: {
-      fr: `Pokémon qui est au troisième stade de sa famille d'évolution (Dracaufeu, Tortank, Raichu…), ${IN_GAME}. Un bébé compte pour un stade : Raichu est au troisième stade (Pichu, Pikachu, Raichu).`,
+      fr: `Pokémon qui est au troisième stade de sa famille d’évolution (Dracaufeu, Tortank, Raichu…), ${IN_GAME}. Un bébé compte pour un stade\u00A0: Raichu est au troisième stade (Pichu, Pikachu, Raichu).`,
     },
     predicate: (p) => p.evolution.stage === 3,
     exclusiveWith: ['evolution'],
@@ -206,7 +206,7 @@ const evolutionCategories: Category[] = [
     family: 'evolution',
     label: { fr: 'Évolue par pierre', en: 'Evolves with a stone' },
     definition: {
-      fr: `Pokémon qui évolue grâce à une pierre d'évolution dans les jeux actuels, ${IN_GAME}.`,
+      fr: `Pokémon qui évolue grâce à une pierre d’évolution dans les jeux actuels, ${IN_GAME}.`,
     },
     predicate: (p) => p.evolution.methods.includes('stone'),
     exclusiveWith: ['evolution'],
@@ -217,7 +217,7 @@ const evolutionCategories: Category[] = [
     family: 'evolution',
     label: { fr: 'Évolue par échange', en: 'Evolves by trade' },
     definition: {
-      fr: `Pokémon qui évolue lorsqu'il est échangé, avec ou sans objet tenu, ${IN_GAME}.`,
+      fr: `Pokémon qui évolue lorsqu’il est échangé, avec ou sans objet tenu, ${IN_GAME}.`,
     },
     predicate: (p) => p.evolution.methods.includes('trade'),
     exclusiveWith: ['evolution'],
@@ -228,7 +228,7 @@ const evolutionCategories: Category[] = [
     family: 'evolution',
     label: { fr: 'Évolue par amitié', en: 'Evolves with friendship' },
     definition: {
-      fr: `Pokémon qui évolue en montant de niveau avec un fort niveau d'amitié, ${IN_GAME}.`,
+      fr: `Pokémon qui évolue en montant de niveau avec un fort niveau d’amitié, ${IN_GAME}.`,
     },
     predicate: (p) => p.evolution.methods.includes('friendship'),
     exclusiveWith: ['evolution'],
@@ -238,7 +238,7 @@ const evolutionCategories: Category[] = [
     id: 'evo-baby',
     family: 'evolution',
     label: { fr: 'Bébé', en: 'Baby' },
-    definition: { fr: 'Pokémon bébé : Pichu, Togepi, Riolu, Ptiravi…' },
+    definition: { fr: 'Pokémon bébé\u00A0: Pichu, Togepi, Riolu, Ptiravi…' },
     predicate: (p) => p.isBaby,
     exclusiveWith: ['evolution'],
     bonus: true,
@@ -248,7 +248,7 @@ const evolutionCategories: Category[] = [
     family: 'evolution',
     label: { fr: 'Évolution introduite en Gén 4', en: 'Evolution added in Gen 4' },
     definition: {
-      fr: `Pokémon dont le lien d'évolution avec sa pré-évolution est apparu en génération 4 : Magnézone, Togekiss, Lucario… (${IN_GAME}). Compte aussi les Pokémon plus anciens qui ont reçu un bébé en Gén 4 (Ronflex avec Goinfrex).`,
+      fr: `Pokémon dont le lien d’évolution avec sa pré-évolution est apparu en génération 4\u00A0: Magnézone, Togekiss, Lucario… (${IN_GAME}). Compte aussi les Pokémon plus anciens qui ont reçu un bébé en Gén 4 (Ronflex avec Goinfrex).`,
     },
     predicate: (p) => p.evolution.evolutionAddedInGen === 4,
     exclusiveWith: ['evolution', 'generation'],
@@ -262,7 +262,7 @@ const statusCategories: Category[] = [
     family: 'status',
     label: { fr: 'Légendaire', en: 'Legendary' },
     definition: {
-      fr: 'Pokémon légendaire : oiseaux, bêtes, Regis, Latias et Latios, Kyogre, Groudon, Rayquaza, Créhelf et ses deux frères, Dialga, Palkia, Heatran, Regigigas, Giratina, Cresselia, Mewtwo, Lugia, Ho-Oh. Les Pokémon fabuleux ont leur propre catégorie.',
+      fr: 'Pokémon légendaire\u00A0: oiseaux, bêtes, Regis, Latias et Latios, Kyogre, Groudon, Rayquaza, Créhelf et ses deux frères, Dialga, Palkia, Heatran, Regigigas, Giratina, Cresselia, Mewtwo, Lugia, Ho-Oh. Les Pokémon fabuleux ont leur propre catégorie.',
     },
     predicate: (p) => p.isLegendary,
     exclusiveWith: ['status'],
@@ -273,7 +273,7 @@ const statusCategories: Category[] = [
     family: 'status',
     label: { fr: 'Fabuleux', en: 'Mythical' },
     definition: {
-      fr: 'Pokémon fabuleux : Mew, Celebi, Jirachi, Deoxys, Phione, Manaphy, Darkrai, Shaymin, Arceus.',
+      fr: 'Pokémon fabuleux\u00A0: Mew, Celebi, Jirachi, Deoxys, Phione, Manaphy, Darkrai, Shaymin, Arceus.',
     },
     predicate: (p) => p.isMythical,
     exclusiveWith: ['status'],
@@ -284,7 +284,7 @@ const statusCategories: Category[] = [
     family: 'status',
     label: { fr: 'Starter', en: 'Starter' },
     definition: {
-      fr: "Pokémon de départ de Kanto, Johto, Hoenn ou Sinnoh, et toute leur lignée d'évolution (Dracaufeu est un starter). Pikachu et Évoli, starters de jeux dérivés, n'en sont pas.",
+      fr: 'Pokémon de départ de Kanto, Johto, Hoenn ou Sinnoh, et toute leur lignée d’évolution (Dracaufeu est un starter). Pikachu et Évoli, starters de jeux dérivés, n’en sont pas.',
     },
     predicate: (p) => p.isStarter,
     exclusiveWith: ['status'],
@@ -295,7 +295,7 @@ const statusCategories: Category[] = [
     family: 'status',
     label: { fr: 'Fossile', en: 'Fossil' },
     definition: {
-      fr: "Pokémon ressuscité à partir d'un fossile, avec ses évolutions : Amonita, Kabuto, Ptéra, Lilia, Anorith, Kranidos, Dinoclier.",
+      fr: 'Pokémon ressuscité à partir d’un fossile, avec ses évolutions\u00A0: Amonita, Kabuto, Ptéra, Lilia, Anorith, Kranidos, Dinoclier.',
     },
     predicate: (p) => p.isFossil,
     exclusiveWith: ['status'],
@@ -306,7 +306,7 @@ const statusCategories: Category[] = [
     family: 'status',
     label: { fr: 'Pseudo-légendaire', en: 'Pseudo-legendary' },
     definition: {
-      fr: 'Dernier stade d’une lignée de trois stades à 600 points de stats de base : Dracolosse, Tyranocif, Drattak, Métalosse, Carchacrok (Minidraco, Draco et les autres stades précédents ne comptent pas).',
+      fr: 'Dernier stade d’une lignée de trois stades à 600 points de stats de base\u00A0: Dracolosse, Tyranocif, Drattak, Métalosse, Carchacrok (Minidraco, Draco et les autres stades précédents ne comptent pas).',
     },
     predicate: (p) => p.isPseudoLegendary,
     exclusiveWith: ['status'],
@@ -320,7 +320,7 @@ const formCategories: Category[] = [
     family: 'form',
     label: { fr: 'A une Méga-évolution', en: 'Has a Mega Evolution' },
     definition: {
-      fr: 'Pokémon qui possède au moins une Méga-évolution dans les jeux actuels, y compris celles de Légendes Pokémon : Z-A. Les Méga-évolutions ne sont pas des entrées à part.',
+      fr: 'Pokémon qui possède au moins une Méga-évolution dans les jeux actuels, y compris celles de Légendes Pokémon\u00A0: Z-A. Les Méga-évolutions ne sont pas des entrées à part.',
     },
     predicate: (p) => p.hasMega,
     exclusiveWith: ['form'],
@@ -331,7 +331,7 @@ const formCategories: Category[] = [
     family: 'form',
     label: { fr: 'A une forme Gigamax', en: 'Has a Gigantamax form' },
     definition: {
-      fr: 'Pokémon qui possède une forme Gigamax (Épée et Bouclier) : Florizarre, Dracaufeu, Tortank, Papilusion, Pikachu, Miaouss, Mackogneur, Ectoplasma, Krabboss, Lokhlass, Évoli, Ronflex.',
+      fr: 'Pokémon qui possède une forme Gigamax (Épée et Bouclier)\u00A0: Florizarre, Dracaufeu, Tortank, Papilusion, Pikachu, Miaouss, Mackogneur, Ectoplasma, Krabboss, Lokhlass, Évoli, Ronflex.',
     },
     predicate: (p) => p.hasGmax,
     exclusiveWith: ['form'],
@@ -403,7 +403,7 @@ const colorCategories: Category[] = COLORS.map(([color, fr, en]) => ({
   id: `color-${color}`,
   family: 'color',
   label: { fr: `Pokémon ${fr}`, en: `${en[0]?.toUpperCase() ?? ''}${en.slice(1)} Pokémon` },
-  definition: { fr: `Pokémon dont la couleur dans le Pokédex est « ${fr} ».` },
+  definition: { fr: `Pokémon dont la couleur dans le Pokédex est «\u00A0${fr}\u00A0».` },
   predicate: (p) => p.color === color,
   exclusiveWith: ['color'],
   bonus: false,
@@ -428,7 +428,7 @@ const SHAPES: {
     en: 'Quadruped',
     silhouettes: ['quadruped'],
     definition:
-      'Pokémon dont la silhouette dans le Pokédex est « quadrupède » (sur quatre pattes : Caninos, Évoli).',
+      'Pokémon dont la silhouette dans le Pokédex est «\u00A0quadrupède\u00A0» (sur quatre pattes\u00A0: Caninos, Évoli).',
   },
   {
     shape: 'wings',
@@ -436,7 +436,7 @@ const SHAPES: {
     en: 'Winged',
     silhouettes: ['wings', 'bug-wings'],
     definition:
-      'Pokémon dont la silhouette dans le Pokédex est « ailée » : une ou plusieurs paires d’ailes visibles (Roucool, Papilusion, Yanma). Les dragons et les bipèdes ailés comme Dracaufeu ont une autre silhouette et ne comptent pas.',
+      'Pokémon dont la silhouette dans le Pokédex est «\u00A0ailée\u00A0»\u00A0: une ou plusieurs paires d’ailes visibles (Roucool, Papilusion, Yanma). Les dragons et les bipèdes ailés comme Dracaufeu ont une autre silhouette et ne comptent pas.',
   },
   {
     shape: 'upright',
@@ -444,7 +444,7 @@ const SHAPES: {
     en: 'Upright',
     silhouettes: ['upright', 'humanoid'],
     definition:
-      'Pokémon dont la silhouette dans le Pokédex est « bipède » : debout sur deux pattes, avec ou sans queue (Salamèche, Machoc, Mackogneur, Alakazam).',
+      'Pokémon dont la silhouette dans le Pokédex est «\u00A0bipède\u00A0»\u00A0: debout sur deux pattes, avec ou sans queue (Salamèche, Machoc, Mackogneur, Alakazam).',
   },
 ];
 
@@ -462,8 +462,8 @@ const sizeCategories: Category[] = [
   {
     id: 'size-height-2m',
     family: 'size',
-    label: { fr: 'Taille ≥ 2 m', en: 'Height ≥ 2 m' },
-    definition: { fr: 'Pokémon mesurant 2 mètres ou plus.' },
+    label: { fr: 'Taille ≥ 2\u00A0m', en: 'Height ≥ 2 m' },
+    definition: { fr: 'Pokémon mesurant 2\u00A0mètres ou plus.' },
     predicate: (p) => p.heightDm >= 20,
     exclusiveWith: ['size'],
     bonus: false,
@@ -471,15 +471,15 @@ const sizeCategories: Category[] = [
   {
     id: 'size-height-50cm',
     family: 'size',
-    label: { fr: 'Petit (50 cm ou moins)', en: 'Small (50 cm or less)' },
-    definition: { fr: 'Pokémon mesurant 50 centimètres ou moins.' },
+    label: { fr: 'Petit (50\u00A0cm ou moins)', en: 'Small (50 cm or less)' },
+    definition: { fr: 'Pokémon mesurant 50\u00A0centimètres ou moins.' },
     predicate: (p) => p.heightDm <= 5,
     exclusiveWith: ['size'],
     bonus: false,
   },
 ];
 
-const FR_ONLY = 'Dépend de la langue : nom français uniquement.';
+const FR_ONLY = 'Dépend de la langue\u00A0: nom français uniquement.';
 
 interface NameSpec {
   id: string;
@@ -498,7 +498,7 @@ const NAME_SPECS: NameSpec[] = [
     id: 'name-starts-vowel',
     fr: 'Nom commençant par une voyelle',
     en: 'Name starts with a vowel',
-    definition: `Pokémon dont le nom français commence par A, E, I, O ou U (accents ignorés ; le Y ne compte pas comme une voyelle). ${FR_ONLY}`,
+    definition: `Pokémon dont le nom français commence par A, E, I, O ou U (accents ignorés\u00A0; le Y ne compte pas comme une voyelle). ${FR_ONLY}`,
     predicate: (name) => VOWELS.test(lettersOf(name)),
   },
   {
@@ -510,9 +510,9 @@ const NAME_SPECS: NameSpec[] = [
   },
   {
     id: 'name-long',
-    fr: 'Nom de 10 lettres ou plus',
+    fr: 'Nom de 10\u00A0lettres ou plus',
     en: 'Name of 10 letters or more',
-    definition: `Pokémon dont le nom français compte 10 lettres ou plus (on ne compte que les lettres, pas les espaces, points ou tirets). ${FR_ONLY}`,
+    definition: `Pokémon dont le nom français compte 10\u00A0lettres ou plus (on ne compte que les lettres, pas les espaces, points ou tirets). ${FR_ONLY}`,
     predicate: (name) => letterCount(name) >= 10,
   },
   {
@@ -546,23 +546,23 @@ const NAME_SPECS: NameSpec[] = [
   },
   {
     id: 'name-has-ou',
-    fr: 'Nom contenant « OU »',
+    fr: 'Nom contenant «\u00A0OU\u00A0»',
     en: 'Name contains "OU"',
-    definition: `Pokémon dont le nom français contient les deux lettres O et U l'une après l'autre (il s'agit des lettres écrites, pas du son). ${FR_ONLY}`,
+    definition: `Pokémon dont le nom français contient les deux lettres O et U l’une après l’autre (il s’agit des lettres écrites, pas du son). ${FR_ONLY}`,
     predicate: (name) => folded(name).includes('ou'),
   },
   {
     id: 'name-has-ch',
-    fr: 'Nom contenant « CH »',
+    fr: 'Nom contenant «\u00A0CH\u00A0»',
     en: 'Name contains "CH"',
-    definition: `Pokémon dont le nom français contient les deux lettres C et H l'une après l'autre (il s'agit des lettres écrites, pas du son). ${FR_ONLY}`,
+    definition: `Pokémon dont le nom français contient les deux lettres C et H l’une après l’autre (il s’agit des lettres écrites, pas du son). ${FR_ONLY}`,
     predicate: (name) => folded(name).includes('ch'),
   },
   {
     id: 'name-double-letter',
     fr: 'Nom avec une lettre double',
     en: 'Name with a double letter',
-    definition: `Pokémon dont le nom français contient deux fois la même lettre de suite, comme dans Bulbizarre ou Tentacool. Un espace, un point ou un tiret les sépare : « Ho-Oh » n'en a pas. ${FR_ONLY}`,
+    definition: `Pokémon dont le nom français contient deux fois la même lettre de suite, comme dans Bulbizarre ou Tentacool. Un espace, un point ou un tiret les sépare\u00A0: «\u00A0Ho-Oh\u00A0» n’en a pas. ${FR_ONLY}`,
     predicate: (name) => /(\p{L})\1/u.test(folded(name)),
   },
   {
@@ -593,9 +593,9 @@ const nameCategories: Category[] = [
   {
     id: 'name-short',
     family: 'name',
-    label: { fr: 'Nom de 5 lettres ou moins', en: 'Name of 5 letters or fewer' },
+    label: { fr: 'Nom de 5\u00A0lettres ou moins', en: 'Name of 5 letters or fewer' },
     definition: {
-      fr: `Pokémon dont le nom français compte 5 lettres ou moins (on ne compte que les lettres : « M. Mime » en a 5). ${FR_ONLY}`,
+      fr: `Pokémon dont le nom français compte 5\u00A0lettres ou moins (on ne compte que les lettres\u00A0: «\u00A0M. Mime\u00A0» en a 5). ${FR_ONLY}`,
     },
     predicate: (p) => letterCount(p.nameFr) <= 5,
     exclusiveWith: ['name'],

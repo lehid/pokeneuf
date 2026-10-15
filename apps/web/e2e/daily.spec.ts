@@ -111,7 +111,7 @@ test.describe('difficulty of the day', () => {
       await expect(badge).toContainText('Difficulté');
       const label = (await badge.getAttribute('aria-label')) ?? '';
       expect(
-        label.replace(/^Difficulté de la grille : /, '').replace(/ \(\d sur 5\)$/, ''),
+        label.replace(/^Difficulté de la grille\u00A0: /, '').replace(/ \(\d sur 5\)$/, ''),
       ).toMatch(name);
     });
   }

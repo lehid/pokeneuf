@@ -453,7 +453,7 @@ describe('difficulty of the grid', () => {
       }[level],
     );
     expect(badge.getAttribute('aria-label')).toBe(
-      `Difficulté de la grille : ${badge.textContent?.split('Difficulté')[1]?.trim()} (${levelIndex + 1} sur ${DIFFICULTY_LEVELS.length})`,
+      `Difficulté de la grille\u00A0: ${badge.textContent?.split('Difficulté')[1]?.trim()} (${levelIndex + 1} sur ${DIFFICULTY_LEVELS.length})`,
     );
     const squares = badge.querySelectorAll('span.bg-lcd-ink');
     expect(squares).toHaveLength(levelIndex + 1);
