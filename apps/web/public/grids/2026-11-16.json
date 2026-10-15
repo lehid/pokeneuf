@@ -3,25 +3,25 @@
   "id": 16,
   "date": "2026-11-16",
   "rows": [
-    "shape-quadruped",
-    "evo-final",
-    "status-legendary"
+    "type-psychic",
+    "type-mono",
+    "evo-none"
   ],
   "cols": [
-    "type-dragon",
-    "gen-4",
-    "type-psychic"
+    "color-red",
+    "gen-2",
+    "name-short"
   ],
   "cellSizes": [
-    3,
-    25,
-    3,
-    6,
-    49,
-    19,
-    6,
-    9,
-    8
+    5,
+    10,
+    8,
+    24,
+    51,
+    21,
+    7,
+    18,
+    7
   ],
-  "difficulty": 65
+  "difficulty": 56
 }

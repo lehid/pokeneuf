@@ -3,25 +3,25 @@
   "id": 21,
   "date": "2026-11-21",
   "rows": [
-    "gen-2",
-    "status-starter",
-    "stat-total-300"
+    "evo-middle",
+    "evo-gen4",
+    "gen-4"
   ],
   "cols": [
-    "color-green",
-    "type-poison",
-    "type-grass"
+    "color-blue",
+    "type-flying",
+    "type-ground"
   ],
   "cellSizes": [
-    12,
-    4,
+    15,
+    5,
+    7,
+    13,
     10,
-    12,
-    3,
-    12,
-    10,
-    10,
-    9
+    8,
+    23,
+    14,
+    10
   ],
-  "difficulty": 69
+  "difficulty": 61
 }

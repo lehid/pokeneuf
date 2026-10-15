@@ -3,25 +3,25 @@
   "id": 15,
   "date": "2026-11-15",
   "rows": [
-    "evo-stone",
-    "type-rock",
-    "type-electric"
+    "type-electric",
+    "color-green",
+    "type-rock"
   ],
   "cols": [
-    "stat-total-300",
-    "gen-2",
-    "shape-upright"
+    "gen-4",
+    "form-mega",
+    "evo-gen4"
   ],
   "cellSizes": [
-    6,
-    4,
-    11,
-    3,
     7,
-    14,
+    3,
     4,
+    13,
+    6,
     8,
-    8
+    7,
+    3,
+    5
   ],
-  "difficulty": 77
+  "difficulty": 81
 }

@@ -3,25 +3,25 @@
   "id": 7,
   "date": "2026-11-07",
   "rows": [
-    "type-ghost",
-    "status-starter",
-    "type-dark"
+    "gen-3",
+    "gen-1",
+    "evo-base"
   ],
   "cols": [
-    "evo-final",
-    "stat-total-500",
-    "evo-gen4"
+    "type-fairy",
+    "type-electric",
+    "color-yellow"
   ],
   "cellSizes": [
-    7,
-    3,
+    5,
     4,
-    12,
-    12,
-    6,
-    12,
+    10,
+    5,
+    9,
+    19,
     7,
-    4
+    8,
+    13
   ],
-  "difficulty": 76
+  "difficulty": 70
 }

@@ -3,25 +3,25 @@
   "id": 18,
   "date": "2026-11-18",
   "rows": [
-    "type-fairy",
-    "evo-middle",
-    "shape-wings"
+    "stat-attack-100",
+    "type-bug",
+    "shape-quadruped"
   ],
   "cols": [
-    "size-height-50cm",
-    "type-normal",
-    "gen-1"
+    "color-yellow",
+    "type-grass",
+    "evo-final"
   ],
   "cellSizes": [
-    7,
-    4,
     5,
-    4,
-    7,
-    26,
+    10,
+    64,
     8,
-    15,
-    16
+    3,
+    19,
+    14,
+    12,
+    33
   ],
-  "difficulty": 69
+  "difficulty": 56
 }

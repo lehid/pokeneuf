@@ -3,25 +3,25 @@
   "id": 25,
   "date": "2026-11-25",
   "rows": [
-    "type-fairy",
-    "gen-1",
-    "size-height-50cm"
+    "color-green",
+    "color-yellow",
+    "type-ghost"
   ],
   "cols": [
-    "type-psychic",
-    "evo-friendship",
-    "evo-stone"
+    "type-mono",
+    "evo-final",
+    "name-ends-a"
   ],
   "cellSizes": [
+    20,
+    20,
+    6,
+    32,
+    19,
     5,
-    4,
-    4,
-    14,
-    3,
-    15,
-    13,
-    9,
-    8
+    7,
+    7,
+    4
   ],
-  "difficulty": 74
+  "difficulty": 62
 }

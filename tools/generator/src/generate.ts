@@ -2,6 +2,7 @@ import {
   addDays,
   canCrossCategories,
   CATEGORIES,
+  checkGrid,
   cellAnswers,
   daysBetween,
   difficultyOf,
@@ -21,7 +22,7 @@ import {
   type Memberships,
   type Popularity,
 } from '@pokeneuf/core';
-import { categoryWeights, WEEKDAYS, type GeneratorConfig } from './config';
+import { categoryWeights, WEEKDAYS, type GeneratorConfig, type Weekday } from './config';
 import { PairTable } from './pairs';
 import { hashString, mulberry32, weightedIndex, type Random } from './rng';
 
@@ -82,6 +83,14 @@ export function seedFromDate(date: GridDate): number {
 
 export function weekdayOf(date: GridDate): (typeof WEEKDAYS)[number] {
   return WEEKDAYS[new Date(`${date}T00:00:00Z`).getUTCDay()] as (typeof WEEKDAYS)[number];
+}
+
+/** The difficulty levels a date accepts: its own entry if any, else the ones of its weekday. */
+export function acceptedLevels(
+  config: Pick<GeneratorConfig, 'dateLevels' | 'weekdayLevels'>,
+  date: GridDate,
+): GeneratorConfig['weekdayLevels'][Weekday] {
+  return config.dateLevels[date] ?? config.weekdayLevels[weekdayOf(date)];
 }
 
 function pairKey(a: string, b: string): string {
@@ -152,6 +161,11 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
     );
   }
 
+  const categoryById = (id: string): Category => {
+    const found = categories.find((c) => c.id === id);
+    if (!found) throw new Error(`pinnedGrids: unknown category "${id}"`);
+    return found;
+  };
   const familyOf = new Map(categories.map((c) => [c.id, c.family]));
 
   /** Families whose cap (`familyWindow`: at most `max` grids in the `windowDays` centred on `date`) is reached. */
@@ -188,6 +202,17 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
       cellSizes,
       difficulty,
     });
+    const pinned = config.pinnedGrids[date];
+    if (pinned) {
+      const rows = pinned.rows.map((id) => categoryById(id));
+      const cols = pinned.cols.map((id) => categoryById(id));
+      const cellSizes = rows.flatMap((r) => cols.map((c) => pairs.size(r.id, c.id)));
+      const grid = candidate(rows, cols, cellSizes);
+      const problems = checkGrid(grid, memberships);
+      if (problems.length > 0)
+        throw new Error(`The pinned grid of ${date} is not valid: ${problems.join('; ')}`);
+      return { grid, attempts: 0, categoryCooldownDays: config.cooldown.categoryDays };
+    }
     const random = mulberry32(seed);
     const rejections: Rejections = {};
     const reject = (reason: string) => {
@@ -208,7 +233,7 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
       if (g.date !== date) seen.add(puzzleKey(g.rows, g.cols)).add(puzzleKey(g.cols, g.rows));
     }
     const weightsNow = balancedWeights(date, history);
-    const accepted = config.weekdayLevels[weekdayOf(date)];
+    const accepted = acceptedLevels(config, date);
     let attempts = 0;
 
     // The category cooldown is a target: when it leaves no valid grid, shorten it one day at a time.

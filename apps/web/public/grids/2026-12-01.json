@@ -3,25 +3,25 @@
   "id": 31,
   "date": "2026-12-01",
   "rows": [
+    "size-height-2m",
     "stat-attack-100",
-    "evo-stage-3",
-    "gen-4"
+    "size-height-50cm"
   ],
   "cols": [
-    "color-green",
-    "type-water",
-    "type-fighting"
+    "type-normal",
+    "name-short",
+    "color-green"
   ],
   "cellSizes": [
-    12,
-    14,
-    13,
-    12,
+    5,
+    7,
+    6,
     10,
     5,
-    13,
-    14,
-    7
+    12,
+    19,
+    10,
+    15
   ],
-  "difficulty": 62
+  "difficulty": 67
 }

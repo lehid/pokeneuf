@@ -3,25 +3,25 @@
   "id": 14,
   "date": "2026-11-14",
   "rows": [
-    "status-starter",
-    "evo-trade",
-    "type-grass"
+    "status-fossil",
+    "stat-speed-100",
+    "type-ground"
   ],
   "cols": [
-    "type-mono",
-    "color-brown",
-    "name-long"
+    "gen-1",
+    "gen-3",
+    "evo-base"
   ],
   "cellSizes": [
-    24,
-    3,
-    9,
-    11,
-    3,
-    3,
-    21,
+    5,
     4,
-    10
+    6,
+    24,
+    12,
+    3,
+    14,
+    13,
+    18
   ],
-  "difficulty": 73
+  "difficulty": 67
 }

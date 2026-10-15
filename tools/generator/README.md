@@ -140,3 +140,15 @@ et **demain** (date de Paris) :
   dernier palier si aucune grille valide n'existe.
 - Une case où un critère implique l'autre (toutes les réponses d'une catégorie, ex. légendaire ×
   « 500+ de stats ») n'est jamais tirée.
+
+## Une date avec ses propres règles
+
+- `dateLevels` (config) : niveaux de difficulté acceptés pour UNE date, à la place de ceux de son jour
+  de semaine (`acceptedLevels`). Le rapport juge la date selon cette entrée.
+- `pinnedGrids` (config) : grille choisie à la main pour une date (lignes et colonnes), au lieu d'un
+  tirage ; elle doit passer `checkGrid` sinon le générateur refuse. Utilisé pour la grille n° 1
+  (2026-11-01) : catégories familières (type Plante, type Vol, rouge × Gén 1, Gén 3, stade de base),
+  cases de 12 à 19 réponses, plutôt qu'un dimanche « très difficile » du calendrier.
+- Comme toute grille, une date **déjà publique** (≤ aujourd'hui, Paris) ne se change plus
+  (`--allow-past` requis). Après avoir épinglé une date, régénérer les ~30 jours suivants
+  (`--force`) pour respecter les cooldowns.

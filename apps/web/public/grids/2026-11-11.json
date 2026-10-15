@@ -3,25 +3,25 @@
   "id": 11,
   "date": "2026-11-11",
   "rows": [
-    "evo-stage-3",
-    "stat-speed-100",
-    "type-poison"
+    "evo-middle",
+    "type-dark",
+    "form-gmax"
   ],
   "cols": [
-    "gen-1",
-    "name-starts-c",
-    "shape-wings"
+    "shape-upright",
+    "size-height-50cm",
+    "shape-quadruped"
   ],
   "cellSizes": [
-    19,
-    3,
-    9,
-    24,
-    6,
-    13,
-    33,
+    31,
     4,
-    6
+    11,
+    8,
+    4,
+    8,
+    5,
+    3,
+    4
   ],
-  "difficulty": 64
+  "difficulty": 76
 }
