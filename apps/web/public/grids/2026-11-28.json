@@ -3,25 +3,25 @@
   "id": 28,
   "date": "2026-11-28",
   "rows": [
-    "type-fighting",
-    "stat-total-300",
-    "stat-total-500"
+    "stat-speed-100",
+    "gen-2",
+    "type-poison"
   ],
   "cols": [
-    "color-red",
-    "name-has-ch",
-    "type-psychic"
+    "size-height-2m",
+    "color-blue",
+    "type-dark"
   ],
   "cellSizes": [
-    3,
-    5,
-    3,
-    6,
-    10,
+    9,
     8,
-    11,
+    3,
+    9,
+    15,
+    6,
     4,
-    21
+    9,
+    3
   ],
   "difficulty": 77
 }

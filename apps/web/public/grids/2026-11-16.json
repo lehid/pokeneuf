@@ -3,25 +3,25 @@
   "id": 16,
   "date": "2026-11-16",
   "rows": [
-    "gen-2",
-    "type-fire",
-    "gen-3"
+    "shape-quadruped",
+    "evo-final",
+    "status-legendary"
   ],
   "cols": [
-    "shape-quadruped",
-    "status-legendary",
-    "evo-base"
+    "type-dragon",
+    "gen-4",
+    "type-psychic"
   ],
   "cellSizes": [
-    22,
-    5,
-    36,
-    16,
-    4,
-    11,
-    20,
-    8,
-    45
+    3,
+    25,
+    3,
+    6,
+    49,
+    19,
+    6,
+    9,
+    8
   ],
-  "difficulty": 53
+  "difficulty": 65
 }

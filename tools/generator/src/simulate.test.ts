@@ -52,7 +52,8 @@ describe('playGame', () => {
 });
 
 describe('simulate', () => {
-  const summaries = () => simulate({ grids, memberships, popularity, gamesPerGrid: 15, seed: 3 });
+  // Enough games per grid for a level held by only one or two of the 14 grids not to be noise.
+  const summaries = () => simulate({ grids, memberships, popularity, gamesPerGrid: 100, seed: 3 });
 
   it('is deterministic', () => {
     expect(summaries()).toEqual(summaries());

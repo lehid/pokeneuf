@@ -3,25 +3,25 @@
   "id": 48,
   "date": "2026-12-18",
   "rows": [
-    "form-mega",
-    "type-dual",
-    "evo-baby"
+    "shape-wings",
+    "evo-final",
+    "color-green"
   ],
   "cols": [
-    "gen-2",
-    "type-normal",
-    "name-short"
+    "type-bug",
+    "type-dragon",
+    "name-has-k"
   ],
   "cellSizes": [
-    9,
-    4,
-    3,
-    49,
-    23,
-    13,
+    16,
+    5,
+    7,
+    19,
+    6,
+    29,
     8,
-    4,
-    4
+    3,
+    5
   ],
-  "difficulty": 69
+  "difficulty": 68
 }

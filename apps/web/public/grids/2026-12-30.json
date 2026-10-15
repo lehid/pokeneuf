@@ -3,25 +3,25 @@
   "id": 60,
   "date": "2026-12-30",
   "rows": [
-    "size-height-2m",
-    "stat-speed-100",
-    "type-dual"
+    "type-dual",
+    "size-height-50cm",
+    "gen-4"
   ],
   "cols": [
-    "type-poison",
-    "shape-wings",
-    "name-has-ou"
+    "color-purple",
+    "stat-speed-100",
+    "evo-baby"
   ],
   "cellSizes": [
-    4,
+    27,
+    28,
+    6,
+    9,
     7,
-    3,
-    3,
-    10,
-    3,
-    37,
-    42,
-    17
+    9,
+    14,
+    17,
+    8
   ],
-  "difficulty": 69
+  "difficulty": 58
 }

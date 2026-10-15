@@ -3,25 +3,25 @@
   "id": 73,
   "date": "2027-01-12",
   "rows": [
-    "status-mythical",
-    "type-flying",
-    "evo-final"
+    "type-fighting",
+    "type-electric",
+    "shape-upright"
   ],
   "cols": [
-    "gen-4",
-    "type-psychic",
-    "name-has-y"
+    "evo-stage-3",
+    "stat-total-500",
+    "evo-base"
   ],
   "cellSizes": [
     5,
-    4,
-    3,
-    14,
-    3,
-    6,
-    49,
-    19,
-    19
+    7,
+    7,
+    5,
+    7,
+    8,
+    39,
+    53,
+    51
   ],
-  "difficulty": 68
+  "difficulty": 57
 }

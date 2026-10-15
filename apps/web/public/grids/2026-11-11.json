@@ -3,25 +3,25 @@
   "id": 11,
   "date": "2026-11-11",
   "rows": [
-    "evo-middle",
-    "stat-total-300",
-    "type-flying"
+    "evo-stage-3",
+    "stat-speed-100",
+    "type-poison"
   ],
   "cols": [
-    "type-normal",
     "gen-1",
+    "name-starts-c",
     "shape-wings"
   ],
   "cellSizes": [
-    7,
-    26,
+    19,
     3,
-    19,
+    9,
     24,
-    8,
-    17,
-    19,
-    39
+    6,
+    13,
+    33,
+    4,
+    6
   ],
-  "difficulty": 52
+  "difficulty": 64
 }

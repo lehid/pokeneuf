@@ -3,25 +3,25 @@
   "id": 59,
   "date": "2026-12-29",
   "rows": [
-    "color-brown",
-    "type-rock",
-    "type-normal"
+    "evo-base",
+    "evo-stage-3",
+    "type-grass"
   ],
   "cols": [
-    "evo-base",
-    "evo-final",
-    "name-starts-c"
+    "size-height-2m",
+    "type-poison",
+    "name-starts-vowel"
   ],
   "cellSizes": [
-    32,
-    30,
-    8,
-    13,
-    13,
     3,
-    26,
-    23,
-    9
+    19,
+    25,
+    11,
+    10,
+    7,
+    6,
+    12,
+    3
   ],
-  "difficulty": 53
+  "difficulty": 68
 }

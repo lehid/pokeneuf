@@ -3,25 +3,25 @@
   "id": 29,
   "date": "2026-11-29",
   "rows": [
-    "evo-final",
-    "evo-gen4",
-    "size-height-2m"
+    "type-normal",
+    "evo-baby",
+    "status-starter"
   ],
   "cols": [
-    "type-ice",
-    "shape-wings",
-    "name-short"
+    "color-yellow",
+    "shape-upright",
+    "name-starts-vowel"
   ],
   "cellSizes": [
+    4,
+    29,
     10,
+    3,
     14,
-    5,
-    5,
-    6,
     3,
     3,
-    7,
-    7
+    23,
+    3
   ],
-  "difficulty": 79
+  "difficulty": 75
 }

@@ -3,25 +3,25 @@
   "id": 14,
   "date": "2026-11-14",
   "rows": [
-    "type-bug",
-    "stat-total-500",
-    "type-ground"
+    "status-starter",
+    "evo-trade",
+    "type-grass"
   ],
   "cols": [
-    "color-yellow",
-    "color-green",
-    "name-starts-vowel"
+    "type-mono",
+    "color-brown",
+    "name-long"
   ],
   "cellSizes": [
-    8,
-    8,
-    9,
-    14,
-    15,
-    14,
+    24,
     3,
+    9,
+    11,
+    3,
+    3,
+    21,
     4,
-    5
+    10
   ],
-  "difficulty": 71
+  "difficulty": 73
 }

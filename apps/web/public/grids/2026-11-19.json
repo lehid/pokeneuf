@@ -3,25 +3,25 @@
   "id": 19,
   "date": "2026-11-19",
   "rows": [
-    "type-flying",
-    "size-height-50cm",
-    "evo-middle"
+    "form-mega",
+    "type-ground",
+    "type-fire"
   ],
   "cols": [
-    "stat-total-300",
-    "name-double-letter",
-    "color-red"
+    "color-yellow",
+    "stat-speed-100",
+    "size-height-2m"
   ],
   "cellSizes": [
-    10,
-    9,
-    6,
-    48,
+    4,
     18,
-    7,
-    7,
+    12,
+    3,
+    3,
+    9,
+    8,
     6,
-    4
+    3
   ],
-  "difficulty": 65
+  "difficulty": 79
 }

@@ -3,25 +3,25 @@
   "id": 76,
   "date": "2027-01-15",
   "rows": [
-    "shape-wings",
+    "status-legendary",
     "gen-2",
-    "status-starter"
+    "evo-middle"
   ],
   "cols": [
-    "evo-stage-3",
-    "evo-middle",
-    "color-yellow"
+    "shape-quadruped",
+    "type-flying",
+    "type-fire"
   ],
   "cellSizes": [
+    5,
+    6,
     4,
-    3,
-    3,
-    12,
+    22,
+    19,
     10,
-    12,
-    12,
-    12,
-    3
+    11,
+    5,
+    5
   ],
-  "difficulty": 76
+  "difficulty": 70
 }

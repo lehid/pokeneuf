@@ -8,20 +8,20 @@
     "stat-total-300"
   ],
   "cols": [
-    "gen-3",
+    "gen-4",
     "color-blue",
-    "gen-4"
+    "gen-3"
   ],
   "cellSizes": [
-    17,
-    15,
     6,
+    15,
+    17,
     4,
     4,
     4,
-    33,
+    15,
     18,
-    15
+    33
   ],
   "difficulty": 64
 }

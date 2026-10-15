@@ -3,25 +3,25 @@
   "id": 39,
   "date": "2026-12-09",
   "rows": [
-    "type-ghost",
-    "name-double-letter",
-    "color-brown"
+    "evo-stage-3",
+    "evo-stone",
+    "type-fighting"
   ],
   "cols": [
-    "evo-gen4",
-    "gen-4",
-    "gen-1"
+    "type-mono",
+    "color-brown",
+    "name-ends-a"
   ],
   "cellSizes": [
-    4,
-    8,
+    20,
+    9,
+    3,
+    15,
+    5,
     3,
     12,
-    21,
-    29,
-    10,
-    17,
-    35
+    8,
+    5
   ],
-  "difficulty": 58
+  "difficulty": 73
 }

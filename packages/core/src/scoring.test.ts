@@ -31,11 +31,19 @@ describe('rankScore', () => {
     expect(rankScore(65 * 2, cell0, known)).toBeCloseTo(1 / 29, 10);
   });
 
-  it('gives the same rank to answers of the same popularity, whatever the order of the list', () => {
+  it('gives tied answers the middle of their ranks, whatever the order of the list', () => {
     const flat = () => 0.5;
-    expect(rankScore(65, cell0, flat)).toBe(0);
-    expect(rankScore(1950, cell0, flat)).toBe(0);
+    // Everyone ties: nobody is the most known, nobody the most obscure.
+    expect(rankScore(65, cell0, flat)).toBe(0.5);
+    expect(rankScore(1950, cell0, flat)).toBe(0.5);
     expect(rankScore(130, [...cell0].reverse(), known)).toBe(rankScore(130, cell0, known));
+    // 4 answers: A is alone on top, B and C tie, D is last.
+    const pop = (id: number) => ({ 1: 4, 2: 2, 3: 2, 4: 1 })[id] ?? 0;
+    const four = [1, 2, 3, 4];
+    expect(rankScore(1, four, pop)).toBe(0);
+    expect(rankScore(2, four, pop)).toBeCloseTo((1 + 0.5) / 3, 10);
+    expect(rankScore(3, four, pop)).toBeCloseTo((1 + 0.5) / 3, 10);
+    expect(rankScore(4, four, pop)).toBe(1);
   });
 
   it('is 0 when there is a single answer', () => {

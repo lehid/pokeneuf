@@ -3,25 +3,25 @@
   "id": 86,
   "date": "2027-01-25",
   "rows": [
-    "stat-total-500",
-    "shape-quadruped",
+    "status-legendary",
+    "color-yellow",
     "color-purple"
   ],
   "cols": [
-    "evo-none",
-    "type-water",
+    "stat-attack-100",
+    "name-ends-a",
     "type-psychic"
   ],
   "cellSizes": [
-    39,
-    21,
-    21,
     14,
     7,
-    3,
+    8,
+    5,
+    5,
+    9,
     7,
-    7,
+    6,
     4
   ],
-  "difficulty": 63
+  "difficulty": 75
 }

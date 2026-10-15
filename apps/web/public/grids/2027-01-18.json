@@ -3,25 +3,25 @@
   "id": 79,
   "date": "2027-01-18",
   "rows": [
-    "color-purple",
-    "status-legendary",
-    "type-dragon"
+    "stat-attack-100",
+    "evo-gen4",
+    "form-mega"
   ],
   "cols": [
-    "form-mega",
-    "stat-total-500",
-    "shape-quadruped"
+    "type-normal",
+    "type-water",
+    "color-blue"
   ],
   "cellSizes": [
-    5,
-    12,
+    10,
+    14,
+    18,
+    10,
     7,
-    5,
-    26,
-    5,
+    13,
+    4,
     7,
-    11,
-    3
+    13
   ],
-  "difficulty": 73
+  "difficulty": 64
 }

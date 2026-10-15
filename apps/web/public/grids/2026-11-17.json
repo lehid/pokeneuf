@@ -3,25 +3,25 @@
   "id": 17,
   "date": "2026-11-17",
   "rows": [
-    "gen-4",
-    "type-ghost",
-    "type-poison"
+    "type-dark",
+    "gen-3",
+    "stat-attack-100"
   ],
   "cols": [
-    "name-long",
-    "stat-speed-100",
-    "form-mega"
+    "type-dual",
+    "color-purple",
+    "name-ends-a"
   ],
   "cellSizes": [
-    16,
+    18,
+    5,
+    3,
+    66,
+    7,
     17,
-    9,
-    3,
-    3,
-    4,
-    12,
-    3,
-    4
+    46,
+    7,
+    9
   ],
-  "difficulty": 78
+  "difficulty": 57
 }

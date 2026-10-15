@@ -81,8 +81,8 @@ export const CATEGORY_FACTS: Record<string, CategoryFact> = {
   'color-purple': { in: [19, 48, 94, 190, 301], out: [1, 6, 25, 133] },
   'color-brown': { in: [13, 59, 107, 185, 287], out: [1, 6, 25, 150] },
   'shape-quadruped': { in: [1, 58, 59, 133, 128], out: [16, 23, 100, 129] },
-  'shape-wings': { in: [16, 21, 22, 41, 142], out: [1, 100, 129, 133] },
-  'shape-upright': { in: [4, 64, 160, 240, 312], out: [1, 25, 133, 129] },
+  'shape-wings': { in: [16, 21, 22, 41, 142, 12, 193], out: [1, 100, 129, 133, 6] }, // bug-wings count, Charizard does not
+  'shape-upright': { in: [4, 64, 160, 240, 312, 68, 65, 282], out: [1, 25, 133, 129] }, // humanoids count too
   'size-height-2m': { in: [95, 130, 143, 321, 384], out: [1, 25, 92, 133] },
   'size-height-50cm': { in: [7, 98, 182, 270, 343], out: [1, 4, 6, 150] }, // Bulbizarre is 70 cm
 

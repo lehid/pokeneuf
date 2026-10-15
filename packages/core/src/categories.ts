@@ -284,7 +284,7 @@ const statusCategories: Category[] = [
     family: 'status',
     label: { fr: 'Starter', en: 'Starter' },
     definition: {
-      fr: "Pokémon de départ de Kanto, Johto, Hoenn ou Sinnoh, et toute leur lignée d'évolution (Dracaufeu est un starter).",
+      fr: "Pokémon de départ de Kanto, Johto, Hoenn ou Sinnoh, et toute leur lignée d'évolution (Dracaufeu est un starter). Pikachu et Évoli, starters de jeux dérivés, n'en sont pas.",
     },
     predicate: (p) => p.isStarter,
     exclusiveWith: ['status'],
@@ -306,7 +306,7 @@ const statusCategories: Category[] = [
     family: 'status',
     label: { fr: 'Pseudo-légendaire', en: 'Pseudo-legendary' },
     definition: {
-      fr: 'Lignée de trois stades à 600 points de stats de base : Dracolosse, Tyranocif, Drattak, Métalosse, Carchacrok.',
+      fr: 'Dernier stade d’une lignée de trois stades à 600 points de stats de base : Dracolosse, Tyranocif, Drattak, Métalosse, Carchacrok (Minidraco, Draco et les autres stades précédents ne comptent pas).',
     },
     predicate: (p) => p.isPseudoLegendary,
     exclusiveWith: ['status'],
@@ -410,20 +410,50 @@ const colorCategories: Category[] = COLORS.map(([color, fr, en]) => ({
   color,
 }));
 
-const SHAPES: [PokedexShape, string, string, string][] = [
-  ['quadruped', 'quadrupède', 'Quadruped', 'sur quatre pattes'],
-  ['wings', 'ailée', 'Winged', 'avec des ailes'],
-  ['upright', 'bipède', 'Upright', 'debout sur deux pattes'],
+/**
+ * The Pokédex has more silhouettes than a player has words for: "upright" is a biped WITH a tail
+ * and "humanoid" one without, "wings" is a single pair and "bug-wings" several. Players think
+ * "biped" and "winged", so each category groups the silhouettes that answer that word.
+ */
+const SHAPES: {
+  shape: 'quadruped' | 'wings' | 'upright';
+  fr: string;
+  en: string;
+  silhouettes: readonly PokedexShape[];
+  definition: string;
+}[] = [
+  {
+    shape: 'quadruped',
+    fr: 'quadrupède',
+    en: 'Quadruped',
+    silhouettes: ['quadruped'],
+    definition:
+      'Pokémon dont la silhouette dans le Pokédex est « quadrupède » (sur quatre pattes : Caninos, Évoli).',
+  },
+  {
+    shape: 'wings',
+    fr: 'ailée',
+    en: 'Winged',
+    silhouettes: ['wings', 'bug-wings'],
+    definition:
+      'Pokémon dont la silhouette dans le Pokédex est « ailée » : une ou plusieurs paires d’ailes visibles (Roucool, Papilusion, Yanma). Les dragons et les bipèdes ailés comme Dracaufeu ont une autre silhouette et ne comptent pas.',
+  },
+  {
+    shape: 'upright',
+    fr: 'bipède',
+    en: 'Upright',
+    silhouettes: ['upright', 'humanoid'],
+    definition:
+      'Pokémon dont la silhouette dans le Pokédex est « bipède » : debout sur deux pattes, avec ou sans queue (Salamèche, Machoc, Mackogneur, Alakazam).',
+  },
 ];
 
-const shapeCategories: Category[] = SHAPES.map(([shape, fr, en, detail]) => ({
+const shapeCategories: Category[] = SHAPES.map(({ shape, fr, en, silhouettes, definition }) => ({
   id: `shape-${shape}`,
   family: 'shape',
   label: { fr: `Forme ${fr}`, en: `${en} shape` },
-  definition: {
-    fr: `Pokémon dont la silhouette dans le Pokédex est « ${fr} » (${detail}).`,
-  },
-  predicate: (p) => p.shape === shape,
+  definition: { fr: definition },
+  predicate: (p) => silhouettes.includes(p.shape),
   exclusiveWith: ['shape'],
   bonus: false,
 }));

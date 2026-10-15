@@ -3,25 +3,25 @@
   "id": 20,
   "date": "2026-11-20",
   "rows": [
-    "type-fighting",
-    "type-rock",
-    "stat-attack-100"
+    "color-red",
+    "evo-base",
+    "stat-total-500"
   ],
   "cols": [
-    "evo-gen4",
-    "evo-final",
-    "name-ends-a"
+    "name-has-ou",
+    "type-fighting",
+    "type-flying"
   ],
   "cellSizes": [
-    5,
-    14,
-    5,
-    5,
-    13,
     3,
-    22,
-    64,
-    9
+    3,
+    6,
+    21,
+    7,
+    19,
+    4,
+    7,
+    17
   ],
-  "difficulty": 64
+  "difficulty": 72
 }

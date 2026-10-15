@@ -3,25 +3,25 @@
   "id": 54,
   "date": "2026-12-24",
   "rows": [
-    "evo-friendship",
-    "stat-total-300",
-    "evo-stage-3"
+    "shape-quadruped",
+    "evo-none",
+    "evo-stone"
   ],
   "cols": [
-    "gen-1",
-    "type-fairy",
-    "color-yellow"
+    "type-water",
+    "type-normal",
+    "name-has-ou"
   ],
   "cellSizes": [
-    4,
+    7,
+    19,
+    12,
+    10,
+    16,
+    5,
     4,
     3,
-    24,
-    9,
-    8,
-    19,
-    5,
-    6
+    4
   ],
-  "difficulty": 74
+  "difficulty": 73
 }

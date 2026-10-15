@@ -3,25 +3,25 @@
   "id": 8,
   "date": "2026-11-08",
   "rows": [
-    "color-blue",
-    "type-mono",
+    "evo-middle",
+    "type-ground",
     "gen-4"
   ],
   "cols": [
-    "evo-baby",
-    "shape-quadruped",
-    "type-rock"
+    "type-dragon",
+    "color-purple",
+    "name-starts-vowel"
   ],
   "cellSizes": [
     4,
-    12,
     4,
-    12,
-    67,
+    4,
+    5,
+    4,
+    5,
     6,
-    8,
-    25,
-    7
+    14,
+    11
   ],
-  "difficulty": 62
+  "difficulty": 81
 }
