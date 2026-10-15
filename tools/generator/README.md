@@ -64,8 +64,8 @@ cooldown de 7 jours de la roadmap est à la limite du faisable. Deux parades :
 1. *Rééquilibrage* : une catégorie moins utilisée que sa part reprend du poids. Sans ça, après une
    semaine il ne reste que les catégories les plus rares, qui ne forment plus de grille valide.
 2. *Repli* : si aucun tirage ne marche à 7 jours, on essaie 6, puis 5… jusqu'au plancher. Jamais en
-   silence : la CLI et `grids:report` comptent les cas (sur 90 jours : 7 jours pour ~1 grille sur
-   3, 6 jours pour la plupart des autres). Le cooldown des **paires** n'est jamais relâché.
+   silence : la CLI et `grids:report` comptent les cas (sur les 90 premiers jours : 6 jours pour ~1
+   grille sur 4, 7 jours ou plus pour les autres). Le cooldown des **paires** n'est jamais relâché.
 
 ## Difficulté
 

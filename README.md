@@ -6,6 +6,7 @@ Projet de fan non officiel, non affilié à Nintendo, Game Freak ou The Pokémon
 
 - Spécification et plan par phases : [ROADMAP.md](ROADMAP.md)
 - Règles pour Claude Code : [CLAUDE.md](CLAUDE.md)
+- Lancement (checklist datée, nuit du 1er novembre, routine, retour arrière) : [LAUNCH.md](LAUNCH.md)
 
 ## Développement
 
@@ -43,8 +44,9 @@ Réglage unique : *Settings › Pages › Source : GitHub Actions*.
   GitHub désactive les workflows planifiés après 60 jours sans activité sur le dépôt ; fusionner la pull
   request mensuelle compte comme activité.
 - **Grilles publiées = historique** : la CI (`grids:immutable`) refuse qu'une pull request modifie,
-  renomme ou supprime une grille datée d'aujourd'hui ou avant. Pour que ce soit bloquant, l'étape
-  *Published grids are untouched* doit être une vérification requise (protection de branche).
+  renomme ou supprime une grille datée d'aujourd'hui ou avant. Pour que ce soit bloquant, le job `check`
+  du workflow CI (qui contient l'étape *Published grids are untouched*) doit être une vérification
+  requise (protection de branche).
 
 ## Signalements d'erreurs de données
 

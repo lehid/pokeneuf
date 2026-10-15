@@ -28,7 +28,7 @@ export const SITE = {
   title: `${APP_NAME} — la grille du jour`,
   description:
     'Chaque jour, une grille 3×3 à remplir avec les bons Pokémon (générations 1 à 4). Gratuit, sans pub, sans compte.',
-  imageAlt: `${APP_NAME} : une grille 3×3 de cases colorées par type`,
+  imageAlt: `${APP_NAME}\u00A0: une grille 3×3 de cases colorées par type`,
 } as const;
 
 /**

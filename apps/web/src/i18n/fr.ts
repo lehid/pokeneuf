@@ -1,9 +1,13 @@
 /** All French UI strings. Never hard-code UI text in components. */
+
+/** Intl writes « 1 novembre »: the first of the month takes an ordinal in French (« 1er novembre »). */
+const FIRST_OF_MONTH = /^(\D*)1 /;
+
 export const fr = {
   tagline: 'Chaque jour, une grille 3×3 à remplir avec les bons Pokémon.',
   ogTagline: 'Une grille 3×3 à remplir, chaque jour.',
   ogDetails: 'Générations 1 à 4 · gratuit · sans pub',
-  gridTitle: (n: number) => `Grille n° ${n}`,
+  gridTitle: (n: number) => `Grille n°\u00A0${n}`,
   demoGrid: 'Grille de démonstration',
   gridDate: (isoDate: string) =>
     new Intl.DateTimeFormat('fr-FR', {
@@ -11,7 +15,9 @@ export const fr = {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
-    }).format(new Date(`${isoDate}T12:00:00Z`)),
+    })
+      .format(new Date(`${isoDate}T12:00:00Z`))
+      .replace(FIRST_OF_MONTH, (_, before: string) => `${before}1er `),
 
   difficultyLabel: 'Difficulté',
   difficulty: {
@@ -22,7 +28,7 @@ export const fr = {
     veryHard: 'Très difficile',
   },
   difficultyAria: (level: string, index: number, total: number) =>
-    `Difficulté de la grille : ${level} (${index} sur ${total})`,
+    `Difficulté de la grille\u00A0: ${level} (${index} sur ${total})`,
 
   archivesButton: 'Archives',
   archivesTitle: 'Archives',
@@ -38,15 +44,15 @@ export const fr = {
   },
   archiveFound: (found: number) => `${found}/9 trouvés`,
   archiveRowLabel: (n: number, date: string, status: string) =>
-    `Grille n° ${n}, ${date} : ${status}`,
+    `Grille n°\u00A0${n}, ${date}\u00A0: ${status}`,
   archiveAction: { unplayed: 'Jouer', inProgress: 'Reprendre', done: 'Voir' },
   pagePrevious: 'Précédent',
   pageNext: 'Suivant',
   pageOf: (page: number, pages: number) => `Page ${page} sur ${pages}`,
   paginationLabel: 'Pagination des archives',
-  archivesEmpty: 'Pas encore d’archive : les grilles passées apparaîtront ici dès demain.',
+  archivesEmpty: 'Pas encore d’archive\u00A0: les grilles passées apparaîtront ici dès demain.',
   archiveNote:
-    'Terminée après le jour de la grille, cette partie est une archive : elle ne compte ni dans les stats ni dans la série.',
+    'Terminée après le jour de la grille, cette partie est une archive\u00A0: elle ne compte ni dans les stats ni dans la série.',
   gridUnavailable: 'Cette grille n’est pas disponible.',
   gridUnavailableTitle: 'Grille introuvable',
 
@@ -54,37 +60,41 @@ export const fr = {
   noGridTitle: 'Pas de grille aujourd’hui',
   noGrid: 'Pas de grille aujourd’hui, revenez demain.',
   noGridRetry: 'La page se met à jour toute seule si la grille arrive.',
-  notLaunched: (date: string) => `Le jeu ouvre le ${date}. Revenez ce jour-là !`,
+  notLaunched: (date: string) => `Le jeu ouvre le ${date}. Revenez ce jour-là\u00A0!`,
   launchDate: (isoDate: string) =>
     new Intl.DateTimeFormat('fr-FR', {
       timeZone: 'UTC',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-    }).format(new Date(`${isoDate}T12:00:00Z`)),
+    })
+      .format(new Date(`${isoDate}T12:00:00Z`))
+      .replace(FIRST_OF_MONTH, (_, before: string) => `${before}1er `),
   tryDemo: 'Essayer la grille de démonstration',
   loadError: 'Impossible de charger la grille du jour.',
   retry: 'Réessayer',
   newGridTitle: 'Nouvelle grille\u00A0!',
-  newGridText: 'Un nouveau jour a commencé : la grille du jour a changé.',
+  newGridText: 'Un nouveau jour a commencé\u00A0: la grille du jour a changé.',
   newGridPlay: 'Jouer la nouvelle grille',
   newGridLater: 'Plus tard',
   backToToday: 'Grille du jour',
   /** Another tab played this grid further; the game on screen has been brought up to date. */
   syncedProgress:
-    'Cette grille a avancé dans un autre onglet : la partie a été mise à jour. Votre dernière réponse n’a pas été jouée.',
+    'Cette grille a avancé dans un autre onglet\u00A0: la partie a été mise à jour. Votre dernière réponse n’a pas été jouée.',
   syncedFinished:
-    'Cette partie a été terminée dans un autre onglet : voici son résultat. Votre dernière réponse n’a pas été jouée.',
-  syncedProgressQuiet: 'Cette grille a avancé dans un autre onglet : la partie a été mise à jour.',
-  syncedFinishedQuiet: 'Cette partie a été terminée dans un autre onglet : voici son résultat.',
+    'Cette partie a été terminée dans un autre onglet\u00A0: voici son résultat. Votre dernière réponse n’a pas été jouée.',
+  syncedProgressQuiet:
+    'Cette grille a avancé dans un autre onglet\u00A0: la partie a été mise à jour.',
+  syncedFinishedQuiet:
+    'Cette partie a été terminée dans un autre onglet\u00A0: voici son résultat.',
 
   crashTitle: 'Un problème est survenu',
   crashText:
-    'Le jeu a rencontré une erreur inattendue. Vous pouvez réessayer ; si le problème persiste, effacer les données du jeu le règle presque toujours.',
+    'Le jeu a rencontré une erreur inattendue. Vous pouvez réessayer\u00A0; si le problème persiste, effacer les données du jeu le règle presque toujours.',
   crashRetry: 'Réessayer',
   crashClear: 'Effacer les données du jeu',
   crashClearWarning:
-    'Cela efface votre progression, vos statistiques et votre série, sur cet appareil. Cette action est définitive.',
+    'Cela efface votre progression, vos statistiques et votre série sur cet appareil. Cette action est définitive.',
   crashClearConfirm: 'Oui, tout effacer',
   crashClearCancel: 'Non, garder mes données',
   disclaimer:
@@ -97,8 +107,8 @@ export const fr = {
   resultButton: 'Résultat',
   boardLabel: 'Grille de jeu',
   cornerLabel: 'Lignes et colonnes',
-  rowHeader: (label: string) => `Ligne : ${label}`,
-  colHeader: (label: string) => `Colonne : ${label}`,
+  rowHeader: (label: string) => `Ligne\u00A0: ${label}`,
+  colHeader: (label: string) => `Colonne\u00A0: ${label}`,
   emptyCell: (row: string, col: string) => `Case vide, ${row} et ${col}`,
   filledCell: (name: string, number: string, row: string, col: string) =>
     `${name}, ${number}, ${row} et ${col}`,
@@ -120,23 +130,23 @@ export const fr = {
       : `${count} Pokémon trouvé${count > 1 ? 's' : ''}. Flèches haut et bas pour choisir, Entrée pour valider.`,
   alreadyUsed: 'déjà utilisé',
 
-  announceCorrect: (name: string) => `Correct : ${name}.`,
+  announceCorrect: (name: string) => `Correct\u00A0: ${name}.`,
   announceWrong: (name: string, left: number) =>
-    `Raté : ${name} ne convient pas. ${left === 0 ? 'Plus de vie.' : `Il reste ${left} vie${left > 1 ? 's' : ''}.`}`,
+    `Raté\u00A0: ${name} ne convient pas. ${left === 0 ? 'Plus de vie.' : `Il reste ${left} vie${left > 1 ? 's' : ''}.`}`,
 
   rulesTitle: 'Comment jouer',
   rules: [
     'Remplissez les 9 cases avec un Pokémon qui correspond à la ligne ET à la colonne.',
     'Chaque Pokémon ne peut être utilisé qu’une seule fois.',
-    '3 erreurs maximum : à la troisième, la partie est perdue.',
+    '3 erreurs maximum\u00A0: à la troisième, la partie est perdue.',
     'Touchez un intitulé pour lire sa définition exacte.',
-    'Générations 1 à 4 seulement (493 Pokémon), avec les types actuels (Fée incluse).',
+    'Générations 1 à 4 seulement (493 Pokémon), avec les types actuels (type Fée inclus).',
   ],
   hideRules: 'Ne plus afficher',
   play: 'Jouer',
 
   abandonTitle: 'Abandonner\u00A0?',
-  abandonQuestion: 'Voulez-vous vraiment abandonner ?',
+  abandonQuestion: 'Voulez-vous vraiment abandonner\u00A0?',
   abandonYes: 'Oui, abandonner',
   abandonNo: 'Continuer à jouer',
 
@@ -166,7 +176,7 @@ export const fr = {
     rare: 'Rare',
     veryRare: 'Très rare',
   },
-  cellRarity: (tier: string) => `rareté estimée : ${tier}`,
+  cellRarity: (tier: string) => `rareté estimée\u00A0: ${tier}`,
   share: 'Partager',
   copied: 'Résultat copié dans le presse-papiers.',
   shared: 'Résultat partagé.',
@@ -226,75 +236,75 @@ export const fr = {
     toc: 'Sommaire',
     sections: {
       play: {
-        title: 'Comment jouer ?',
+        title: 'Comment jouer\u00A0?',
         paragraphs: [
           'Chaque jour, une nouvelle grille de 3 lignes et 3 colonnes apparaît à minuit, heure de Paris. Chaque case attend un Pokémon qui répond à la fois au critère de sa ligne et à celui de sa colonne.',
           'Touchez une case, tapez un nom (français ou anglais) ou un numéro de Pokédex, puis choisissez dans la liste. Un Pokémon ne peut servir qu’une fois dans la grille. À la troisième erreur, la partie est perdue.',
-          'Il n’y a qu’une partie par grille : pas de nouvel essai. Vous pouvez abandonner à tout moment, ou rejouer les grilles passées depuis les archives.',
+          'Il n’y a qu’une partie par grille\u00A0: pas de nouvel essai. Vous pouvez abandonner à tout moment, ou rejouer les grilles passées depuis les archives.',
         ],
       },
       categories: {
-        title: 'Que veut dire chaque catégorie ?',
+        title: 'Que veut dire chaque catégorie\u00A0?',
         intro: (count: number) =>
-          `Voici les ${count} catégories qui peuvent apparaître. Cette liste est générée à partir du jeu lui-même : c’est exactement la définition utilisée pour valider vos réponses. Dans le jeu, touchez un intitulé pour la lire.`,
+          `Voici les ${count} catégories qui peuvent apparaître. Cette liste est générée à partir du jeu lui-même\u00A0: ce sont exactement les définitions utilisées pour valider vos réponses. Dans le jeu, touchez un intitulé pour lire la sienne.`,
         inGame:
-          'Toutes les définitions s’entendent « parmi les Pokémon du jeu » (générations 1 à 4).',
+          'Toutes les définitions s’entendent «\u00A0parmi les Pokémon du jeu\u00A0» (générations 1 à 4).',
       },
       score: {
-        title: 'Comment est calculé le score ?',
+        title: 'Comment est calculé le score\u00A0?',
         main: (rules: { base: number; bonus: number; penalty: number; max: number }) =>
-          `Chaque bonne réponse rapporte ${rules.base} points, plus jusqu’à ${rules.bonus} points selon sa rareté : plus la réponse est rare parmi toutes celles possibles pour la case, plus elle rapporte. Chaque erreur retire ${rules.penalty} points. Le score est compris entre 0 et ${rules.max}.`,
+          `Chaque bonne réponse rapporte ${rules.base} points, plus jusqu’à ${rules.bonus} points selon sa rareté\u00A0: plus la réponse est rare parmi toutes celles possibles pour la case, plus elle rapporte. Chaque erreur retire ${rules.penalty} points. Le score est compris entre 0 et ${rules.max}.`,
         paragraphs: [
-          'Le bonus de rareté n’est pas proportionnel : une réponse un peu moins courante rapporte déjà l’essentiel du bonus, et le haut du classement reste atteignable sans viser l’obscur à chaque case.',
-          'Le score donne aussi un titre :',
+          'Le bonus de rareté n’est pas proportionnel\u00A0: une réponse un peu moins courante rapporte déjà l’essentiel du bonus, et le haut du classement reste atteignable sans viser l’obscur à chaque case.',
+          'Le score donne aussi un titre\u00A0:',
         ],
         titleLine: (title: string, from: number) =>
-          `${title} : à partir de ${from} point${from > 1 ? 's' : ''}`,
+          `${title}\u00A0: à partir de ${from} point${from > 1 ? 's' : ''}`,
       },
       rarity: {
-        title: 'Que signifie la rareté estimée ?',
+        title: 'Que signifie la rareté estimée\u00A0?',
         paragraphs: [
-          'Le site n’a pas de serveur et ne sait donc pas ce que les autres joueurs répondent : la rareté est une estimation de la notoriété d’un Pokémon (sa génération, s’il est un starter, un légendaire, un stade final, et une liste de Pokémon emblématiques établie à la main). Ce n’est pas un pourcentage de joueurs.',
-          'Pour chaque case, les réponses possibles sont classées du Pokémon le plus connu au plus obscur, et la rareté dépend de la place de votre réponse dans ce classement :',
+          'Le site n’a pas de serveur et ne sait donc pas ce que les autres joueurs répondent\u00A0: la rareté est une estimation de la notoriété d’un Pokémon (sa génération, s’il est un starter, un légendaire, un stade final, et une liste de Pokémon emblématiques établie à la main). Ce n’est pas un pourcentage de joueurs.',
+          'Pour chaque case, les réponses possibles sont classées du Pokémon le plus connu au plus obscur, et la rareté dépend de la place de votre réponse dans ce classement\u00A0:',
         ],
         tierRules: [
           'parmi le quart des réponses les plus connues de la case',
-          'entre 25 % et 50 % du classement',
-          'entre 50 % et 75 % du classement',
+          'entre 25\u00A0% et 50\u00A0% du classement',
+          'entre 50\u00A0% et 75\u00A0% du classement',
           'parmi le quart des réponses les plus obscures',
         ],
       },
       streak: {
-        title: 'À quoi servent la série et les statistiques ?',
+        title: 'À quoi servent la série et les statistiques\u00A0?',
         paragraphs: [
           'La série compte les jours de suite où vous avez terminé la grille du jour, gagnée ou perdue. Un jour sans partie, ou une partie abandonnée, remet la série à zéro.',
           'Une partie ne compte dans la série et les statistiques que si elle se termine le jour de sa grille (heure de Paris). Une partie finie après minuit, ou depuis les archives, ne compte pas.',
-          'Tout reste dans votre navigateur : effacer les données du site efface vos statistiques et votre série.',
+          'Tout reste dans votre navigateur\u00A0: effacer les données du site efface vos statistiques et votre série.',
         ],
       },
       data: {
-        title: 'D’où viennent les données ?',
+        title: 'D’où viennent les données\u00A0?',
         paragraphs: [
-          'Les fiches (types, statistiques, taille, évolutions…) viennent de PokéAPI, complétées et corrigées à la main là où c’est nécessaire (starters, fossiles, légendaires, Méga-évolutions, Pokémon les plus connus…). Les noms affichés sont les noms français officiels ; la recherche accepte aussi les noms anglais et les numéros.',
-          'Une erreur, une définition discutable ? Signalez-la avec le lien ci-dessous (il se trouve aussi dans la définition d’une catégorie et dans la liste des réponses d’une case) : chaque correction est ajoutée aux données, avec un test pour ne pas la perdre.',
+          'Les fiches (types, statistiques, taille, évolutions…) viennent de PokéAPI, complétées et corrigées à la main là où c’est nécessaire (starters, fossiles, légendaires, Méga-évolutions, Pokémon les plus connus…). Les noms affichés sont les noms français officiels\u00A0; la recherche accepte aussi les noms anglais et les numéros.',
+          'Une erreur, une définition discutable\u00A0? Signalez-la avec le lien ci-dessous (il se trouve aussi dans la définition d’une catégorie et dans la liste des réponses d’une case)\u00A0: chaque correction est ajoutée aux données, avec un test pour ne pas la perdre.',
         ],
       },
       generations: {
-        title: 'Pourquoi seulement les générations 1 à 4 ?',
+        title: 'Pourquoi seulement les générations 1 à 4\u00A0?',
         text: (count: number) =>
-          `Le jeu couvre les ${count} premiers Pokémon (numéros 1 à ${count}, de Kanto à Sinnoh) : assez pour des grilles variées, assez peu pour que chacun puisse en connaître la plupart. Les générations suivantes pourront être ajoutées plus tard.`,
+          `Le jeu couvre les ${count} premiers Pokémon (numéros 1 à ${count}, de Kanto à Sinnoh)\u00A0: assez pour des grilles variées, assez peu pour que chacun puisse en connaître la plupart. Les générations suivantes pourront être ajoutées plus tard.`,
       },
       types: {
-        title: 'Quels types sont utilisés ?',
+        title: 'Quels types sont utilisés\u00A0?',
         paragraphs: [
-          'Les types actuels, ceux des jeux récents, type Fée inclus : Mélofée est de type Fée, Marill est Eau/Fée et Togepi est Fée. Ils peuvent donc différer de ce que vous avez connu dans les premières versions des jeux.',
+          'Les types actuels, ceux des jeux récents, type Fée inclus\u00A0: Mélofée est de type Fée, Marill est Eau/Fée et Togepi est Fée. Ils peuvent donc différer de ce que vous avez connu dans les premières versions des jeux.',
         ],
       },
       evolutions: {
-        title: 'Comment sont comptées les évolutions ?',
+        title: 'Comment sont comptées les évolutions\u00A0?',
         paragraphs: [
-          'Les évolutions sont comptées parmi les Pokémon du jeu uniquement. Un « stade final » est un Pokémon qui n’évolue en aucun Pokémon des générations 1 à 4 : Colossinge est donc un stade final ici, même si Courrousinge existe dans une génération plus récente.',
-          'Les formes régionales (Alola, Galar, Hisui) n’existent pas dans le jeu. Les Méga-évolutions et formes Gigamax ne sont pas des entrées à part : « a une Méga-évolution » est simplement un critère possible.',
+          'Les évolutions sont comptées parmi les Pokémon du jeu uniquement. Un «\u00A0stade final\u00A0» est le dernier stade d’une famille d’évolution, c’est-à-dire un Pokémon qui a une pré-évolution et n’évolue en aucun Pokémon des générations 1 à 4\u00A0: Colossinge est donc un stade final ici, même si Courrousinge existe dans une génération plus récente.',
+          'Les formes régionales (Alola, Galar, Hisui) n’existent pas dans le jeu. Les Méga-évolutions et formes Gigamax ne sont pas des entrées à part\u00A0: «\u00A0a une Méga-évolution\u00A0» est simplement un critère possible.',
         ],
       },
     },
@@ -324,7 +334,7 @@ export const fr = {
         title: 'Propriété intellectuelle et non-affiliation',
         paragraphs: [
           'Ce site est un projet de fan, gratuit, sans publicité et non officiel. Il n’est ni affilié à, ni approuvé, ni sponsorisé par Nintendo, Game Freak, Creatures Inc. ou The Pokémon Company.',
-          'Pokémon et les noms des Pokémon sont des marques de leurs propriétaires respectifs. Le site n’utilise aucune image officielle : les pictogrammes et les couleurs sont dessinés pour ce projet.',
+          'Pokémon et les noms des Pokémon sont des marques de leurs propriétaires respectifs. Le site n’utilise aucune image officielle\u00A0: les pictogrammes et les couleurs sont dessinés pour ce projet.',
           'Les données de référence proviennent de PokéAPI.',
         ],
       },

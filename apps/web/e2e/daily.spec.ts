@@ -44,7 +44,7 @@ test('shows a polite message when there is no grid today', async ({ page }) => {
 test('before launch day, announces it and offers the demo grid', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-10-13T12:00:00+02:00'));
   await page.goto('./');
-  await expect(page.getByTestId('no-grid')).toContainText('1 novembre 2026');
+  await expect(page.getByTestId('no-grid')).toContainText('1er novembre 2026');
   await page.getByTestId('try-demo').click();
   await expect(page.getByTestId('board')).toBeVisible();
   await expect(page.getByText('Grille de démonstration')).toBeVisible();
@@ -111,7 +111,7 @@ test.describe('difficulty of the day', () => {
       await expect(badge).toContainText('Difficulté');
       const label = (await badge.getByTestId('difficulty-text').textContent()) ?? '';
       expect(
-        label.replace(/^Difficulté de la grille : /, '').replace(/ \(\d sur 5\)$/, ''),
+        label.replace(/^Difficulté de la grille\u00A0: /, '').replace(/ \(\d sur 5\)$/, ''),
       ).toMatch(name);
     });
   }

@@ -214,7 +214,7 @@ describe('daily grid', () => {
 
   it('announces the launch and offers the demo before launch day', async () => {
     daily(noon('2026-10-13'), served({}));
-    expect((await screen.findByTestId('no-grid')).textContent).toContain('1 novembre 2026');
+    expect((await screen.findByTestId('no-grid')).textContent).toContain('1er novembre 2026');
     expect(screen.getByTestId('try-demo').getAttribute('href')).toBe('?demo');
   });
 
