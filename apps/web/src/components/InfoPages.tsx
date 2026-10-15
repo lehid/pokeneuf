@@ -12,7 +12,7 @@ import {
 } from '@pokeneuf/core';
 import { useEffect, type ReactNode } from 'react';
 import changelog from '../content/changelog.md?raw';
-import { ISSUES_URL, LEGAL, type LegalField } from '../content/legal';
+import { ISSUES_URL, LEGAL, LEGAL_UPDATED, type LegalField } from '../content/legal';
 import { pokedex } from '../data';
 import { fr } from '../i18n/fr';
 import { FamilyIcon } from './FamilyIcon';
@@ -134,6 +134,9 @@ export function FaqPage() {
       <div className="flex flex-col gap-3">
         <Section id="play" title={s.play.title} open>
           <Paragraphs items={s.play.paragraphs} />
+        </Section>
+        <Section id="schedule" title={s.schedule.title}>
+          <Paragraphs items={s.schedule.paragraphs} />
         </Section>
         <Section id="categories" title={s.categories.title}>
           <p>{s.categories.intro(CATEGORIES.length)}</p>
@@ -277,6 +280,17 @@ export function LegalPage({ legal = LEGAL }: { legal?: Record<LegalField, string
             <Paragraphs items={s.privacy.paragraphs} />
           </div>
         </section>
+        <section aria-labelledby="legal-liability">
+          <h3 id="legal-liability" className="mb-2 font-bold">
+            {s.liability.title}
+          </h3>
+          <div className="flex flex-col gap-2">
+            <Paragraphs items={s.liability.paragraphs} />
+          </div>
+        </section>
+        <p className="text-xs text-lcd-soft" data-testid="legal-updated">
+          {fr.legal.updated(fr.launchDate(LEGAL_UPDATED))}
+        </p>
       </div>
     </InfoLayout>
   );
