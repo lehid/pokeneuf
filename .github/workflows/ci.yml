@@ -19,7 +19,8 @@ jobs:
         with:
           persist-credentials: false
           # A pull request needs the history to compare its grids with the base branch (grids:immutable).
-          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 1 }}
+          # Strings on purpose: in a GitHub expression `0` is falsy, so `cond && 0 || 1` is always 1.
+          fetch-depth: ${{ github.event_name == 'pull_request' && '0' || '1' }}
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
