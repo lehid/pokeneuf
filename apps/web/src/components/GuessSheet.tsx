@@ -13,16 +13,18 @@ const MAX_SUGGESTIONS = 8;
 function GuessCombobox({ onPick }: { onPick(pokemon: Pokemon): void }) {
   const game = useGame((s) => s.game);
   const used = useMemo(() => usedPokemon(game), [game]);
+  // The text of the input belongs to the input (uncontrolled: a controlled value lags behind fast
+  // typing and drops keystrokes). `query` only follows it, to compute the suggestions.
   const [query, setQuery] = useState('');
   const items = useMemo(() => search(query, { lang: 'fr', limit: MAX_SUGGESTIONS }), [query]);
+  const isOpen = query.trim() !== '';
 
-  const { isOpen, getLabelProps, getInputProps, getMenuProps, getItemProps, highlightedIndex } =
+  const { getLabelProps, getInputProps, getMenuProps, getItemProps, highlightedIndex } =
     useCombobox<Pokemon>({
       items,
-      inputValue: query,
       // Nothing stays "selected": a pick is played at once and the sheet closes.
       selectedItem: null,
-      isOpen: query.trim() !== '',
+      isOpen,
       defaultHighlightedIndex: 0,
       itemToString: (item) => item?.nameFr ?? '',
       isItemDisabled: (item) => used.has(item.id),
@@ -30,6 +32,17 @@ function GuessCombobox({ onPick }: { onPick(pokemon: Pokemon): void }) {
       onSelectedItemChange: ({ selectedItem }) => {
         if (selectedItem) onPick(selectedItem);
       },
+      // Losing the focus is not a choice. By default Downshift selects the highlighted suggestion
+      // when the input blurs, which PLAYED a move (and cost a life) on Escape, on Tab to "Fermer",
+      // on the Android back button, or when another dialog opened over the sheet (C1). Enter and a
+      // click still select.
+      stateReducer: (state, { type, changes }) =>
+        type === useCombobox.stateChangeTypes.InputBlur
+          ? { ...changes, selectedItem: state.selectedItem, inputValue: state.inputValue }
+          : changes,
+      // Downshift's own live region is appended to <body>, which is inert while a modal dialog is
+      // open: nothing in it would ever be read. The French status below lives inside the dialog.
+      getA11yStatusMessage: () => '',
     });
 
   return (
@@ -40,6 +53,8 @@ function GuessCombobox({ onPick }: { onPick(pokemon: Pokemon): void }) {
       <input
         {...getInputProps({
           autoFocus: true,
+          // Follow the text synchronously, in the same render as the keystroke.
+          onChange: (event) => setQuery((event.target as HTMLInputElement).value),
           onKeyDown: (event) => {
             // Escape closes the sheet (native dialog behaviour), not just the suggestions.
             if (event.key === 'Escape') {
@@ -57,6 +72,9 @@ function GuessCombobox({ onPick }: { onPick(pokemon: Pokemon): void }) {
         enterKeyHint="go"
         data-testid="guess-input"
       />
+      <p className="sr-only" role="status" aria-live="polite" data-testid="suggestions-status">
+        {isOpen ? fr.suggestionsStatus(items.length) : ''}
+      </p>
       <ul
         {...getMenuProps()}
         className="mt-2 max-h-[55dvh] overflow-y-auto"
@@ -93,12 +111,13 @@ function GuessCombobox({ onPick }: { onPick(pokemon: Pokemon): void }) {
               </li>
             );
           })}
-        {isOpen && items.length === 0 && (
-          <li className="px-2 py-2 text-sm text-lcd-soft" data-testid="no-result">
-            {fr.noResult}
-          </li>
-        )}
       </ul>
+      {/* Outside the listbox: only options may be children of a role=listbox. */}
+      {isOpen && items.length === 0 && (
+        <p className="px-2 py-2 text-sm text-lcd-soft" data-testid="no-result">
+          {fr.noResult}
+        </p>
+      )}
     </div>
   );
 }

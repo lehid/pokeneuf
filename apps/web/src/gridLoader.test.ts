@@ -46,6 +46,14 @@ describe('loadGrid', () => {
     expect(await load(async () => json({ hello: 'world' }))).toEqual({ kind: 'error' });
   });
 
+  it('never rejects, even for a date that is not a real day (it used to hang on "Chargement…")', async () => {
+    const fetchImpl = vi.fn(async () => json(demoGrid));
+    for (const date of ['2026-11-99', '2026-00-01', 'demain', '']) {
+      await expect(load(fetchImpl, date), date).resolves.toEqual({ kind: 'error' });
+    }
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
   it('refuses a grid for another day, or one the game would not publish', async () => {
     expect(await load(async () => json({ ...demoGrid, date: '2026-11-02' }))).toEqual({
       kind: 'error',

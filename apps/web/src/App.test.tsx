@@ -286,7 +286,7 @@ describe('daily grid', () => {
     const answer = pokemonById(solution[0] ?? 1);
     play('cell-0-0', answer.nameFr);
     expect([...storage.data.keys()].some((k) => k === 'pokeneuf:v1:game:1')).toBe(false);
-    expect(storage.data.has('demo:pokeneuf:v1:game:1')).toBe(true);
+    expect(storage.data.has('pokeneuf:v1:demo:game:1')).toBe(true);
     first.unmount();
 
     daily(noon(DAY), served({ [DAY]: demoGrid }), storage);
@@ -452,9 +452,14 @@ describe('difficulty of the grid', () => {
         veryHard: 'Très difficile',
       }[level],
     );
-    expect(badge.getAttribute('aria-label')).toBe(
-      `Difficulté de la grille : ${badge.textContent?.split('Difficulté')[1]?.trim()} (${levelIndex + 1} sur ${DIFFICULTY_LEVELS.length})`,
+    // A real sentence for screen readers (an aria-label on a <p> is unreliable), the visual part hidden.
+    const spoken = within(badge).getByTestId('difficulty-text');
+    expect(spoken.classList.contains('sr-only')).toBe(true);
+    expect(spoken.textContent).toBe(
+      fr.difficultyAria(fr.difficulty[level], levelIndex + 1, DIFFICULTY_LEVELS.length),
     );
+    expect(badge.hasAttribute('aria-label')).toBe(false);
+    expect(badge.querySelectorAll('[aria-hidden="true"]')).toHaveLength(3);
     const squares = badge.querySelectorAll('span.bg-lcd-ink');
     expect(squares).toHaveLength(levelIndex + 1);
   });

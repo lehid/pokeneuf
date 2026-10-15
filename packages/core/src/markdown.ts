@@ -14,8 +14,12 @@ export type MarkdownBlock =
   | { type: 'paragraph'; children: MarkdownInline[] }
   | { type: 'list'; items: MarkdownInline[][] };
 
-/** Links may point to the site itself, to the web, or to a mail address. Nothing else. */
-const SAFE_HREF = /^(https?:\/\/|mailto:|#\/|\/(?!\/)|\.\/)/i;
+/**
+ * Links may point to the site itself, to the web, or to a mail address. Nothing else. A backslash
+ * is refused anywhere: browsers read `\` as `/` in URLs, so `/\evil.test` is `//evil.test`.
+ */
+const SAFE_HREF = /^(https?:\/\/|mailto:|#\/|\/(?![/\\])|\.\/)/i;
+const isSafeHref = (href: string): boolean => SAFE_HREF.test(href) && !href.includes('\\');
 
 const INLINE = /\*\*([^*]+)\*\*|`([^`]+)`|\[([^\]]+)\]\(([^)\s]+)\)/g;
 
@@ -31,7 +35,7 @@ export function parseInline(source: string): MarkdownInline[] {
     const [whole, strong, code, label, href] = match;
     if (strong !== undefined) out.push({ type: 'strong', text: strong });
     else if (code !== undefined) out.push({ type: 'code', text: code });
-    else if (label !== undefined && href !== undefined && SAFE_HREF.test(href)) {
+    else if (label !== undefined && href !== undefined && isSafeHref(href)) {
       out.push({ type: 'link', text: label, href });
     } else pushText(label ?? whole);
   }
@@ -39,7 +43,21 @@ export function parseInline(source: string): MarkdownInline[] {
   return out;
 }
 
-const HEADING = /^(#{1,3})\s+(.+?)\s*#*\s*$/;
+/** `#`, `##` or `###`, a space, then the title. (The optional closing hashes are cut by hand.) */
+const HEADING = /^(#{1,3})[ \t]+(.*)$/;
+
+/**
+ * The title of a heading line: trimmed, without the optional closing `#` run (`## Title ##`).
+ * Done by scanning, not with a regexp: `\s*#*\s*$` backtracks quadratically on long runs of spaces.
+ */
+function headingTitle(rest: string): string {
+  const title = rest.trim();
+  let end = title.length;
+  while (end > 0 && title[end - 1] === '#') end--;
+  const closing = end < title.length && end > 0 && /\s/.test(title[end - 1] ?? '');
+  return closing ? title.slice(0, end).trimEnd() : title;
+}
+
 const BULLET = /^\s*[-*]\s+(.*)$/;
 
 export function parseMarkdown(source: string): MarkdownBlock[] {
@@ -60,15 +78,16 @@ export function parseMarkdown(source: string): MarkdownBlock[] {
 
   for (const line of source.replace(/\r\n?/g, '\n').split('\n')) {
     const heading = HEADING.exec(line);
+    const title = heading?.[2] === undefined ? '' : headingTitle(heading[2]);
     const bullet = BULLET.exec(line);
     if (line.trim() === '') {
       flush();
-    } else if (heading?.[1] !== undefined && heading[2] !== undefined) {
+    } else if (heading?.[1] !== undefined && title !== '') {
       flush();
       blocks.push({
         type: 'heading',
         level: heading[1].length as 1 | 2 | 3,
-        children: parseInline(heading[2]),
+        children: parseInline(title),
       });
     } else if (bullet?.[1] !== undefined) {
       if (paragraph.length > 0) flush();

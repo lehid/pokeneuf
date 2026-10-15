@@ -77,6 +77,29 @@ describe('search', () => {
     expect(ids('999')).toEqual([]);
   });
 
+  it('reads a number the way players write it: #0025, n°25, nº 25, no. 25, 0025, n25', () => {
+    const queries = [
+      '#0025',
+      '#25',
+      'n°25',
+      'N° 25',
+      'nº25',
+      'no. 25',
+      'No25',
+      '0025',
+      ' 025 ',
+      'n25',
+    ];
+    for (const query of queries) expect(ids(query), query).toEqual([25]);
+  });
+
+  it('does not take a name that merely starts with n for a number', () => {
+    expect(ids('nidoran')).not.toEqual([]);
+    expect(ids('n°')).toEqual([]);
+    expect(ids('#')).toEqual([]);
+    expect(ids('00000')).toEqual([]);
+  });
+
   it('returns nothing for an empty or blank query', () => {
     expect(ids('')).toEqual([]);
     expect(ids('   ')).toEqual([]);

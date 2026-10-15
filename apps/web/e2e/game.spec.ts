@@ -22,7 +22,11 @@ const testId = (cell: number): string => `cell-${Math.floor(cell / 3)}-${cell % 
 async function play(page: Page, cell: number, pokemon: string): Promise<void> {
   await page.getByTestId(testId(cell)).click();
   await page.getByTestId('guess-input').fill(pokemon);
+  // Wait for the suggestion that Enter will play, and for the sheet to be gone: the next click must
+  // not land while this sheet is still closing.
+  await expect(page.getByTestId('suggestions').locator('li').first()).toBeVisible();
   await page.getByTestId('guess-input').press('Enter');
+  await expect(page.getByTestId('guess-sheet')).toBeHidden();
 }
 
 test.beforeEach(async ({ page }) => {
@@ -114,6 +118,66 @@ test('the combobox works with the keyboard and shows names, numbers and types', 
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('guess-sheet')).toBeHidden();
   await expect(page.getByTestId('lives')).toHaveAttribute('data-left', '3');
+});
+
+test.describe('leaving the guess sheet never plays the highlighted suggestion (C1)', () => {
+  /** Types the start of a wrong answer: its suggestion is highlighted but must not be played. */
+  async function typeWithoutPlaying(page: Page): Promise<void> {
+    await page.getByTestId('cell-0-0').click();
+    await page.getByTestId('guess-input').fill(wrongFor(0).nameFr.slice(0, 4));
+    await expect(page.getByTestId('suggestions').locator('li').first()).toBeVisible();
+  }
+  async function expectNothingPlayed(page: Page): Promise<void> {
+    await expect(page.getByTestId('guess-sheet')).toBeHidden();
+    await expect(page.getByTestId('lives')).toHaveAttribute('data-left', '3');
+    await expect(page.getByTestId('cell-0-0')).toHaveAttribute('data-state', 'empty');
+    await expect(page.getByTestId('end-dialog')).toHaveCount(0);
+  }
+
+  test('Escape closes the sheet without a move', async ({ page }) => {
+    await typeWithoutPlaying(page);
+    await page.keyboard.press('Escape');
+    await expectNothingPlayed(page);
+  });
+
+  test('Tab to "Fermer" then Enter closes the sheet without a move', async ({ page }) => {
+    await typeWithoutPlaying(page);
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('button', { name: 'Fermer' })).toBeFocused();
+    await expect(page.getByTestId('guess-sheet')).toBeVisible();
+    await expect(page.getByTestId('lives')).toHaveAttribute('data-left', '3');
+    await page.keyboard.press('Enter');
+    await expectNothingPlayed(page);
+  });
+
+  test('a new grid popping over the sheet does not play the suggestion', async ({ page }) => {
+    await typeWithoutPlaying(page);
+    await page.clock.setFixedTime(new Date('2026-11-06T00:01:00+01:00'));
+    await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+    await expect(page.getByTestId('new-grid-dialog')).toBeVisible();
+    // The sheet lost the focus to the new dialog: that is not a choice.
+    await expect(page.getByTestId('lives')).toHaveAttribute('data-left', '3');
+    await page.getByText('Plus tard').click();
+    await expect(page.getByTestId('new-grid-dialog')).toHaveCount(0);
+    await expect(page.getByTestId('guess-sheet')).toBeVisible();
+    await expect(page.getByTestId('lives')).toHaveAttribute('data-left', '3');
+    await expect(page.getByTestId('cell-0-0')).toHaveAttribute('data-state', 'empty');
+  });
+
+  test('Enter still plays the highlighted suggestion', async ({ page }) => {
+    await typeWithoutPlaying(page);
+    await page.getByTestId('guess-input').press('Enter');
+    await expect(page.getByTestId('lives')).toHaveAttribute('data-left', '2');
+    await expect(page.getByTestId('guess-sheet')).toBeHidden();
+  });
+
+  test('clicking a suggestion still plays it', async ({ page }) => {
+    const id = solution[0] ?? 1;
+    await page.getByTestId('cell-0-0').click();
+    await page.getByTestId('guess-input').fill(name(id));
+    await page.getByTestId(`suggestion-${id}`).click();
+    await expect(page.getByTestId('cell-0-0')).toHaveAttribute('data-state', 'filled');
+  });
 });
 
 test('a header explains its category', async ({ page }) => {

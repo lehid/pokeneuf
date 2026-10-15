@@ -58,12 +58,26 @@ export function AbandonDialog() {
   return (
     <Modal title={fr.abandonTitle} onClose={closeDialog} testId="abandon-dialog">
       <p className="mb-4">{fr.abandonQuestion}</p>
-      <div className="flex flex-col gap-3 sm:flex-row-reverse">
-        <button type="button" className="btn btn-danger flex-1" onClick={confirmAbandon}>
-          {fr.abandonYes}
-        </button>
-        <button type="button" className="btn btn-primary flex-1" onClick={closeDialog}>
+      {/* The safe answer comes first in the DOM (reading and Tab order) and has the initial focus:
+          a double Enter must never abandon the game. `flex-col-reverse` keeps the destructive
+          choice on top on a phone, `sm:flex-row` on the right of the row on a wide screen. */}
+      <div className="flex flex-col-reverse gap-3 sm:flex-row">
+        <button
+          type="button"
+          className="btn btn-primary flex-1"
+          onClick={closeDialog}
+          data-autofocus
+          data-testid="abandon-no"
+        >
           {fr.abandonNo}
+        </button>
+        <button
+          type="button"
+          className="btn btn-danger flex-1"
+          onClick={confirmAbandon}
+          data-testid="abandon-yes"
+        >
+          {fr.abandonYes}
         </button>
       </div>
     </Modal>
@@ -201,11 +215,12 @@ export function StatsDialog() {
       {stats.played === 0 && <p className="mb-3 text-sm text-lcd-soft">{fr.statsEmpty}</p>}
       <dl className="mb-4 grid grid-cols-3 gap-2 text-center">
         {figures.map(([label, value]) => (
-          <div key={label} className="border-2 border-lcd-ink bg-lcd-bg p-2">
+          // A term comes before its description (<dt> then <dd>); the figure is shown above its label.
+          <div key={label} className="flex flex-col-reverse border-2 border-lcd-ink bg-lcd-bg p-2">
+            <dt className="mt-1 text-[0.65rem] leading-tight text-lcd-soft">{label}</dt>
             <dd className="title-pixel text-base whitespace-nowrap" data-testid={`stat-${label}`}>
               {value}
             </dd>
-            <dt className="mt-1 text-[0.65rem] leading-tight text-lcd-soft">{label}</dt>
           </div>
         ))}
       </dl>

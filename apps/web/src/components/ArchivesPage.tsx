@@ -14,6 +14,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { loadGridIndex, type IndexLoad } from '../gridLoader';
 import { fr } from '../i18n/fr';
 import type { KeyValueStorage } from '../storage';
+import { PageHeading } from './PageHeading';
 import { Notice, Shell } from './Shell';
 
 interface ArchivesPageProps {
@@ -103,9 +104,9 @@ export function ArchivesPage({ page, storage, now, baseUrl, fetchImpl }: Archive
   return (
     <Shell>
       <section className="panel p-4" aria-labelledby="archives-title">
-        <h2 id="archives-title" className="title-pixel mb-2 text-sm">
+        <PageHeading id="archives-title" className="title-pixel mb-2 text-sm">
           {fr.archivesTitle}
-        </h2>
+        </PageHeading>
         <p className="text-sm text-lcd-soft">{fr.archivesIntro}</p>
         <a
           className="btn mt-3 inline-block"

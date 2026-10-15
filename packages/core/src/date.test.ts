@@ -7,6 +7,8 @@ import {
   gridUrl,
   hasNewGrid,
   isBeforeLaunch,
+  isValidGridDate,
+  msUntilNextGridDate,
 } from './date';
 
 describe('gridDateFor (Europe/Paris)', () => {
@@ -81,6 +83,86 @@ describe('a tab left open across Paris midnight', () => {
 
   it('does not offer anything while the date is unchanged, whatever the local time zone', () => {
     expect(hasNewGrid('2026-11-05', new Date('2026-11-05T11:00:00Z'))).toBe(false);
+  });
+});
+
+describe('isValidGridDate', () => {
+  it('accepts real calendar days, leap day included', () => {
+    for (const date of ['2026-11-01', '2026-12-31', '2028-02-29', '2026-01-01']) {
+      expect(isValidGridDate(date), date).toBe(true);
+    }
+  });
+
+  it('refuses what has the shape of a date but is not one', () => {
+    for (const date of [
+      '2026-00-01',
+      '2026-13-01',
+      '2026-11-00',
+      '2026-11-31',
+      '2026-11-99',
+      '2027-02-29',
+      '2026-02-30',
+    ]) {
+      expect(isValidGridDate(date), date).toBe(false);
+    }
+  });
+
+  it('refuses anything that is not written YYYY-MM-DD', () => {
+    for (const date of [
+      '',
+      'demain',
+      '2026-1-1',
+      '20261101',
+      '2026-11-01T00:00:00Z',
+      ' 2026-11-01',
+    ]) {
+      expect(isValidGridDate(date), JSON.stringify(date)).toBe(false);
+    }
+  });
+
+  it('is what makes the date math throw: no date passes one and fails the other', () => {
+    expect(() => addDays('2026-00-01', 1)).toThrow('Invalid grid date');
+    expect(() => daysBetween('2026-11-99', '2026-11-01')).toThrow('Invalid grid date');
+  });
+});
+
+describe('msUntilNextGridDate', () => {
+  it('counts down to Paris midnight, in winter and summer time', () => {
+    expect(msUntilNextGridDate(new Date('2026-11-05T22:59:00Z'))).toBe(60_000); // 23:59 CET
+    expect(msUntilNextGridDate(new Date('2026-08-05T21:59:30Z'))).toBe(30_000); // 23:59:30 CEST
+  });
+
+  it('is a full day right after midnight', () => {
+    expect(msUntilNextGridDate(new Date('2026-11-05T23:00:00Z'))).toBe(86_400_000);
+  });
+
+  it('keeps millisecond precision', () => {
+    expect(msUntilNextGridDate(new Date('2026-11-05T22:59:59.250Z'))).toBe(750);
+  });
+
+  it('lasts 25 hours on the day the clocks go back (October)', () => {
+    // 2026-10-25 00:00 CEST is 22:00Z the day before; the day ends at 23:00Z (00:00 CET).
+    expect(msUntilNextGridDate(new Date('2026-10-24T22:00:00Z'))).toBe(25 * 3_600_000);
+    expect(msUntilNextGridDate(new Date('2026-10-25T00:30:00Z'))).toBe(22.5 * 3_600_000);
+  });
+
+  it('lasts 23 hours on the day the clocks go forward (March)', () => {
+    // 2027-03-28 00:00 CET is 23:00Z the day before; the day ends at 22:00Z (00:00 CEST).
+    expect(msUntilNextGridDate(new Date('2027-03-27T23:00:00Z'))).toBe(23 * 3_600_000);
+  });
+
+  it('lands exactly on the instant the grid date changes', () => {
+    for (const iso of [
+      '2026-11-05T12:00:00Z',
+      '2026-10-25T01:00:00Z',
+      '2027-03-28T00:30:00Z',
+      '2026-12-31T22:59:59.999Z',
+    ]) {
+      const now = new Date(iso);
+      const wait = msUntilNextGridDate(now);
+      expect(hasNewGrid(gridDateFor(now), new Date(now.getTime() + wait - 1))).toBe(false);
+      expect(hasNewGrid(gridDateFor(now), new Date(now.getTime() + wait))).toBe(true);
+    }
   });
 });
 
