@@ -18,7 +18,7 @@ const configSchema = z.strictObject({
     /** A category does not come back before this many days (the target)… */
     categoryDays: days,
     /**
-     * …but 6 categories a day for 7 days is 42 of the 58 categories, so when no valid grid exists
+     * …but 6 categories a day for 7 days is 42 of the 69 categories, so when no valid grid exists
      * the generator shortens it one day at a time, down to this floor. Never silent: the report
      * lists the dates where it happened.
      */

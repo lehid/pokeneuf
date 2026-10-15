@@ -114,7 +114,7 @@ L'idée est de faire « Pokémon » par les codes visuels, pas par les images.
 ## 3. Architecture recommandée
 
 ### 3.1 Stack — statique d'abord (v1), backend ensuite (v2)
-**v1 = site 100 % statique sur GitHub Pages**, aucun serveur, aucun compte à créer en dehors de GitHub. Les grilles sont pré-générées en JSON et versionnées dans le repo. Le client choisit la grille du jour avec `gridDateFor(now)`, donc aucun rebuild n'est nécessaire à minuit. Le déploiement se fait par GitHub Actions à chaque push sur `main`.
+**v1 = site 100 % statique sur GitHub Pages**, aucun serveur, aucun compte à créer en dehors de GitHub. Les grilles sont pré-générées en JSON et versionnées dans le repo. Le client choisit la grille du jour avec `gridDateFor(now)` (date de Paris). Le site déployé contient les grilles du passé, d'aujourd'hui **et de demain** (`grids:publish --ahead 1`) : demain est mis en ligne la veille au soir, donc un build de minuit en retard ou manqué ne prive pas les joueurs de leur grille ; les grilles plus lointaines restent hors du site. Le déploiement se fait par GitHub Actions à chaque push sur `main` **et** par plusieurs builds planifiés par jour (soirée, puis de 22 h 03 à 3 h 03 UTC pour couvrir minuit à Paris en heure d'été et d'hiver) ; chaque build est idempotent. Une vérification après déploiement contrôle que la grille du jour est servie et ouvre une issue `deploy-alert` sinon. Le client réessaie en plus chaque minute pendant une heure si la grille du jour manque.
 
 **v2 = Cloudflare** (Workers + Hono + D1 + KV) pour la rareté multijoueur en direct (§3.6, phases V2).
 
@@ -124,7 +124,7 @@ L'idée est de faire « Pokémon » par les codes visuels, pas par les images.
 | Mise en place | Rien en dehors de GitHub | Compte Cloudflare + wrangler |
 | Rareté | **Estimée** (prior statique, §3.5) | Réelle, % des joueurs du jour |
 | Charge | CDN GitHub, aucun souci de pic | Edge, pas de cold start |
-| Limite | Grilles futures lisibles dans le JS (triche possible, sans enjeu) | — |
+| Limite | Grilles futures lisibles dans le dépôt public (triche possible, sans enjeu) ; celle de demain est en ligne dès la veille | — |
 
 Front : **Vite + React + TypeScript**, Tailwind, Zustand (état), un combobox accessible (Downshift), `vite-plugin-pwa`. Tests : Vitest + Playwright. Validation : Zod. Analytics sans cookie (GoatCounter ou Cloudflare Web Analytics, optionnel).
 
@@ -153,7 +153,7 @@ Le **moteur `core` est pur et sans dépendance réseau**. En v2, le Worker le r�
 3. **Couplage parfait** obligatoire : il doit exister 9 Pokémon *distincts* qui remplissent la grille (appariement biparti, Hopcroft-Karp ou backtracking).
 4. Score de difficulté = f(taille des cases) → cible par jour de semaine (plus facile le lundi, plus dur le week-end, optionnel).
 5. **Cooldown** : une catégorie ne revient pas avant N jours, et une paire ligne×colonne ne revient pas avant M jours. Poids de fréquence par catégorie (réglables, cf. v1.15).
-6. Déterministe via seed. La CLI génère 90 jours d'avance dans `apps/web/public/grids/YYYY-MM-DD.json` + un `index.json` (n°, date), puis **revue humaine** (`pnpm grids:report` et page de prévisualisation en dev) avant commit. Une GitHub Action hebdomadaire vérifie qu'il reste ≥ 30 jours de grilles et ouvre une issue sinon.
+6. Déterministe via seed. La CLI génère 90 jours d'avance dans `apps/web/public/grids/YYYY-MM-DD.json` + un `index.json` (n°, date), puis **revue humaine** (`pnpm grids:report` et page de prévisualisation en dev) avant commit. Une GitHub Action hebdomadaire vérifie qu'il reste ≥ 45 jours de grilles (comptés depuis max(aujourd'hui, lancement)) et ouvre une issue sinon ; une Action mensuelle `grids-replenish` ouvre une pull request qui complète le stock à ~90 jours. Une grille dont la date est ≤ aujourd'hui est publique, donc immuable (`grids:immutable`).
 
 ### 3.5 Score & rareté (spécification)
 **v1 — rareté estimée (statique).** Chaque Pokémon a un score de popularité `pop(a)` ∈ [0,1], calculé une fois par le pipeline à partir de proxys :
@@ -166,7 +166,7 @@ Dans une case, on trie les réponses valides par `pop` décroissante. `rankScore
 **v2 — rareté réelle.** `share(a) = (w·prior(a) + n(a)) / (w + N_c)`, avec `prior` = la part implicite donnée par `pop` dans la case et **figée à la publication**, `n(a)` = picks live, `N_c` = total de la case, `w` = 300 pseudo-votes par défaut. `rankScore` est alors recalculé sur `share`.
 
 **Commun aux deux versions :**
-- Points d'une bonne réponse : `15 + round(100 × rankScore)`. Fonction isolée et configurable dans `core/scoring`.
+- Points d'une bonne réponse : `30 + round(85 × √rankScore)` (`SCORING` : `basePoints` 30, `rankPoints` 85, `rankCurve` 0,5). Fonction isolée et configurable dans `core/scoring`. (La formule de départ, `15 + 100 × rang`, donnait environ 300 à un joueur qui répond ce qui lui vient en premier.)
 - Score final = Σ points − 20 × erreurs, borné à [0, 900]. **Figé à la fin de partie** pour le partage.
 - Les archives ne comptent ni dans les stats, ni dans la streak (et en v2, ni dans la rareté).
 
@@ -320,7 +320,7 @@ Phase 5 (ROADMAP §3.1, §3.4). Branche apps/web sur les vraies grilles :
 - Au chargement, le client calcule gridDateFor(now) et charge public/grids/{date}.json (fetch avec cache: 'no-cache' ; jamais mis en cache longue durée par le service worker). Fallback propre si la grille manque ("Pas de grille aujourd'hui, revenez demain").
 - Changement de jour pendant qu'une page est ouverte : si l'onglet revient au premier plan après minuit, proposer la nouvelle grille.
 - Génère et commit 90 jours de grilles à partir de LAUNCH_DATE (constante dans core/config.ts), après `pnpm grids:report` lisible dans la PR.
-- Workflow GitHub Actions hebdomadaire "grids-stock" : échoue et ouvre une issue s'il reste moins de 30 jours de grilles.
+- Workflow GitHub Actions hebdomadaire "grids-stock" : échoue et ouvre une issue s'il reste moins de 45 jours de grilles (seuil porté de 30 à 45 jours : le temps de relire un lot).
 - Vérifie que le build GitHub Pages fonctionne sous le sous-chemin /<repo>/ (base Vite) ET sous un domaine perso (variable VITE_BASE).
 Tests : gridDateFor autour de minuit et des changements d'heure ; Playwright avec horloge simulée (23:59 → 00:01 Paris).
 Ouvre une PR "Phase 5 — daily static grids & deploy".
@@ -330,7 +330,7 @@ Ouvre une PR "Phase 5 — daily static grids & deploy".
 ```
 Phase 6 (ROADMAP §3.5 v1 et §3.8).
 - packages/data : calcule pop(a) ∈ [0,1] (génération, statut, stade final, liste data/manual/popular.json d'environ 60 Pokémon très connus) et l'écrit dans pokedex.json. Golden facts : Pikachu et Dracaufeu dans le top 5 %, un Pokémon obscur de Gén 3/4 dans le bas.
-- core/scoring : rankScore par case (tri par pop), paliers Commun / Peu commun / Rare / Très rare, points = 15 + round(100×rankScore), total borné [0,900], −20/erreur. API pensée pour accepter en v2 un share live à la place de pop. Tests unitaires avec cas chiffrés.
+- core/scoring : rankScore par case (tri par pop), paliers Commun / Peu commun / Rare / Très rare, points = 30 + round(85×√rankScore) (formule d'origine `15 + round(100×rankScore)`, remplacée pour la calibration), total borné [0,900], −20/erreur. API pensée pour accepter en v2 un share live à la place de pop. Tests unitaires avec cas chiffrés.
 - UI : palier de rareté sur chaque case remplie (libellé "rareté estimée", pas de faux %), score /900 dans le header, modale de fin avec score figé, x/9, réponse la plus rare.
 - Solutions : toutes les réponses valides par case, triées de la plus rare à la plus commune, avec leur palier.
 - Partage : texte §3.8 sans spoiler, navigator.share puis fallback clipboard, toast de confirmation.

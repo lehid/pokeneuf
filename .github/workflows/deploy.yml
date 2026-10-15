@@ -1,30 +1,50 @@
 name: Deploy to GitHub Pages
 
+# The site publishes the grid of TODAY and the one of TOMORROW (Paris date), never further ahead:
+# tomorrow's grid goes online the evening before, so a late or missed midnight build does not leave
+# the players without a grid. Past grids are history and stay. (`pnpm grids:publish --ahead 1`)
+#
+# GitHub scheduled runs are best effort: they can start late, or be skipped when GitHub is loaded.
+# Hence several idempotent builds a day (a build always publishes the same thing for a given day),
+# not a single one. Crons are UTC only; Paris midnight is 22:00 UTC in summer (UTC+2) and
+# 23:00 UTC in winter (UTC+1). Minutes are off the hour on purpose (the hour marks are the busiest).
 on:
   push:
     branches: [main]
   workflow_dispatch:
-  # Just after Paris midnight, in summer time (UTC+2) and in winter time (UTC+1): each build
-  # publishes the grids up to today (Paris), so the grid of the new day goes live a few minutes
-  # after midnight. (The client asks again every minute until it is there.)
   schedule:
-    - cron: '3 22 * * *'
-    - cron: '3 23 * * *'
+    # Evening before: tomorrow's grid goes online (21:47 Paris in summer, 20:47 in winter).
+    - cron: '47 19 * * *'
+    # Around Paris midnight, in both seasons: 22:03 to 03:03 UTC = 00:03 to 05:03 (summer) or
+    # 23:03 to 04:03 (winter) in Paris. The first runs are the ones that matter; the next ones are
+    # the safety net if they were late or skipped. (The client also asks again every minute for an hour.)
+    - cron: '3 22,23,0,1,2,3 * * *'
+    # Daytime, so that there is never a long stretch without a build.
+    - cron: '23 7,13 * * *'
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+# Nothing by default: each job asks for what it needs.
+permissions: {}
 
+# Never cancel a deployment in progress (it could leave the site half published); one waits for the
+# other. GitHub keeps at most one run waiting, which is enough because every build is identical.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    outputs:
+      today: ${{ steps.dates.outputs.today }}
+      tomorrow: ${{ steps.dates.outputs.tomorrow }}
+      launch: ${{ steps.dates.outputs.launch }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -35,24 +55,141 @@ jobs:
           path: packages/data/.cache
           key: data-${{ hashFiles('packages/data/src/config.ts') }}
       - run: pnpm install --frozen-lockfile
+
+      - id: dates
+        name: Dates of the run (Paris)
+        run: |
+          today="$(TZ=Europe/Paris date +%F)"
+          echo "today=$today" >> "$GITHUB_OUTPUT"
+          echo "tomorrow=$(TZ=Europe/Paris date -d "$today + 1 day" +%F)" >> "$GITHUB_OUTPUT"
+          echo "launch=$(grep -oP "LAUNCH_DATE = '\K[0-9-]+" packages/core/src/config.ts)" >> "$GITHUB_OUTPUT"
+
+      - name: Site address
+        # Served under https://<user>.github.io/<repo>/ (a user project page). Use VITE_BASE=/ and
+        # the domain in VITE_SITE_URL with a custom domain. Read from GITHUB_REPOSITORY, which exists
+        # for every event (github.event.repository is not guaranteed on `schedule`).
+        run: |
+          repo="${GITHUB_REPOSITORY#*/}"
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "VITE_BASE=/${repo}/" >> "$GITHUB_ENV"
+          echo "VITE_SITE_URL=https://${owner}.github.io/${repo}/" >> "$GITHUB_ENV"
       - run: pnpm --filter @pokeneuf/web build
+
+      # The repository holds the next 90 days of grids; the site gets the past, today and tomorrow.
+      - run: pnpm grids:publish --dir apps/web/dist/grids --ahead 1
+      # A broken grid is never published: what is about to go online must pass the report (hard
+      # invariants for the days already public, strict rules for tomorrow's grid).
+      - run: pnpm grids:report --dir apps/web/dist/grids
+      - name: Today's and tomorrow's grids are in the build
         env:
-          # Served under https://<user>.github.io/<repo>/. Use "/" with a custom domain.
-          VITE_BASE: /${{ github.event.repository.name }}/
-          # Absolute address for the link previews (og:image, canonical). With a custom domain, set it to that domain.
-          VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
-      # The repository holds the next 90 days of grids; the site only gets today's and the past ones.
-      - run: pnpm grids:publish --dir apps/web/dist/grids
+          TODAY: ${{ steps.dates.outputs.today }}
+          TOMORROW: ${{ steps.dates.outputs.tomorrow }}
+          LAUNCH: ${{ steps.dates.outputs.launch }}
+        run: |
+          for day in "$TODAY" "$TOMORROW"; do
+            if [[ "$day" < "$LAUNCH" ]]; then
+              echo "$day is before the launch ($LAUNCH): no grid expected."
+            elif [ ! -f "apps/web/dist/grids/$day.json" ]; then
+              echo "::error::No grid for $day in the build: the stock ran out (pnpm grids:generate)."
+              exit 1
+            fi
+          done
       - uses: actions/upload-pages-artifact@v3
         with:
           path: apps/web/dist
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # What is online must be what was built: the live site, not the workflow, is the judge.
+  verify:
+    needs: [build, deploy]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions: {}
+    steps:
+      - name: Check the deployed grids
+        env:
+          PAGE_URL: ${{ needs.deploy.outputs.page_url }}
+          TODAY: ${{ needs.build.outputs.today }}
+          TOMORROW: ${{ needs.build.outputs.tomorrow }}
+          LAUNCH: ${{ needs.build.outputs.launch }}
+        run: |
+          base="${PAGE_URL%/}"
+          # Pages and its CDN can take a few minutes to serve the new files: retry, with a cache-busting query.
+          fetch() { # fetch <path> <output file>
+            for attempt in $(seq 1 12); do
+              code="$(curl -sS -o "$2" -w '%{http_code}' -H 'Cache-Control: no-cache' \
+                "$base/$1?check=$GITHUB_RUN_ID-$attempt" || true)"
+              if [ "$code" = "200" ] && jq -e . "$2" > /dev/null 2>&1; then return 0; fi
+              echo "$1: HTTP $code (attempt $attempt/12)"
+              sleep 25
+            done
+            return 1
+          }
+
+          curl -fsS --retry 6 --retry-delay 20 --retry-all-errors -o /dev/null "$base/" \
+            || { echo "::error::$base/ does not answer."; exit 1; }
+          fetch grids/index.json index.json \
+            || { echo "::error::grids/index.json is missing or invalid on $base."; exit 1; }
+          # Nothing further ahead than tomorrow may be online.
+          if [ -n "$(jq -r --arg max "$TOMORROW" '.grids[] | select(.date > $max) | .date' index.json)" ]; then
+            echo "::error::index.json lists grids after $TOMORROW: the future leaked."
+            exit 1
+          fi
+          if [[ "$TODAY" < "$LAUNCH" ]]; then
+            echo "Before the launch ($LAUNCH): no grid expected for $TODAY."
+            exit 0
+          fi
+          jq -e --arg d "$TODAY" '.grids | map(.date) | index($d) != null' index.json > /dev/null \
+            || { echo "::error::index.json does not list today ($TODAY)."; exit 1; }
+          fetch "grids/$TODAY.json" today.json \
+            || { echo "::error::grids/$TODAY.json is missing on $base."; exit 1; }
+          jq -e --arg d "$TODAY" '.date == $d' today.json > /dev/null \
+            || { echo "::error::grids/$TODAY.json holds another date."; exit 1; }
+          echo "OK: $base serves the grid of $TODAY."
+
+  # Opens (or comments on) an issue when a deployment fails, and closes it once one works again.
+  notify:
+    needs: [build, deploy, verify]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Open, update or close the deploy-alert issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          label="deploy-alert"
+          gh label create "$label" --description "The site was not deployed or the grid of the day is missing" \
+            --color B60205 2>/dev/null || true
+          open="$(gh issue list --label "$label" --state open --json number --jq '.[0].number')"
+          if [[ " $RESULTS " == *" failure "* ]]; then
+            body="The deployment failed or the deployed site does not serve today's grid (event: $EVENT). Results: $RESULTS. Run: $RUN_URL. Re-run it with \`workflow_dispatch\` once fixed; the usual cause is an empty grid stock (\`pnpm grids:stock\`)."
+            if [ -z "$open" ]; then
+              gh issue create --label "$label" --title "Deployment problem: the grid of the day may be missing" --body "$body"
+            else
+              gh issue comment "$open" --body "$body"
+            fi
+          elif [[ " $RESULTS " != *" cancelled "* && " $RESULTS " != *" skipped "* && -n "$open" ]]; then
+            gh issue close "$open" --reason completed --comment "Deployed and verified again: $RUN_URL"
+          fi

@@ -3,7 +3,15 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { APP_NAME as BUILD_APP_NAME, pwaOptions, SITE, siteUrl, socialTags } from './site.config';
+import { fr } from './src/i18n/fr';
+import {
+  APP_NAME as BUILD_APP_NAME,
+  escapeRegExp,
+  pwaOptions,
+  SITE,
+  siteUrl,
+  socialTags,
+} from './site.config';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const html = (file: string) => readFileSync(path.join(here, file), 'utf8');
@@ -81,12 +89,39 @@ describe('pwaOptions', () => {
       expect(workbox && workbox.skipWaiting).toBe(true);
       const rule = workbox && workbox.runtimeCaching && workbox.runtimeCaching[0];
       expect(rule && rule.handler).toBe('NetworkOnly');
+      // Data, not code: a RegExp survives being copied into sw.js, a closure over `base` does not.
       const matches = rule && rule.urlPattern;
-      if (typeof matches !== 'function') throw new Error('expected a matcher function');
-      const request = (path: string) => ({ url: new URL(path, 'https://x.test') }) as never;
-      expect(matches(request(`${base}grids/2026-11-01.json`))).toBe(true);
-      expect(matches(request(`${base}grids/index.json`))).toBe(true);
-      expect(matches(request(`${base}assets/index.js`))).toBe(false);
+      if (!(matches instanceof RegExp)) throw new Error('expected a RegExp');
+      // Workbox runs a route RegExp on the whole URL, origin included.
+      const isGrid = (path: string) => matches.test(new URL(path, 'https://x.test').href);
+      expect(isGrid(`${base}grids/2026-11-01.json`)).toBe(true);
+      expect(isGrid(`${base}grids/index.json`)).toBe(true);
+      expect(isGrid(`${base}assets/index.js`)).toBe(false);
+      expect(isGrid(`${base}index.html`)).toBe(false);
+      const denied = workbox && workbox.navigateFallbackDenylist?.[0];
+      expect(denied?.test(`${base}grids/2026-11-01.json`)).toBe(true);
+      expect(denied?.test(`${base}faq`)).toBe(false);
     });
   }
+});
+
+describe('pwaOptions manifest', () => {
+  it('does not lock the orientation (WCAG 1.3.4)', () => {
+    expect(pwaOptions('/pokeneuf/').manifest).not.toHaveProperty('orientation');
+  });
+});
+
+describe('escapeRegExp', () => {
+  it('makes a repository name a literal', () => {
+    const base = '/my.repo+x/';
+    expect(new RegExp(`^${escapeRegExp(base)}$`).test(base)).toBe(true);
+    expect(new RegExp(`^${escapeRegExp(base)}$`).test('/myXrepo+x/')).toBe(false);
+  });
+});
+
+describe('404.html', () => {
+  it('carries the non-affiliation notice, word for word as in the app (fr.disclaimer)', () => {
+    const match = /<p class="disclaimer">([^<]+)<\/p>/.exec(html('./404.html'));
+    expect(match?.[1]?.replace(/\s+/g, ' ').trim()).toBe(fr.disclaimer);
+  });
 });

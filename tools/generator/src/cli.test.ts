@@ -9,6 +9,7 @@ import { realMemberships } from './test-world';
 
 const run = promisify(execFile);
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
+const PRE_LAUNCH = '2026-10-01';
 
 /** Runs a CLI the way `pnpm grids:*` does (tsx), without failing on a non-zero exit. */
 async function cli(
@@ -16,10 +17,16 @@ async function cli(
   args: string[],
   env: Record<string, string> = {},
 ) {
+  // The tests build grids for November 2026: without a fixed "today", they would start to fail on
+  // the launch day (the generator refuses to create a grid dated today or earlier).
+  const withToday =
+    script === 'generate-cli' && !args.includes('--today')
+      ? [...args, '--today', PRE_LAUNCH]
+      : args;
   try {
     const { stdout, stderr } = await run(
       process.execPath,
-      ['--import', 'tsx', path.join('src', `${script}.ts`), ...args],
+      ['--import', 'tsx', path.join('src', `${script}.ts`), ...withToday],
       { cwd: ROOT, timeout: 120_000, env: { ...process.env, ...env } },
     );
     return { code: 0, stdout, stderr };
@@ -113,7 +120,7 @@ describe('pnpm grids:generate', () => {
     const before = await Promise.all(
       (await files()).map((f) => readFile(path.join(dir, f), 'utf8')),
     );
-    const force = (today: string) =>
+    const force = (today: string, extra: string[] = []) =>
       cli('generate-cli', [
         '--from',
         '2026-11-01',
@@ -122,23 +129,73 @@ describe('pnpm grids:generate', () => {
         '--force',
         '--today',
         today,
+        ...extra,
         '--out',
         dir,
       ]);
+    const unchanged = async () =>
+      expect(
+        await Promise.all((await files()).map((f) => readFile(path.join(dir, f), 'utf8'))),
+      ).toEqual(before);
 
     const refused = await force('2026-11-02'); // the 1st and the 2nd are published
     expect(refused.code).toBe(2);
-    expect(refused.stderr).toMatch(
-      /--force would rewrite published grids \(2026-11-01, 2026-11-02\)/,
-    );
+    expect(refused.stderr).toMatch(/rewrite or create the grid of today or of past days/);
+    expect(refused.stderr).toContain('(2026-11-01, 2026-11-02)');
     expect(refused.stderr).toContain('history');
+    expect(refused.stderr).toContain('--allow-past');
     const sameDay = await force('2026-11-01'); // today's grid is public too
     expect(sameDay.code).toBe(2);
-    expect(
-      await Promise.all((await files()).map((f) => readFile(path.join(dir, f), 'utf8'))),
-    ).toEqual(before);
+    await unchanged();
 
     expect((await force('2026-10-31')).code).toBe(0); // nothing published yet: allowed
+    await unchanged(); // same grids, regenerated
+  }, 180_000);
+
+  it('refuses to create a grid dated today or earlier, unless --allow-past', async () => {
+    const generate = (extra: string[] = []) =>
+      cli('generate-cli', [
+        '--from',
+        '2026-11-01',
+        '--days',
+        '2',
+        '--today',
+        '2026-11-02',
+        ...extra,
+        '--out',
+        dir,
+      ]);
+    const refused = await generate();
+    expect(refused.code).toBe(2);
+    expect(refused.stderr).toContain('--allow-past');
+    expect(await files()).toEqual([]); // nothing written, not even the index
+
+    const allowed = await generate(['--allow-past']);
+    expect(allowed.code).toBe(0);
+    expect(allowed.stdout).toContain('2 generated, 0 kept');
+    expect(await files()).toEqual(['2026-11-01.json', '2026-11-02.json', 'index.json']);
+
+    // And an existing past grid is rewritten only with --force *and* --allow-past.
+    const before = await readFile(path.join(dir, '2026-11-01.json'), 'utf8');
+    expect((await generate(['--force'])).code).toBe(2);
+    expect((await generate(['--force', '--allow-past'])).code).toBe(0);
+    expect(await readFile(path.join(dir, '2026-11-01.json'), 'utf8')).toBe(before);
+  }, 180_000);
+
+  it('leaves existing past grids alone without --force, even when the range covers them', async () => {
+    await cli('generate-cli', ['--from', '2026-11-01', '--days', '2', '--out', dir]);
+    const out = await cli('generate-cli', [
+      '--from',
+      '2026-11-01',
+      '--days',
+      '3',
+      '--today',
+      '2026-11-02',
+      '--out',
+      dir,
+    ]);
+    expect(out.code).toBe(0);
+    expect(out.stdout).toContain('1 generated, 2 kept');
   }, 180_000);
 
   it('can still add missing days after published ones, without touching them', async () => {
@@ -150,7 +207,7 @@ describe('pnpm grids:generate', () => {
       '--days',
       '4',
       '--today',
-      '2026-11-03',
+      '2026-11-02',
       '--out',
       dir,
     ]);
@@ -216,16 +273,19 @@ describe('pnpm grids:report', () => {
 });
 
 describe('pnpm grids:publish', () => {
-  it('keeps today and the past in the built site, and drops the grids of the days to come', async () => {
+  it('keeps the past, today and tomorrow in the built site, and drops the grids further ahead', async () => {
     await cli('generate-cli', ['--from', '2026-11-01', '--days', '6', '--out', dir]);
     const out = await cli('publish-cli', ['--dir', dir, '--today', '2026-11-03']);
     expect(out.code).toBe(0);
-    expect(out.stdout).toContain('Published 3 grid(s) up to 2026-11-03 (2026-11-01 to 2026-11-03)');
-    expect(out.stdout).toContain('3 grid(s) of the days to come');
+    expect(out.stdout).toContain(
+      'Published 4 grid(s) up to 2026-11-04 (today 2026-11-03 + 1) (2026-11-01 to 2026-11-04)',
+    );
+    expect(out.stdout).toContain('2 grid(s) further ahead');
     expect(await files()).toEqual([
       '2026-11-01.json',
       '2026-11-02.json',
       '2026-11-03.json',
+      '2026-11-04.json',
       'index.json',
     ]);
     const index = JSON.parse(await readFile(path.join(dir, 'index.json'), 'utf8'));
@@ -233,6 +293,7 @@ describe('pnpm grids:publish', () => {
       '2026-11-01',
       '2026-11-02',
       '2026-11-03',
+      '2026-11-04',
     ]);
 
     // The published folder is still a valid, complete one.
@@ -240,11 +301,32 @@ describe('pnpm grids:publish', () => {
     expect(report.code).toBe(0);
   }, 180_000);
 
+  it('honours --ahead (0 = today only)', async () => {
+    await cli('generate-cli', ['--from', '2026-11-01', '--days', '6', '--out', dir]);
+    const out = await cli('publish-cli', ['--dir', dir, '--today', '2026-11-03', '--ahead', '0']);
+    expect(out.code).toBe(0);
+    expect(out.stdout).toContain('Published 3 grid(s) up to 2026-11-03');
+    expect(await files()).toEqual([
+      '2026-11-01.json',
+      '2026-11-02.json',
+      '2026-11-03.json',
+      'index.json',
+    ]);
+  }, 180_000);
+
+  it('refuses a bad --ahead', async () => {
+    for (const ahead of ['-1', 'x', '1.5']) {
+      const out = await cli('publish-cli', ['--dir', dir, `--ahead=${ahead}`]);
+      expect(out.code).toBe(2);
+      expect(out.stderr).toContain('--ahead must be a whole number');
+    }
+  }, 60_000);
+
   it('publishes nothing before the launch, and says so', async () => {
     await cli('generate-cli', ['--from', '2026-11-01', '--days', '3', '--out', dir]);
     const out = await cli('publish-cli', ['--dir', dir, '--today', '2026-10-13']);
     expect(out.code).toBe(0);
-    expect(out.stdout).toContain('Published 0 grid(s) up to 2026-10-13');
+    expect(out.stdout).toContain('Published 0 grid(s) up to 2026-10-14');
     expect(await files()).toEqual(['index.json']);
     const index = JSON.parse(await readFile(path.join(dir, 'index.json'), 'utf8'));
     expect(index.grids).toEqual([]);
@@ -276,8 +358,13 @@ describe('pnpm grids:publish', () => {
       INIT_CWD: path.dirname(dir),
     });
     expect(out.code).toBe(0);
-    expect(out.stdout).toContain('Published 2 grid(s)');
-    expect(await files()).toEqual(['2026-11-01.json', '2026-11-02.json', 'index.json']);
+    expect(out.stdout).toContain('Published 3 grid(s)');
+    expect(await files()).toEqual([
+      '2026-11-01.json',
+      '2026-11-02.json',
+      '2026-11-03.json',
+      'index.json',
+    ]);
   }, 180_000);
 
   it('fails, and creates nothing, when the folder is wrong', async () => {

@@ -11,7 +11,8 @@
     "test": "vitest run",
     "grids:stock": "tsx src/stock-cli.ts",
     "score:simulate": "tsx src/simulate-cli.ts",
-    "grids:publish": "tsx src/publish-cli.ts"
+    "grids:publish": "tsx src/publish-cli.ts",
+    "grids:immutable": "tsx src/immutable-cli.ts"
   },
   "dependencies": {
     "@pokeneuf/core": "workspace:*",

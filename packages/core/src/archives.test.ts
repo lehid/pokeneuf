@@ -7,6 +7,7 @@ import {
   endedOnItsDay,
   paginate,
 } from './archives';
+import { gridDateFor, hasNewGrid } from './date';
 import type { GameSummary } from './storage';
 
 const playing: GameSummary = { status: 'playing', found: 3, finishedOn: null, score: null };
@@ -38,6 +39,20 @@ describe('archiveDates', () => {
     const dates = archiveDates(published, '2026-11-07');
     expect(dates.every((d) => d < '2026-11-07')).toBe(true);
     expect(dates).not.toContain('2026-11-10');
+  });
+
+  it('does not list tomorrow, which the site publishes the evening before (today + 1)', () => {
+    const index = ['2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04']; // today is the 3rd
+    expect(archiveDates(index, '2026-11-03')).toEqual(['2026-11-02', '2026-11-01']);
+    // The day after the launch's eve: the first grid is public, but nothing is playable yet.
+    expect(archiveDates(['2026-11-01'], '2026-10-31')).toEqual([]);
+  });
+
+  it("does not tell a tab to switch to tomorrow's grid before Paris midnight", () => {
+    // 2026-11-03 23:59 in Paris (winter time, UTC+1) is 22:59 UTC; tomorrow's grid is already online.
+    expect(hasNewGrid('2026-11-03', new Date('2026-11-03T22:59:00Z'))).toBe(false);
+    expect(hasNewGrid('2026-11-03', new Date('2026-11-03T23:00:00Z'))).toBe(true);
+    expect(gridDateFor(new Date('2026-11-03T22:59:00Z'))).toBe('2026-11-03');
   });
 
   it('ignores duplicates and dates before the launch', () => {

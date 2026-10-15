@@ -110,12 +110,24 @@ export function htmlPlaceholders(base: string): Plugin[] {
   ];
 }
 
+/** A string as a literal piece of a regular expression. */
+export function escapeRegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\/-]/g, '\\$&');
+}
+
 /**
  * Offline support for the app shell only (ROADMAP phase 8): the page, scripts, styles, fonts and
  * icons are precached; the grids never are. A grid is fetched from the network on every visit (the
  * client asks for `no-cache`), because a stale grid of the day is worse than a slow one.
  */
 export function pwaOptions(base: string): Partial<VitePWAOptions> {
+  // Workbox copies the options into `sw.js` as text: a function would keep a free variable (the
+  // minifier renames `base` to `base2`, which does not exist in the worker). A RegExp is plain data.
+  const gridsPath = new RegExp(`^${escapeRegExp(base)}grids/`);
+  // Workbox matches a route RegExp against the whole URL (`url.href`, origin included), not the
+  // path: the pattern must allow for `https://host` before the base path. (The fallback denylist
+  // above is matched against the path and the query only, hence the stricter `gridsPath`.)
+  const gridsUrl = new RegExp(`^https?://[^/]+${escapeRegExp(base)}grids/`);
   return {
     registerType: 'autoUpdate',
     // Registered by hand in `main.tsx` (production only), so `404.html` never installs the worker.
@@ -129,7 +141,6 @@ export function pwaOptions(base: string): Partial<VitePWAOptions> {
       start_url: base,
       scope: base,
       display: 'standalone',
-      orientation: 'portrait',
       background_color: THEME.light,
       theme_color: THEME.light,
       icons: [
@@ -143,14 +154,14 @@ export function pwaOptions(base: string): Partial<VitePWAOptions> {
       // The grids are data, not shell; the link preview image and the 404 page are not needed offline.
       globIgnores: ['grids/**', 'og-image.png', '404.html'],
       navigateFallback: `${base}index.html`,
-      navigateFallbackDenylist: [new RegExp(`^${base}grids/`)],
+      navigateFallbackDenylist: [gridsPath],
       cleanupOutdatedCaches: true,
       // A new version takes over at once, and the very first visit is already covered offline.
       skipWaiting: true,
       clientsClaim: true,
       runtimeCaching: [
         {
-          urlPattern: ({ url }: { url: URL }) => url.pathname.startsWith(`${base}grids/`),
+          urlPattern: gridsUrl,
           handler: 'NetworkOnly',
         },
       ],

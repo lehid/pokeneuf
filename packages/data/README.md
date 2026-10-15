@@ -67,7 +67,7 @@ qui a bougé. Le changement de commit est une décision, jamais un effet de bord
 
 ## Catégories et memberships (phase 2)
 
-Le registre vit dans `@pokeneuf/core` (`CATEGORIES`, 58 catégories, 11 familles). `data:build`
+Le registre vit dans `@pokeneuf/core` (`CATEGORIES`, 69 catégories, 10 familles ; `CATEGORIES.length` et `CATEGORY_FAMILIES` font foi). `data:build`
 évalue chaque prédicat sur chaque Pokémon et écrit `dist/memberships.json` : un bitset hexadécimal
 par catégorie (1 bit par n° national). Le jeu et le générateur lisent ce fichier avec
 `new Memberships(file)` : `isValid(pokemonId, ligne, colonne)`, `answersFor(ligne, colonne)`, `size(cat)`.

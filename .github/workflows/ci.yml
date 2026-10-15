@@ -5,11 +5,22 @@ on:
   push:
     branches: [main]
 
+# Read-only: CI never needs to write to the repository.
+permissions:
+  contents: read
+
 jobs:
   check:
-    runs-on: ubuntu-latest
+    # Pinned: `ubuntu-latest` moves to a new image on its own, and Playwright's system dependencies
+    # (`--with-deps`) are not guaranteed there.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          # A pull request needs the history to compare its grids with the base branch (grids:immutable).
+          # Strings on purpose: in a GitHub expression `0` is falsy, so `cond && 0 || 1` is always 1.
+          fetch-depth: ${{ github.event_name == 'pull_request' && '0' || '1' }}
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -27,6 +38,11 @@ jobs:
       # Every committed grid, past ones included, must still be valid: a category that disappears or
       # a data fix that changes an answer would break the history of the game.
       - run: pnpm grids:report
+      # A grid dated today or earlier is public, hence history: a pull request must not change,
+      # rename or delete one. Pull requests only (a push to main is already merged).
+      - name: Published grids are untouched
+        if: ${{ github.event_name == 'pull_request' }}
+        run: pnpm grids:immutable --base "origin/${{ github.base_ref }}"
       - run: pnpm build
       - run: pnpm --filter @pokeneuf/web exec playwright install --with-deps chromium
       - run: pnpm e2e

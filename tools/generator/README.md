@@ -5,10 +5,11 @@ Fabrique les grilles quotidiennes (ROADMAP §3.4). Les **règles** d'une grille 
 
 ```bash
 pnpm data:build                                          # prérequis : dist/memberships.json
-pnpm grids:generate --from 2026-11-01 --days 90          # → apps/web/public/grids/
+pnpm grids:generate --from 2026-11-01 --days 90          # → apps/web/public/grids/ (refuse les dates ≤ aujourd'hui sans --allow-past)
 pnpm grids:report                                        # revue avant commit ; code 1 si problème
-pnpm grids:stock                                         # code 1 s'il reste moins de 30 jours de grilles
-pnpm grids:publish --dir apps/web/dist/grids             # site construit : retire les grilles des jours à venir
+pnpm grids:stock                                         # code 1 s'il reste moins de 45 jours de grilles
+pnpm grids:publish --dir apps/web/dist/grids             # site construit : garde jusqu'à demain (--ahead 1), retire la suite
+pnpm grids:immutable --base origin/main                  # code 1 si une grille ≤ aujourd'hui a été modifiée/renommée/supprimée
 pnpm score:simulate                                      # scores de joueurs simulés, par niveau, vs la bande visée
 pnpm --filter @pokeneuf/generator test
 ```
@@ -21,6 +22,10 @@ pnpm --filter @pokeneuf/generator test
 - **Incrémental** : les grilles déjà présentes sont gardées (elles alimentent les cooldowns). Lancer
   `--days 90` puis `--days 120` donne exactement les mêmes fichiers qu'un seul `--days 120`.
   `--force` régénère les dates demandées (résultat identique, tant que l'historique l'est).
+- **Passé protégé** : toute date ≤ aujourd'hui (Paris) que la commande créerait ou réécrirait est
+  refusée (code 2, rien n'est écrit) sauf avec `--allow-past`. Les grilles existantes d'une plage
+  qui les recouvre sont simplement gardées. Un jour passé manquant est une décision à prendre
+  volontairement, pas un effet de bord. (`--today` sert aux tests.)
 - **Déterministe** : graine dérivée de la date (`seedFromDate`), aucune autre source d'aléa. Ne
   jamais changer `hashString` ni le texte de la graine : ça changerait toutes les grilles futures.
 - Pas de grille avant `LAUNCH_DATE`. Les fichiers générés ne sont pas formatés par Prettier
@@ -54,7 +59,7 @@ taille des cases et difficulté cohérentes avec les données.
 | `weekdayLevels` | niveaux de difficulté acceptés par jour (`mon`…`sun`), optionnels |
 | `attemptsPerStage` | tirages par palier de cooldown |
 
-**Pourquoi un cooldown « mou ».** 6 catégories par jour × 7 jours = 42 des 58 catégories : le
+**Pourquoi un cooldown « mou ».** 6 catégories par jour × 7 jours = 42 des 69 catégories : le
 cooldown de 7 jours de la roadmap est à la limite du faisable. Deux parades :
 1. *Rééquilibrage* : une catégorie moins utilisée que sa part reprend du poids. Sans ça, après une
    semaine il ne reste que les catégories les plus rares, qui ne forment plus de grille valide.
@@ -82,6 +87,16 @@ tout écart au calendrier et toute semaine avec plus d'une grille très difficil
 familles, cooldowns, jours manquants, cohérence de `index.json`. Il rejoue `checkGrid` sur chaque
 fichier : il sert aussi de garde-fou quand les catégories ou les données changent.
 
+**Grilles déjà publiques** (date ≤ aujourd'hui Paris, `--today` pour les tests). Elles sont de
+l'histoire : une correction de données peut déplacer une taille de case sans rendre la grille
+injouable. Seuls les **invariants durs** font échouer le rapport (code 1) : catégories connues et
+qui peuvent se croiser, au moins 3 réponses par case, 9 Pokémon différents possibles, numéro et date
+valides, puzzle jamais publié deux fois (même retourné), plus jours manquants et `index.json`. La
+dérive des tailles de cases annoncées, du plafond de 80 réponses, de la difficulté annoncée, de la
+variété de familles, du calendrier de niveaux, des cooldowns et de la semaine à une seule grille très
+difficile devient un **avertissement** imprimé (`~`), code 0. Les grilles à venir gardent toutes les
+règles strictes (`!`, code 1).
+
 ## Calibrer le score
 
 `pnpm score:simulate` fait jouer trois profils (casual, regular, fan) sur les grilles publiées et
@@ -92,17 +107,29 @@ joueurs simulés ne sont qu'un modèle : à confirmer avec de vraies parties.
 
 ## Publication et historique
 
-Le dépôt garde **90 jours d'avance** (`public/grids`), mais le site déployé ne montre jamais demain :
-- `pnpm grids:publish --dir apps/web/dist/grids` travaille sur la **copie construite** : il garde
-  les grilles d'aujourd'hui (date de Paris) et du passé, supprime les autres et réécrit
-  `index.json`. Il refuse de toucher `apps/web/public/grids`.
-- Le workflow de déploiement le lance à chaque build, et un déclencheur planifié reconstruit le
-  site juste après minuit (22:03 et 23:03 UTC : minuit à Paris en heure d'été et d'hiver). Le
-  client réessaie toutes les minutes pendant une heure si la grille du jour n'est pas encore là.
-- Une grille publiée est de l'**histoire** : `grids:generate --force` refuse de réécrire une grille
-  d'aujourd'hui ou du passé (`--today` sert aux tests), et la CI rejoue `grids:report` sur toutes
-  les grilles. Une catégorie utilisée par une grille passée ne se supprime donc pas : on la garde
-  dans le registre, quitte à ne plus la tirer (`categoryWeights`).
+Le dépôt garde **90 jours d'avance** (`public/grids`) ; le site déployé n'a que le passé, aujourd'hui
+et **demain** (date de Paris) :
+- `pnpm grids:publish --dir apps/web/dist/grids [--ahead N]` travaille sur la **copie construite** :
+  il garde les grilles jusqu'à aujourd'hui + N jours (N = 1 par défaut : demain est en ligne la veille
+  au soir, un build de minuit en retard ne laisse donc pas les joueurs sans grille), supprime les
+  autres et réécrit `index.json`. Il refuse de toucher `apps/web/public/grids` et un dossier absent.
+  Le client ne montre jamais demain : les archives listent les dates strictement passées et la grille
+  du jour se charge par la date de Paris (`archiveDates`, `hasNewGrid`).
+- Le workflow de déploiement le lance à chaque build, puis rejoue `grids:report` sur le dossier
+  publié. Il est déclenché par les pushs sur `main` et par plusieurs crons UTC (soirée, puis 22:03 à
+  03:03 UTC : minuit à Paris en heure d'été et d'hiver), plus un `workflow_dispatch` manuel. Après le
+  déploiement, il télécharge `grids/<aujourd'hui>.json` et `grids/index.json` depuis le site et ouvre
+  une issue `deploy-alert` si l'un manque. Le client réessaie en plus toutes les minutes pendant une
+  heure si la grille du jour n'est pas encore là.
+- Une grille publiée est de l'**histoire**. `grids:generate` refuse de créer ou réécrire une date
+  ≤ aujourd'hui sans `--allow-past`, `pnpm grids:immutable --base origin/main` échoue si une grille
+  datée d'aujourd'hui ou avant est modifiée, renommée ou supprimée (CI, pull requests uniquement ;
+  les ajouts sont permis), et `grids:report` ne bloque sur ces grilles que pour les invariants durs.
+  Une catégorie utilisée par une grille passée ne se supprime donc pas : on la garde dans le
+  registre, quitte à ne plus la tirer (`categoryWeights`).
+- **Stock** : `pnpm grids:stock` (45 jours, depuis max(aujourd'hui, `LAUNCH_DATE`) pour ne pas
+  alerter avant le lancement). Le workflow mensuel `grids-replenish` génère les grilles manquantes
+  jusqu'à ~90 jours et ouvre une pull request (sans jamais réécrire une grille existante).
 
 ## Équilibrage de la famille des noms et cases triviales
 
