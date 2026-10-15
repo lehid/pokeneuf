@@ -26,15 +26,46 @@ beforeEach(async () => {
 afterEach(() => remove());
 
 describe('publishGrids', () => {
-  it('keeps the grids up to today, today included', async () => {
-    const result = await publishGrids(dir, '2026-11-03');
+  it('keeps the grids up to tomorrow by default, today and tomorrow included', async () => {
+    const result = await publishGrids(dir, '2026-11-02');
     expect(result.kept).toEqual(['2026-11-01', '2026-11-02', '2026-11-03']);
     expect(result.removed).toEqual(['2026-11-04', '2026-11-05']);
     expect((await readGrids(dir)).map((g) => g.date)).toEqual(result.kept);
   });
 
+  it('takes the number of days ahead as a parameter: 0 is today only, 3 reaches three days ahead', async () => {
+    expect((await publishGrids(dir, '2026-11-03', 0)).kept).toEqual([
+      '2026-11-01',
+      '2026-11-02',
+      '2026-11-03',
+    ]);
+    const { dir: other, remove: removeOther } = await scratchDir();
+    try {
+      const grids = [1, 2, 3, 4, 5].map(grid);
+      for (const g of grids) await writeGrid(g, other);
+      await writeIndex(grids, other);
+      const result = await publishGrids(other, '2026-11-01', 3);
+      expect(result.kept).toEqual(['2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04']);
+      expect(result.removed).toEqual(['2026-11-05']);
+    } finally {
+      await removeOther();
+    }
+  });
+
+  it('rejects an invalid number of days', async () => {
+    await expect(publishGrids(dir, '2026-11-03', -1)).rejects.toThrow(/ahead/);
+    await expect(publishGrids(dir, '2026-11-03', 1.5)).rejects.toThrow(/ahead/);
+    expect((await readGrids(dir)).length).toBe(5); // nothing was removed
+  });
+
+  it('crosses a month end: tomorrow of the 30th is the 1st', async () => {
+    await writeGrid({ ...grid(1), date: '2026-12-01', id: 31 }, dir);
+    const result = await publishGrids(dir, '2026-11-30');
+    expect(result.kept).toContain('2026-12-01');
+  });
+
   it('rewrites the index so that it lists what is there, and nothing else', async () => {
-    await publishGrids(dir, '2026-11-02');
+    await publishGrids(dir, '2026-11-01');
     const index = await readIndex(dir);
     expect(index?.grids).toEqual([
       { id: 1, date: '2026-11-01' },
@@ -47,9 +78,9 @@ describe('publishGrids', () => {
     ]);
   });
 
-  it('leaves tomorrow out, even by one day, and keeps all of them once they are past', async () => {
-    expect((await publishGrids(dir, '2026-11-01')).kept).toEqual(['2026-11-01']);
-    const [all] = await Promise.all([publishGrids(dir, '2027-01-01')]);
+  it('leaves the day after tomorrow out, even by one day, and keeps all of them once they are past', async () => {
+    expect((await publishGrids(dir, '2026-11-01')).kept).toEqual(['2026-11-01', '2026-11-02']);
+    const all = await publishGrids(dir, '2027-01-01');
     expect(all.removed).toEqual([]);
   });
 
@@ -58,6 +89,10 @@ describe('publishGrids', () => {
     expect(result.kept).toEqual([]);
     expect(result.removed).toHaveLength(5);
     expect((await readIndex(dir))?.grids).toEqual([]);
+  });
+
+  it('puts the first grid on line the evening before the launch, not before', async () => {
+    expect((await publishGrids(dir, '2026-10-31')).kept).toEqual(['2026-11-01']);
   });
 
   it('fails on a folder that does not exist, instead of publishing nothing quietly', async () => {

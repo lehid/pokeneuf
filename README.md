@@ -25,6 +25,27 @@ Node 22 et pnpm 10 (`corepack enable`).
 GitHub Pages, déployé automatiquement à chaque push sur `main` (`.github/workflows/deploy.yml`).
 Réglage unique : *Settings › Pages › Source : GitHub Actions*.
 
+- **Ce qui est en ligne** : les grilles du passé, d'aujourd'hui **et de demain** (heure de Paris). Les
+  grilles plus lointaines restent dans le dépôt, hors du site (`pnpm grids:publish --ahead 1`).
+- **Déploiements de nuit** : en plus des pushs, le workflow tourne plusieurs fois par jour (cron UTC :
+  19 h 47, de 22 h 03 à 3 h 03, 7 h 23 et 13 h 23) pour couvrir minuit à Paris en heure d'été (22 h UTC)
+  comme d'hiver (23 h UTC). Les déclencheurs planifiés de GitHub peuvent être en retard ou sautés : d'où
+  la redondance. Chaque build est idempotent et vérifie `grids:report` avant publication.
+- **Relancer à la main** : *Actions › Deploy to GitHub Pages › Run workflow* (`workflow_dispatch`), par
+  exemple si la grille du jour manque.
+- **Alerte** : après chaque déploiement, une vérification télécharge `grids/<aujourd'hui>.json` et
+  `grids/index.json` depuis le site en ligne. En cas d'échec, une issue `deploy-alert` est ouverte (ou
+  commentée), puis fermée au prochain déploiement réussi.
+- **Stock de grilles** : `grids-stock` (hebdomadaire) alerte sous 45 jours ; `grids-replenish`
+  (mensuel, ou à la demande) ouvre une pull request qui complète à ~90 jours. Une pull request ouverte
+  par un workflow ne lance pas la CI toute seule : la fermer puis la rouvrir. Il faut aussi cocher
+  *Settings › Actions › General › Allow GitHub Actions to create and approve pull requests*.
+  GitHub désactive les workflows planifiés après 60 jours sans activité sur le dépôt ; fusionner la pull
+  request mensuelle compte comme activité.
+- **Grilles publiées = historique** : la CI (`grids:immutable`) refuse qu'une pull request modifie,
+  renomme ou supprime une grille datée d'aujourd'hui ou avant. Pour que ce soit bloquant, l'étape
+  *Published grids are untouched* doit être une vérification requise (protection de branche).
+
 ## Contenu et mentions légales
 
 - **À faire avant le lancement : compléter `apps/web/src/content/legal.ts`** (éditeur, statut, adresse, directeur de la publication, contact). Chaque champ `null` s'affiche en rouge « À compléter » sur la page `#/legal`.

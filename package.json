@@ -13,6 +13,7 @@
     "grids:report": "pnpm --filter @pokeneuf/generator grids:report",
     "grids:stock": "pnpm --filter @pokeneuf/generator grids:stock",
     "grids:publish": "pnpm --filter @pokeneuf/generator grids:publish",
+    "grids:immutable": "pnpm --filter @pokeneuf/generator grids:immutable",
     "score:simulate": "pnpm --filter @pokeneuf/generator score:simulate",
     "build": "pnpm -r build",
     "e2e": "pnpm --filter @pokeneuf/web e2e",

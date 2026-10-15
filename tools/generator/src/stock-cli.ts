@@ -2,11 +2,11 @@ import { parseArgs } from 'node:util';
 import { fromWhereTyped } from './cli-common';
 import { gridDateFor } from '@pokeneuf/core';
 import { GRIDS_DIR, readGrids } from './files';
-import { MIN_STOCK_DAYS, stockDays, stockEnd } from './stock';
+import { MIN_STOCK_DAYS, stockDays, stockEnd, stockStart } from './stock';
 
 const USAGE = `Usage: pnpm grids:stock [--min N] [--dir DIR] [--today YYYY-MM-DD]
 
-  Exits with 1 when the grids do not cover the next N days (default ${MIN_STOCK_DAYS}) from today (Paris).`;
+  Exits with 1 when the grids do not cover the next N days (default ${MIN_STOCK_DAYS}) from today (Paris), or from the launch day before the launch.`;
 
 const { values } = parseArgs({
   options: {
@@ -33,8 +33,8 @@ const days = stockDays(dates, today);
 const end = stockEnd(dates, today);
 console.log(
   end === null
-    ? `No grid for ${today}: the stock is empty.`
-    : `Grid stock: ${days} day(s) from ${today}, up to ${end}.`,
+    ? `No grid for ${stockStart(today)}: the stock is empty.`
+    : `Grid stock: ${days} day(s) from ${stockStart(today)}, up to ${end}.`,
 );
 if (days < min) {
   console.error(`Fewer than ${min} days of grids left: run "pnpm grids:generate" and commit them.`);

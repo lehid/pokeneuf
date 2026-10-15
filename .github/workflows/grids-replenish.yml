@@ -1,0 +1,104 @@
+name: Replenish grids
+
+# Once a month (and on demand): generate the missing grids so that the repository holds about 90
+# days of grids from tomorrow, and open a pull request with them. A human reviews and merges it.
+# (90 days, not 60: with a monthly cycle and an alert at 45 days, a 60-day top-up would raise the
+# stock alert every month.)
+#
+# It only ever ADDS grid files: existing grids (published or not) are kept as they are, because
+# `grids:generate` never overwrites without --force and this workflow never passes it. Days up to
+# today are never touched either (`--from` is tomorrow at the earliest).
+#
+# Known limits, on purpose:
+# - A pull request created with GITHUB_TOKEN does NOT trigger the `pull_request` workflows (a GitHub
+#   rule against loops): the CI checks do not run by themselves on it. The owner closes and reopens
+#   the pull request (or pushes an empty commit to its branch) to start CI, then merges it once it
+#   is green. This workflow already runs `grids:report` before opening it, as a first filter.
+# - The repository setting "Allow GitHub Actions to create and approve pull requests" (Settings >
+#   Actions > General > Workflow permissions) must be on, or the last step fails.
+# - GitHub disables scheduled workflows after 60 days without repository activity. Merging the
+#   monthly pull request counts as activity, so this cycle keeps itself alive; if the repository
+#   is left alone for two months, re-enable the workflows from the Actions tab.
+on:
+  schedule:
+    - cron: '41 5 1 * *'
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'Days of grids to cover from tomorrow (existing grids are kept)'
+        default: '90'
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: grids-replenish
+  cancel-in-progress: false
+
+jobs:
+  replenish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: actions/cache@v4
+        with:
+          path: packages/data/.cache
+          key: data-${{ hashFiles('packages/data/src/config.ts') }}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm data:build
+
+      - name: Do nothing when a replenish pull request is already open
+        id: open
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing="$(gh pr list --state open --search 'chore: replenish grids in:title' --json number --jq '.[0].number')"
+          echo "existing=$existing" >> "$GITHUB_OUTPUT"
+          if [ -n "$existing" ]; then echo "Pull request #$existing is still open: nothing to do."; fi
+
+      - name: Generate the missing grids
+        if: steps.open.outputs.existing == ''
+        env:
+          DAYS: ${{ inputs.days || '90' }}
+        run: |
+          [[ "$DAYS" =~ ^[0-9]+$ ]] && [ "$DAYS" -ge 1 ] && [ "$DAYS" -le 366 ] || { echo "::error::days must be 1-366"; exit 1; }
+          tomorrow="$(TZ=Europe/Paris date -d 'tomorrow' +%F)"
+          launch="$(grep -oP "LAUNCH_DATE = '\K[0-9-]+" packages/core/src/config.ts)"
+          from="$tomorrow"
+          if [[ "$from" < "$launch" ]]; then from="$launch"; fi
+          echo "FROM=$from" >> "$GITHUB_ENV"
+          pnpm grids:generate --from "$from" --days "$DAYS"
+          pnpm grids:report
+          pnpm grids:immutable --base HEAD
+          # Only additions (new grid files) and index.json may differ.
+          changed="$(git status --porcelain -- apps/web/public/grids | grep -v '^??' | grep -v 'index.json$' || true)"
+          if [ -n "$changed" ]; then echo "::error::An existing grid changed:"; echo "$changed"; exit 1; fi
+
+      - name: Open the pull request
+        if: steps.open.outputs.existing == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain -- apps/web/public/grids)" ]; then
+            echo "The stock already covers the period: nothing to add."
+            exit 0
+          fi
+          added="$(git status --porcelain -- apps/web/public/grids | grep -c '^??.*[0-9]\.json$' || true)"
+          branch="chore/replenish-grids-$(date -u +%Y%m%d)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add apps/web/public/grids
+          git commit -m "chore: replenish grids from $FROM"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "chore: replenish grids from $FROM" \
+            --body "Automatic monthly replenishment: $added new grid(s) from $FROM. Existing grids are untouched (\`grids:immutable\` and \`grids:report\` passed in the workflow). **CI does not start by itself on a pull request opened by a workflow**: close and reopen this pull request to run it, review the report, then merge. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"

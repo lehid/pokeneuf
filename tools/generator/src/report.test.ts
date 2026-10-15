@@ -10,7 +10,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { loadConfig, type GeneratorConfig } from './config';
 import { buildIndex, type GridIndex } from './files';
 import { createGenerator, dateRange } from './generate';
-import { analyzeGrids, cooldownFindings } from './report';
+import { analyzeGrids, cooldownFindings, frozenGridFindings } from './report';
 import { realWorld } from './test-world';
 
 let memberships: Memberships;
@@ -97,9 +97,17 @@ describe('cooldownFindings', () => {
   });
 });
 
+/** All the grids are in the future: the strict rules apply to each of them. */
+const BEFORE_ALL = '2026-10-01';
+/** All the grids are public. */
+const AFTER_ALL = '2027-06-01';
+
 describe('analyzeGrids', () => {
-  const run = (list: readonly Grid[], index: GridIndex | null = buildIndex(list)) =>
-    analyzeGrids(list, memberships, popularity, config, index);
+  const run = (
+    list: readonly Grid[],
+    index: GridIndex | null = buildIndex(list),
+    today: string = BEFORE_ALL,
+  ) => analyzeGrids(list, memberships, popularity, config, index, undefined, today);
 
   it('finds nothing wrong with generated grids, and describes them', () => {
     const { text, problems } = run(grids);
@@ -119,7 +127,15 @@ describe('analyzeGrids', () => {
 
   it('flags grids whose level is not accepted on their weekday', () => {
     const strict = { ...config, weekdayLevels: { mon: ['veryEasy' as const] } };
-    const { problems } = analyzeGrids(grids, memberships, popularity, strict, buildIndex(grids));
+    const { problems } = analyzeGrids(
+      grids,
+      memberships,
+      popularity,
+      strict,
+      buildIndex(grids),
+      undefined,
+      BEFORE_ALL,
+    );
     expect(problems.some((p) => /mon grid\(s\) outside the accepted levels veryEasy/.test(p))).toBe(
       true,
     );
@@ -137,7 +153,15 @@ describe('analyzeGrids', () => {
     // 2026-11-02 is a Monday: Monday to Sunday is one calendar week.
     for (const date of dateRange('2026-11-02', 7))
       week.push(generate({ date, history: week }).grid);
-    const { problems } = analyzeGrids(week, memberships, popularity, allVeryHard, buildIndex(week));
+    const { problems } = analyzeGrids(
+      week,
+      memberships,
+      popularity,
+      allVeryHard,
+      buildIndex(week),
+      undefined,
+      BEFORE_ALL,
+    );
     expect(problems.some((p) => /7 very hard grids in the week of 2026-11-02/.test(p))).toBe(true);
   });
 
@@ -177,5 +201,120 @@ describe('analyzeGrids', () => {
     expect(run(grids.slice(0, 1)).text).toMatch(/never: .*type-/);
     const all = CATEGORIES.length;
     expect(run(grids.slice(0, 1)).text).toContain(`of ${all} used`);
+  });
+});
+
+/** The same memberships after a data fix: every cell gains one answer (a Pokémon that is not in the pool). */
+const grown = (extra: number): Memberships =>
+  Object.assign(Object.create(memberships) as Memberships, {
+    answersFor: (...args: Parameters<Memberships['answersFor']>) => [
+      ...memberships.answersFor(...args),
+      ...Array.from({ length: extra }, (_, i) => 9000 + i),
+    ],
+  });
+
+/** …or after a data change that leaves every cell with two answers. */
+const thin = (): Memberships =>
+  Object.assign(Object.create(memberships) as Memberships, {
+    answersFor: (...args: Parameters<Memberships['answersFor']>) =>
+      memberships.answersFor(...args).slice(0, 2),
+  });
+
+describe('frozen grids (today and the past)', () => {
+  const analyze = (list: readonly Grid[], world: Memberships, today: string) =>
+    analyzeGrids(list, world, popularity, config, buildIndex(list), undefined, today);
+
+  it('reports exactly what checkGrid reports, split in hard and soft', () => {
+    for (const grid of grids.slice(0, 5)) {
+      expect(frozenGridFindings(grid, memberships)).toEqual({ hard: [], soft: [] });
+    }
+    const drifted = frozenGridFindings(grids[0] as Grid, grown(1));
+    expect(drifted.hard).toEqual([]);
+    expect(drifted.soft.length).toBeGreaterThanOrEqual(9); // 9 stated cell sizes are now wrong
+    expect(frozenGridFindings(grids[0] as Grid, thin()).hard.length).toBeGreaterThan(0);
+  });
+
+  it('does not fail on a data change that shifts the cell sizes of a past grid (a warning)', () => {
+    const world = grown(2);
+    const past = analyze(grids, world, AFTER_ALL);
+    expect(past.problems).toEqual([]);
+    expect(past.warnings.join('\n')).toMatch(/answers, not /);
+    expect(past.text).toMatch(/warning\(s\) on grids already public.*not blocking/);
+    expect(past.text).toContain('No problem found.');
+  });
+
+  it('still fails on the same data change for grids that are not public yet', () => {
+    const future = analyze(grids, grown(2), BEFORE_ALL);
+    expect(future.problems.join('\n')).toMatch(/answers, not /);
+    expect(future.warnings).toEqual([]);
+  });
+
+  it('mixes both: only the public part is forgiven', () => {
+    const today = (grids[19] as Grid).date; // 20 public grids, 20 to come
+    const { problems, warnings } = analyze(grids, grown(1), today);
+    expect(warnings.length).toBeGreaterThan(0);
+    expect(problems.length).toBeGreaterThan(0);
+    for (const line of problems) {
+      const date = /\((\d{4}-\d{2}-\d{2})\)/.exec(line)?.[1];
+      if (date) expect(date > today).toBe(true);
+    }
+  });
+
+  it('fails when a cell of a past grid has fewer than 3 answers', () => {
+    const { problems } = analyze(grids.slice(0, 3), thin(), AFTER_ALL);
+    expect(problems.join('\n')).toMatch(/has 2 answers \(at least 3 needed\)/);
+  });
+
+  it('fails on a category that no longer exists, a pair that cannot cross, or a wrong number', () => {
+    const unknown = grids.map((g, i) =>
+      i === 0 ? { ...g, rows: ['gone-forever', g.rows[1], g.rows[2]] as Grid['rows'] } : g,
+    );
+    expect(analyze(unknown, memberships, AFTER_ALL).problems.join('\n')).toMatch(
+      /unknown category "gone-forever"/,
+    );
+    const renumbered = grids.map((g, i) => (i === 2 ? { ...g, id: 99 } : g));
+    expect(analyze(renumbered, memberships, AFTER_ALL).problems.join('\n')).toMatch(
+      /id should be 3/,
+    );
+  });
+
+  it('fails when the same puzzle was published twice, even turned around', () => {
+    const [a, b] = grids as [Grid, Grid];
+    const twin: Grid = { ...b, rows: a.cols, cols: a.rows, cellSizes: a.cellSizes };
+    const { problems } = analyze([a, twin], memberships, AFTER_ALL);
+    expect(problems.join('\n')).toMatch(
+      /puzzle of 2026-11-02 is the one already published on 2026-11-01/,
+    );
+  });
+
+  it('turns weekday-level, cooldown and very-hard-week findings into warnings', () => {
+    const strict = { ...config, weekdayLevels: { mon: ['veryEasy' as const] } };
+    const run2 = (today: string) =>
+      analyzeGrids(grids, memberships, popularity, strict, buildIndex(grids), undefined, today);
+    expect(run2(AFTER_ALL).problems).toEqual([]);
+    expect(run2(AFTER_ALL).warnings.join('\n')).toMatch(
+      /mon grid\(s\) outside the accepted levels/,
+    );
+    expect(run2(BEFORE_ALL).problems.join('\n')).toMatch(/mon grid\(s\) outside/);
+
+    const repeated = grids.map((g, i) =>
+      i === 1
+        ? { ...g, rows: [(grids[0] as Grid).rows[0], g.rows[1], g.rows[2]] as Grid['rows'] }
+        : g,
+    );
+    const frozen = analyze(repeated, memberships, AFTER_ALL);
+    expect(frozen.problems.join('\n')).not.toMatch(/returns after/);
+    expect(frozen.warnings.join('\n')).toMatch(/category "[a-z0-9-]+" returns after 1 day/);
+    expect(analyze(repeated, memberships, BEFORE_ALL).problems.join('\n')).toMatch(
+      /returns after 1 day/,
+    );
+  });
+
+  it('keeps failing on structural problems: missing days and a wrong index', () => {
+    const gap = grids.filter((_, i) => i !== 5);
+    expect(analyze(gap, memberships, AFTER_ALL).problems.join('\n')).toMatch(/missing days/);
+    expect(
+      analyzeGrids(grids, memberships, popularity, config, null, undefined, AFTER_ALL).problems,
+    ).toContain('index.json is missing');
   });
 });

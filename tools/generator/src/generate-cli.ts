@@ -6,13 +6,15 @@ import { createGenerator, dateRange, GenerationError } from './generate';
 import { frozenDates } from './publish';
 import { GRIDS_DIR, MEMBERSHIPS_PATH, readGrids, writeGrid, writeIndex } from './files';
 
-const USAGE = `Usage: pnpm grids:generate --from YYYY-MM-DD --days N [--force] [--out DIR] [--memberships FILE]
+const USAGE = `Usage: pnpm grids:generate --from YYYY-MM-DD --days N [--force] [--allow-past] [--out DIR] [--memberships FILE]
 
-  --from   first date (Paris calendar date), not before the launch date (${LAUNCH_DATE})
-  --days   number of consecutive days to cover (1-366)
-  --force  regenerate dates that already have a grid (default: keep them, they feed the cooldowns);
-           never for today or a past day: a published grid is history and does not change
-  --today  the date taken for today, for tests (default: today in Paris)`;
+  --from        first date (Paris calendar date), not before the launch date (${LAUNCH_DATE})
+  --days        number of consecutive days to cover (1-366)
+  --force       regenerate dates that already have a grid (default: keep them, they feed the cooldowns)
+  --allow-past  allow creating or (with --force) rewriting a grid dated today (Paris) or earlier.
+                Without it the command refuses: a published grid is history and does not change, and
+                a missing past grid is a decision to make on purpose, not a side effect.
+  --today       the date taken for today, for tests (default: today in Paris)`;
 
 const { values } = parseArgs({
   options: {
@@ -21,6 +23,7 @@ const { values } = parseArgs({
     out: { type: 'string', default: GRIDS_DIR },
     memberships: { type: 'string', default: MEMBERSHIPS_PATH },
     force: { type: 'boolean', default: false },
+    'allow-past': { type: 'boolean', default: false },
     today: { type: 'string' },
     help: { type: 'boolean', default: false },
   },
@@ -51,22 +54,22 @@ const generate = createGenerator({ memberships, popularity, config });
 const dates = dateRange(from, days);
 const existing = await readGrids(outDir);
 const today = values.today ?? gridDateFor(new Date());
-if (values.force) {
-  const have = new Set(existing.map((g) => g.date));
-  const frozen = frozenDates(
-    dates.filter((d) => have.has(d)),
-    today,
+// Dates that this run would create or overwrite: the missing ones, and with --force the existing ones.
+const have = new Set(existing.map((g) => g.date));
+const touched = dates.filter((d) => values.force || !have.has(d));
+const frozenTouched = frozenDates(touched, today);
+if (frozenTouched.length > 0 && !values['allow-past']) {
+  const rewritten = frozenTouched.filter((d) => have.has(d)).length;
+  fail(
+    `This would ${rewritten > 0 ? 'rewrite or ' : ''}create the grid of today or of past days ` +
+      `(${frozenTouched.slice(0, 3).join(', ')}${frozenTouched.length > 3 ? '…' : ''}): ` +
+      `a published grid is history and never changes. Start from a day after ${today}, ` +
+      `or pass --allow-past if you really mean it.`,
   );
-  if (frozen.length > 0) {
-    fail(
-      `--force would rewrite published grids (${frozen.slice(0, 3).join(', ')}${frozen.length > 3 ? '…' : ''}): ` +
-        `the grids of today and of past days are history and never change.`,
-    );
-  }
 }
 const regenerated = new Set(values.force ? dates : []);
 const grids: Grid[] = existing.filter((g) => !regenerated.has(g.date));
-const have = new Set(grids.map((g) => g.date));
+const haveNow = new Set(grids.map((g) => g.date));
 
 let generated = 0;
 let kept = 0;
@@ -75,7 +78,7 @@ const relaxed: Record<number, number> = {};
 let failure: GenerationError | null = null;
 
 for (const date of dates) {
-  if (have.has(date)) {
+  if (haveNow.has(date)) {
     kept++;
     continue;
   }

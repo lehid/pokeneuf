@@ -1,6 +1,8 @@
 name: Grid stock
 
-# Every week: fail and open an issue when fewer than 30 days of grids are left (ROADMAP phase 5).
+# Every week: fail and open an issue when fewer than 45 days of grids are left (counted from today,
+# or from the launch day before the launch). The monthly `grids-replenish` workflow normally keeps
+# the stock at about 90 days; this check is the safety net if it did not run or its PR was not merged.
 on:
   schedule:
     - cron: '17 6 * * 1'
@@ -12,9 +14,12 @@ permissions:
 
 jobs:
   stock:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -22,16 +27,26 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - id: stock
-        run: pnpm grids:stock --min 30
+        # The threshold is MIN_STOCK_DAYS in tools/generator/src/stock.ts (45).
+        run: pnpm grids:stock
       - name: Open an issue when the stock is low
         if: failure() && steps.stock.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           label="grids-stock"
-          gh label create "$label" --description "Fewer than 30 days of grids left" --color D93F0B 2>/dev/null || true
+          gh label create "$label" --description "Fewer than 45 days of grids left" --color D93F0B 2>/dev/null || true
           if [ -z "$(gh issue list --label "$label" --state open --json number --jq '.[].number')" ]; then
             gh issue create --label "$label" \
-              --title "Grid stock below 30 days" \
-              --body "The weekly check found fewer than 30 days of grids from today. Generate more with \`pnpm grids:generate --from <first missing date> --days 90\`, review \`pnpm grids:report\`, and commit them. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+              --title "Grid stock below 45 days" \
+              --body "The weekly check found fewer than 45 days of grids from today. Run the \`Replenish grids\` workflow (Actions tab, workflow_dispatch) or \`pnpm grids:generate --from <first missing date> --days 90\`, review \`pnpm grids:report\`, and merge the pull request. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           fi
+      - name: Close the stock alert once the stock is back
+        if: steps.stock.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for number in $(gh issue list --label "grids-stock" --state open --json number --jq '.[].number'); do
+            gh issue close "$number" --reason completed \
+              --comment "The stock is back above 45 days. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          done
