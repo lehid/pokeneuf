@@ -22,7 +22,7 @@ jobs:
           # Strings on purpose: in a GitHub expression `0` is falsy, so `cond && 0 || 1` is always 1.
           fetch-depth: ${{ github.event_name == 'pull_request' && '0' || '1' }}
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
