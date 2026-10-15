@@ -1,14 +1,17 @@
 import { categoryAccent, getCategory, readableTextColor } from '@pokeneuf/core';
 import { useState } from 'react';
+import { useGame } from '../GameContext';
 import { fr } from '../i18n/fr';
 import { FamilyIcon } from './FamilyIcon';
 import { TypeIcon } from './TypeIcon';
 import { Modal } from './Modal';
+import { ReportLink } from './ReportLink';
 
 /** A row or column title. Tapping it explains exactly what counts (ROADMAP §1.6). */
 export function CategoryHeader({ id, axis }: { id: string; axis: 'row' | 'col' }) {
   const category = getCategory(id);
   const [open, setOpen] = useState(false);
+  const grid = useGame((s) => s.grid);
   const accent = categoryAccent(category);
   const label = category.label.fr;
 
@@ -41,6 +44,17 @@ export function CategoryHeader({ id, axis }: { id: string; axis: 'row' | 'col' }
           <button type="button" className="btn btn-primary w-full" onClick={() => setOpen(false)}>
             {fr.close}
           </button>
+          <p className="mt-2 text-center text-sm">
+            <ReportLink
+              testId="report-definition"
+              context={{
+                kind: 'definition',
+                categoryId: id,
+                gridId: grid.id,
+                gridDate: grid.date,
+              }}
+            />
+          </p>
         </Modal>
       )}
     </>

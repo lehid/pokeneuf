@@ -3,25 +3,25 @@
   "id": 24,
   "date": "2026-11-24",
   "rows": [
-    "evo-trade",
-    "status-legendary",
-    "evo-final"
+    "evo-stage-3",
+    "form-mega",
+    "size-height-50cm"
   ],
   "cols": [
     "stat-attack-100",
-    "gen-3",
-    "type-water"
+    "type-bug",
+    "shape-quadruped"
   ],
   "cellSizes": [
-    3,
-    3,
-    5,
-    14,
+    25,
+    4,
     8,
-    3,
-    64,
-    45,
-    39
+    24,
+    4,
+    8,
+    7,
+    11,
+    23
   ],
-  "difficulty": 62
+  "difficulty": 63
 }

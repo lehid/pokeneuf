@@ -3,25 +3,25 @@
   "id": 4,
   "date": "2026-11-04",
   "rows": [
-    "stat-speed-100",
-    "gen-1",
-    "evo-stone"
+    "type-steel",
+    "status-starter",
+    "status-legendary"
   ],
   "cols": [
-    "type-normal",
-    "type-grass",
-    "color-green"
+    "shape-upright",
+    "size-height-50cm",
+    "shape-quadruped"
   ],
   "cellSizes": [
-    15,
-    4,
+    6,
     5,
-    22,
-    14,
-    9,
+    6,
+    23,
+    8,
+    12,
+    10,
     3,
-    7,
-    3
+    5
   ],
   "difficulty": 73
 }

@@ -3,25 +3,25 @@
   "id": 28,
   "date": "2026-11-28",
   "rows": [
-    "stat-speed-100",
-    "gen-2",
-    "type-poison"
+    "type-normal",
+    "type-water",
+    "status-starter"
   ],
   "cols": [
-    "size-height-2m",
-    "color-blue",
-    "type-dark"
+    "form-gmax",
+    "evo-middle",
+    "name-starts-vowel"
   ],
   "cellSizes": [
-    9,
-    8,
+    3,
+    7,
+    10,
     3,
     9,
-    15,
-    6,
-    4,
-    9,
+    13,
+    3,
+    12,
     3
   ],
-  "difficulty": 77
+  "difficulty": 80
 }

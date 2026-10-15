@@ -29,5 +29,12 @@
     "sat": ["hard"],
     "sun": ["veryHard"]
   },
+  "dateLevels": { "2026-11-01": ["veryEasy", "easy"] },
+  "pinnedGrids": {
+    "2026-11-01": {
+      "rows": ["type-grass", "type-flying", "color-red"],
+      "cols": ["gen-1", "gen-3", "evo-base"]
+    }
+  },
   "attemptsPerStage": 400
 }

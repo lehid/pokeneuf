@@ -38,6 +38,27 @@ const configSchema = z.strictObject({
    */
   weekdayLevels: z.partialRecord(z.enum(WEEKDAYS), z.array(z.enum(DIFFICULTY_LEVELS)).min(1)),
   /**
+   * Levels accepted on ONE date, instead of the ones of its weekday (a day that deserves better than
+   * the calendar: the launch day must not be "very hard"). Only dates that are not yet public can
+   * be changed, like any grid.
+   */
+  dateLevels: z
+    .record(z.string().regex(/^\d{4}-\d{2}-\d{2}$/), z.array(z.enum(DIFFICULTY_LEVELS)).min(1))
+    .default({}),
+  /**
+   * A grid chosen by hand for one date (the launch day: familiar categories, generous cells),
+   * instead of a draw. It must still pass `checkGrid`, and the generator refuses it otherwise.
+   */
+  pinnedGrids: z
+    .record(
+      z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      z.strictObject({
+        rows: z.tuple([z.string(), z.string(), z.string()]),
+        cols: z.tuple([z.string(), z.string(), z.string()]),
+      }),
+    )
+    .default({}),
+  /**
    * Categories used less than their weight says (over this many days, both sides of the date) are
    * drawn more, the others less. Without it, the categories left after a week of cooldown are
    * always the rarest ones, which cannot make a valid grid. 0 turns it off.

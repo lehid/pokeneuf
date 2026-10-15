@@ -3,25 +3,25 @@
   "id": 8,
   "date": "2026-11-08",
   "rows": [
-    "evo-middle",
-    "type-ground",
-    "gen-4"
+    "type-ice",
+    "type-fighting",
+    "color-red"
   ],
   "cols": [
-    "type-dragon",
-    "color-purple",
-    "name-starts-vowel"
+    "form-mega",
+    "evo-gen4",
+    "gen-4"
   ],
   "cellSizes": [
-    4,
-    4,
-    4,
-    5,
-    4,
+    3,
     5,
     6,
-    14,
-    11
+    5,
+    5,
+    7,
+    6,
+    3,
+    5
   ],
-  "difficulty": 81
+  "difficulty": 86
 }

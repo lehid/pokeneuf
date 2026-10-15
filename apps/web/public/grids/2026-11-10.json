@@ -3,25 +3,25 @@
   "id": 10,
   "date": "2026-11-10",
   "rows": [
-    "type-fighting",
-    "size-height-50cm",
+    "type-poison",
+    "shape-wings",
     "stat-attack-100"
   ],
   "cols": [
-    "gen-3",
-    "type-fire",
-    "color-blue"
+    "type-bug",
+    "size-height-2m",
+    "color-purple"
   ],
   "cellSizes": [
-    7,
-    4,
-    7,
-    29,
-    4,
-    21,
-    27,
     9,
-    18
+    4,
+    22,
+    16,
+    7,
+    8,
+    5,
+    28,
+    7
   ],
-  "difficulty": 61
+  "difficulty": 65
 }

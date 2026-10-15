@@ -1,0 +1,35 @@
+name: Bug
+description: Le site ne fonctionne pas comme prévu (affichage, clavier, lecteur d'écran, partie, sauvegarde…).
+title: 'Bug : '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci ! Ce formulaire s'ouvre sur GitHub : rien n'est envoyé tant que vous ne cliquez pas sur « Submit new issue ». Pour une réponse ou une définition fausse, utilisez plutôt « Erreur de donnée ».
+  - type: textarea
+    id: what
+    attributes:
+      label: Que s'est-il passé ?
+      description: Ce que vous avez fait, ce que vous attendiez, ce qui est arrivé.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Comment le reproduire ?
+      placeholder: |
+        1. Ouvrir le jeu
+        2. Toucher la case …
+        3. …
+  - type: input
+    id: device
+    attributes:
+      label: Appareil et navigateur
+      description: Par exemple « iPhone 14, Safari » ou « Windows, Firefox ». Facultatif.
+  - type: input
+    id: grid
+    attributes:
+      label: Grille
+      description: Numéro ou date de la grille concernée, si le bug en dépend.
+      placeholder: 'n° 12 · 2026-11-12'

@@ -197,6 +197,14 @@ export const fr = {
   solutionsTitle: 'Bonnes réponses',
   solutionsSorted: 'Du plus connu au plus rare.',
   solutionsCount: (n: number) => `${n} réponse${n > 1 ? 's' : ''} possible${n > 1 ? 's' : ''}`,
+
+  // "Signaler une erreur" : lien vers un formulaire GitHub prérempli (rien n'est envoyé par le site).
+  report: {
+    link: 'Signaler une erreur',
+    newTab: '(s’ouvre dans un nouvel onglet)',
+    faqNote:
+      'Le lien ouvre un formulaire GitHub prérempli : rien n’est envoyé tant que vous ne le validez pas, et un compte GitHub gratuit est nécessaire pour le faire. Les grilles déjà publiées ne changent jamais : une correction vaut pour les grilles à venir.',
+  },
   footer: {
     nav: 'Informations',
     faq: 'FAQ',
@@ -278,7 +286,7 @@ export const fr = {
         title: 'D’où viennent les données\u00A0?',
         paragraphs: [
           'Les fiches (types, statistiques, taille, évolutions…) viennent de PokéAPI, complétées et corrigées à la main là où c’est nécessaire (starters, fossiles, légendaires, Méga-évolutions, Pokémon les plus connus…). Les noms affichés sont les noms français officiels\u00A0; la recherche accepte aussi les noms anglais et les numéros.',
-          'Une erreur, une définition discutable\u00A0? Signalez-la depuis le dépôt du projet\u00A0: chaque correction est ajoutée aux données, avec un test pour ne pas la perdre.',
+          'Une erreur, une définition discutable\u00A0? Signalez-la avec le lien ci-dessous (il se trouve aussi dans la définition d’une catégorie et dans la liste des réponses d’une case)\u00A0: chaque correction est ajoutée aux données, avec un test pour ne pas la perdre.',
         ],
       },
       generations: {

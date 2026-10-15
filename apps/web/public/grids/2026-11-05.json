@@ -3,25 +3,25 @@
   "id": 5,
   "date": "2026-11-05",
   "rows": [
-    "color-yellow",
-    "evo-baby",
-    "form-gmax"
+    "evo-stage-3",
+    "stat-total-500",
+    "stat-total-300"
   ],
   "cols": [
-    "type-mono",
-    "type-dual",
-    "name-has-k"
+    "color-blue",
+    "type-dragon",
+    "type-rock"
   ],
   "cellSizes": [
-    32,
-    16,
-    12,
-    12,
-    6,
-    3,
-    7,
+    15,
     5,
-    5
+    4,
+    29,
+    11,
+    7,
+    18,
+    3,
+    3
   ],
-  "difficulty": 68
+  "difficulty": 71
 }

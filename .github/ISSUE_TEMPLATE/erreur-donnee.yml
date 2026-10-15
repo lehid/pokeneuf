@@ -1,0 +1,63 @@
+# Formulaire « Signaler une erreur » (lien du jeu : packages/core/src/report.ts).
+# Les `id` des champs sont les paramètres d'URL de préremplissage : ne pas les renommer sans
+# changer `REPORT_FIELDS` dans le code (un test compare les deux). Les options de `kind` doivent
+# rester mot pour mot celles de `REPORT_KIND_OPTIONS`.
+name: Erreur de donnée
+description: Une réponse refusée ou acceptée à tort, une définition de catégorie fausse ou discutable, un Pokémon mal classé.
+title: 'Erreur de donnée — '
+labels: ['data-error']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci ! Ce formulaire s'ouvre sur GitHub : rien n'est envoyé tant que vous ne cliquez pas sur « Submit new issue ». Ne mettez pas d'information personnelle.
+
+        Les données viennent de PokéAPI, corrigées à la main là où il le faut. Chaque correction est ajoutée au projet avec un test pour ne pas la perdre. Une grille déjà publiée ne change jamais : une correction vaut pour les grilles à venir.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: De quoi s'agit-il ?
+      options:
+        - Une réponse (Pokémon accepté ou refusé à tort)
+        - La définition d’une catégorie
+        - Une grille ou une case
+        - Autre chose dans les données
+    validations:
+      required: true
+  - type: input
+    id: grid
+    attributes:
+      label: Grille
+      description: Numéro et date de la grille (affichés en haut du jeu), si vous les connaissez.
+      placeholder: 'n° 12 · 2026-11-12'
+  - type: input
+    id: location
+    attributes:
+      label: Case ou catégorie
+      description: La case (ligne et colonne) ou la catégorie concernée.
+      placeholder: 'Case ligne 1 × colonne 3 (Feu × Vol)'
+  - type: input
+    id: pokemon
+    attributes:
+      label: Pokémon
+      description: Nom ou numéro du Pokémon concerné, s'il y en a un.
+      placeholder: 'Pikachu (n° 25)'
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qu'est-ce qui est faux ?
+      description: Ce que le jeu affiche ou accepte, et pourquoi c'est une erreur.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Qu'est-ce qui serait juste ?
+      description: Ce que le jeu devrait accepter, refuser ou afficher à la place.
+    validations:
+      required: true
+  - type: textarea
+    id: proof
+    attributes:
+      label: Source ou preuve (facultatif)
+      description: Un lien (Poképédia, Bulbapedia, Serebii…) ou une capture d'écran des jeux.

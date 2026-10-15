@@ -3,25 +3,25 @@
   "id": 17,
   "date": "2026-11-17",
   "rows": [
-    "type-dark",
-    "gen-3",
-    "stat-attack-100"
+    "shape-upright",
+    "type-fairy",
+    "evo-friendship"
   ],
   "cols": [
-    "type-dual",
-    "color-purple",
-    "name-ends-a"
+    "size-height-50cm",
+    "stat-total-300",
+    "type-normal"
   ],
   "cellSizes": [
-    18,
-    5,
-    3,
-    66,
+    31,
+    27,
+    29,
     7,
-    17,
-    46,
-    7,
-    9
+    9,
+    4,
+    9,
+    8,
+    6
   ],
-  "difficulty": 57
+  "difficulty": 60
 }
