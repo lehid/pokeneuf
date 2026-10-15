@@ -24,13 +24,10 @@ Légende : ☐ à faire par vous · `commande` à lancer dans le dépôt cloné 
 
 ### Mentions légales : `apps/web/src/content/legal.ts`
 
-Cinq champs valent `null` aujourd’hui ; chacun s’affiche en rouge « À compléter » sur `SITE#/legal`. Ne rien inventer.
+Renseignées le 15/10 par le propriétaire (`publisherName` et `publicationDirector` : Lehid ; statut : particulier ; adresse : « Paris, France » ; contact : une adresse e-mail dédiée). Un champ `null` s’affiche en rouge « À compléter » sur `SITE#/legal`. Ne rien inventer.
 
-- ☐ `publisherName` : nom ou pseudonyme.
-- ☐ `publisherStatus` : par exemple `'Particulier'`.
-- ☐ `publisherAddress` : adresse postale, **ou** `'Adresse communiquée à l’hébergeur'` si vous restez anonyme (particulier non professionnel : l’anonymat vis-à-vis du public est permis par la LCEN, art. 6, si l’hébergeur détient votre identité).
-- ☐ `publicationDirector` : en général vous-même.
-- ☐ `contactEmail` : une adresse lue régulièrement (un alias dédié plutôt que votre adresse personnelle).
+- ☑ Éditeur, statut, adresse, directeur de la publication, contact : faits.
+- ☐ **Adresse** : « Paris, France » est une adresse très partielle ; pour un éditeur qui s’identifie, la LCEN attend une adresse postale. Si vous ne voulez pas publier votre domicile, repassez en « particulier anonyme » (`publisherAddress` : `'Adresse communiquée à l’hébergeur'`), permis pour un non-professionnel si l’hébergeur détient votre identité.
 - ☐ **Hébergeur, à revérifier le jour du lancement** : la page cite « GitHub Pages, un service de GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis » (`fr.legal.sections.host.text` dans `apps/web/src/i18n/fr.ts`). Contrôler que cette raison sociale et cette adresse sont toujours celles publiées par GitHub dans ses conditions et mentions légales. La LCEN (art. 6, III) liste pour l’hébergeur le nom, l’adresse **et le numéro de téléphone** ; le texte actuel n’a pas de téléphone, et GitHub n’en publie peut-être pas : décider (avec un avis juridique si besoin) si c’est acceptable. Ce point n’a pas été tranché dans le code.
 - ☐ Après modification : `pnpm test` (les tests de la page légale acceptent des champs remplis), puis, une fois en ligne, ouvrir `SITE#/legal` : plus aucun « À compléter ».
 - ☐ Vérifier aussi dans les outils du navigateur (Application › Cookies) qu’aucun cookie n’est posé : la page promet « aucun cookie » (`fr.legal.sections.privacy`).
@@ -57,7 +54,7 @@ Cinq champs valent `null` aujourd’hui ; chacun s’affiche en rouge « À comp
 |---|---|
 | Jeu. 15/10 → dim. 18/10 | ☐ Décisions du tableau ci-dessus (nom, adresse du site, éditeur). |
 | Lun. 19/10 | ☐ Tous les réglages GitHub ci-dessus. ☐ Lancer la répétition de déploiement. |
-| Mar. 20/10 | ☐ Compléter `legal.ts` (pull request, CI verte, fusion). |
+| Mar. 20/10 | ☑ `legal.ts` complété le 15/10 ; reste à trancher l’adresse et le téléphone de l’hébergeur (voir plus haut). |
 | Mer. 21/10 | ☐ Relire les premières grilles : `pnpm data:build && pnpm grids:report` doit finir par « No problem found. » (au 15/10 : 90 grilles, n° 1 du 01/11/2026 au n° 90 du 29/01/2027). ☐ Premier passage de la matrice d’appareils (e) avec `SITE?demo` (la grille de démonstration marche avant le lancement). |
 | Ven. 23/10 | ☐ **Gel** : plus de nouvelle fonctionnalité. Tout ce qui reste à fusionner l’est maintenant. |
 | Dim. 25/10 | Passage à l’heure d’hiver. Rien à faire : les crons du déploiement couvrent minuit en été comme en hiver. |

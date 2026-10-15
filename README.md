@@ -79,7 +79,7 @@ Autres checklists : [docs/add-category.md](docs/add-category.md) (ajouter ou mod
 
 ## Contenu et mentions légales
 
-- **À faire avant le lancement : compléter `apps/web/src/content/legal.ts`** (éditeur, statut, adresse, directeur de la publication, contact). Chaque champ `null` s'affiche en rouge « À compléter » sur la page `#/legal`.
+- Mentions légales : les faits de l'éditeur sont dans `apps/web/src/content/legal.ts` (renseignés le 15/10/2026). Un champ `null` s'afficherait en rouge « À compléter » sur la page `#/legal` ; l'adresse et le téléphone de l'hébergeur restent à trancher (voir LAUNCH.md).
 - Les nouveautés se rédigent dans `apps/web/src/content/changelog.md` (Markdown restreint : titres, listes, **gras**, `code`, liens) ; elles s'affichent sur `#/changelog`.
 - La FAQ (`#/faq`) génère les définitions des catégories depuis le registre et les chiffres du score depuis `SCORING` : rien à recopier à la main.
 - Application installable (PWA) : seul le *shell* est mis en cache hors-ligne ; les grilles viennent toujours du réseau. `VITE_SITE_URL` (posé par le workflow de déploiement) donne l'adresse absolue des aperçus de lien.

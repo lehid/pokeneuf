@@ -142,6 +142,29 @@ describe('LegalPage', () => {
   });
 });
 
+describe('the real legal notices and the schedule FAQ', () => {
+  it('are complete: nothing is left "À compléter", and the publisher and contact are shown', () => {
+    expect(missingLegalFields(LEGAL)).toEqual([]);
+    render(<LegalPage />);
+    expect(screen.queryByTestId(/^legal-todo-/)).toBeNull();
+    const publisher = within(screen.getByTestId('legal-publisher'));
+    expect(publisher.getAllByText('Lehid')).toHaveLength(2); // publisher and director
+    expect(publisher.getByText('Particulier')).toBeTruthy();
+    expect(publisher.getByText('Paris, France')).toBeTruthy();
+    expect(publisher.getByText(LEGAL.contactEmail as string)).toBeTruthy();
+    expect(screen.getByTestId('legal-updated').textContent).toMatch(/Dernière mise à jour/);
+  });
+
+  it('explains when the grid changes and why a game counts only on its day', () => {
+    render(<FaqPage />);
+    const schedule = screen.getByTestId('faq-schedule').textContent ?? '';
+    expect(schedule).toContain('minuit, heure de Paris');
+    expect(schedule).toContain('archives');
+    expect(schedule).toContain('le jour de sa grille');
+    expect(schedule).toContain('très difficile');
+  });
+});
+
 describe('navigation', () => {
   const app = () =>
     render(

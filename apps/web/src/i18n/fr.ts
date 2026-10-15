@@ -243,6 +243,15 @@ export const fr = {
           'Il n’y a qu’une partie par grille\u00A0: pas de nouvel essai. Vous pouvez abandonner à tout moment, ou rejouer les grilles passées depuis les archives.',
         ],
       },
+      schedule: {
+        title: 'Quand change la grille, et pourquoi ces règles\u00A0?',
+        paragraphs: [
+          'La grille change chaque jour à minuit, heure de Paris, pour tout le monde au même moment, quel que soit votre fuseau horaire ou l’heure de votre appareil.',
+          'Il n’y a qu’une partie par grille et pas de rejeu\u00A0: c’est un rendez-vous quotidien, et tout le monde joue la même grille. Les grilles passées restent disponibles dans les archives, mais elles ne comptent ni dans les statistiques ni dans la série.',
+          'La difficulté varie selon le jour\u00A0: plus douce en début de semaine, plus relevée en fin de semaine, avec une grille « très difficile » le dimanche. Elle est affichée sur chaque grille. La toute première grille est volontairement facile.',
+          'La série et les statistiques ne comptent une partie que si elle se termine le jour de sa grille. C’est ce qui les rend comparables d’un jour à l’autre\u00A0: une grille commencée à 23 h 55 et finie après minuit passe en archive.',
+        ],
+      },
       categories: {
         title: 'Que veut dire chaque catégorie\u00A0?',
         intro: (count: number) =>
@@ -313,6 +322,7 @@ export const fr = {
   legal: {
     title: 'Mentions légales',
     todo: 'À compléter',
+    updated: (date: string) => `Dernière mise à jour\u00A0: ${date}.`,
     sections: {
       publisher: {
         title: 'Éditeur du site',
@@ -344,6 +354,14 @@ export const fr = {
           'Le site ne dépose aucun cookie, n’utilise aucun traceur ni aucune publicité, et ne vous demande aucun compte.',
           'Votre progression, vos statistiques et vos préférences sont enregistrées uniquement dans le stockage local de votre navigateur. Elles ne sont jamais envoyées à un serveur et vous pouvez les effacer à tout moment depuis les réglages de votre navigateur.',
           'Comme pour tout site web, l’hébergeur peut journaliser l’adresse IP des visites dans ses journaux techniques, selon sa propre politique de confidentialité.',
+          'Pour toute question sur vos données, ou pour exercer vos droits, écrivez à l’adresse de contact ci-dessus.',
+        ],
+      },
+      liability: {
+        title: 'Contenu et responsabilité',
+        paragraphs: [
+          'Les données sur les Pokémon viennent de sources publiques et de corrections manuelles\u00A0; malgré le soin apporté, une erreur est possible. Signalez-la depuis le jeu\u00A0: elle sera corrigée.',
+          'Le site est fourni tel quel, gratuitement, sans garantie de disponibilité.',
         ],
       },
     },

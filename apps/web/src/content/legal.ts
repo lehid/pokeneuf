@@ -1,24 +1,24 @@
 /**
- * Facts of the legal notices that only the owner of the site can provide.
- *
- * TODO(owner): replace every `null` below before the public launch (2026-11-01). A `null` shows a
- * visible "À compléter" marker on the page (`#/legal`), so nothing is published silently empty.
+ * Facts of the legal notices, given by the owner of the site (2026-10-15). A `null` would show a
+ * visible "À compléter" marker on the page (`#/legal`), so nothing is ever published silently empty.
  * French law (LCEN, art. 6): a private individual may stay anonymous towards the public if the
- * host holds their identity, but the notices must still say so; a professional must give the
- * full identity.
+ * host holds their identity; here the publisher chose to be named.
  */
 export const LEGAL = {
-  /** Name or pseudonym of the publisher, e.g. `'Jean Dupont'`. */
-  publisherName: null as string | null,
-  /** Legal status, e.g. `'Particulier'` or the name and number of the association. */
-  publisherStatus: null as string | null,
-  /** Postal address, or `'Adresse communiquée à l’hébergeur'` if the publisher stays anonymous. */
-  publisherAddress: null as string | null,
-  /** Director of the publication (often the publisher). */
-  publicationDirector: null as string | null,
-  /** A contact address that is read, e.g. `'contact@example.org'`. */
-  contactEmail: null as string | null,
+  /** Name or pseudonym of the publisher. */
+  publisherName: 'Lehid' as string | null,
+  /** Legal status. */
+  publisherStatus: 'Particulier' as string | null,
+  /** Postal address, as the publisher wants it shown. */
+  publisherAddress: 'Paris, France' as string | null,
+  /** Director of the publication (the publisher). */
+  publicationDirector: 'Lehid' as string | null,
+  /** The address that is read (a mailbox of its own, not a personal one). */
+  contactEmail: 'angulaire37.abbaye@icloud.com' as string | null,
 };
+
+/** Date of the last review of the legal notices (shown on the page). */
+export const LEGAL_UPDATED = '2026-10-15';
 
 export type LegalField = keyof typeof LEGAL;
 
