@@ -10,17 +10,26 @@ import { useMemo } from 'react';
 import { memberships, popularity } from './data';
 import { useGame } from './GameContext';
 
-/** Score and rarity of the current game, recomputed when it changes. */
+/**
+ * Score and rarity of the current game. The cells and tiers follow the data, but the TOTAL of a
+ * finished game is the one frozen when it ended: a data rebuild never changes a score already
+ * shown, shared or written to the history.
+ */
 export function useScore(): GameScore {
   const grid = useGame((s) => s.grid);
   const game = useGame((s) => s.game);
-  return useMemo(() => scoreGame(game, grid, memberships, popularity), [game, grid]);
+  const finalScore = useGame((s) => s.finalScore);
+  return useMemo(() => {
+    const computed = scoreGame(game, grid, memberships, popularity);
+    return finalScore === null ? computed : { ...computed, total: finalScore };
+  }, [game, grid, finalScore]);
 }
 
+/** The stats and the streak as of the real Paris date, even while an old grid is on screen. */
 export function useStats(): Stats {
-  const grid = useGame((s) => s.grid);
   const history = useGame((s) => s.history);
-  return useMemo(() => computeStats(history, grid.date), [history, grid.date]);
+  const today = useGame((s) => s.today());
+  return useMemo(() => computeStats(history, today), [history, today]);
 }
 
 /** How hard today's grid is: size of the cells, obscurity and mass of the answers. */

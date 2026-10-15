@@ -109,7 +109,7 @@ test.describe('difficulty of the day', () => {
       const badge = page.getByTestId('difficulty');
       await expect(badge).toBeVisible();
       await expect(badge).toContainText('Difficulté');
-      const label = (await badge.getAttribute('aria-label')) ?? '';
+      const label = (await badge.getByTestId('difficulty-text').textContent()) ?? '';
       expect(
         label.replace(/^Difficulté de la grille : /, '').replace(/ \(\d sur 5\)$/, ''),
       ).toMatch(name);
@@ -120,10 +120,10 @@ test.describe('difficulty of the day', () => {
     await page.clock.setFixedTime(new Date('2026-11-08T12:00:00+01:00'));
     await page.goto('./');
     await expect(page.getByTestId('difficulty')).toHaveAttribute('data-level', 'veryHard');
-    await expect(page.getByTestId('difficulty')).toHaveAttribute('aria-label', /5 sur 5/);
+    await expect(page.getByTestId('difficulty-text')).toHaveText(/5 sur 5/);
     await page.clock.setFixedTime(new Date('2026-11-03T12:00:00+01:00'));
     await page.goto('./');
     await expect(page.getByTestId('difficulty')).toHaveAttribute('data-level', 'easy');
-    await expect(page.getByTestId('difficulty')).toHaveAttribute('aria-label', /2 sur 5/);
+    await expect(page.getByTestId('difficulty-text')).toHaveText(/2 sur 5/);
   });
 });

@@ -15,7 +15,11 @@ function wrongFor(date: string, cell: number): Pokemon {
 async function play(page: Page, cell: number, name: string): Promise<void> {
   await page.getByTestId(`cell-${Math.floor(cell / 3)}-${cell % 3}`).click();
   await page.getByTestId('guess-input').fill(name);
+  // Wait for the suggestion that Enter will play, and for the sheet to be gone: the next click must
+  // not land while this sheet is still closing.
+  await expect(page.getByTestId('suggestions').locator('li').first()).toBeVisible();
   await page.getByTestId('guess-input').press('Enter');
+  await expect(page.getByTestId('guess-sheet')).toBeHidden();
 }
 
 /** Three wrong answers: the game is lost, with a score of 0. */

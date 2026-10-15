@@ -22,7 +22,11 @@ export function normalize(input: string): string {
     .trim();
 }
 
-const NATIONAL_NUMBER = /^#?(\d{1,3})$/;
+/**
+ * A national number as players write it, on the normalized query (where `no.` has become `no `):
+ * `25`, `025`, `0025`, `#025`, `n°25`, `nº 25`, `no 25`, `n25`.
+ */
+const NATIONAL_NUMBER = /^(?:#|n[°º]?|no)?\s*0*(\d{1,3})$/;
 
 export interface SearchOptions {
   /**

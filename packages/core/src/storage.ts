@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { MAX_ERRORS, MAX_SCORE, STORAGE_PREFIX } from './config';
 import { CELLS, type Grid } from './grid';
-import { cellCategories, type GameState } from './game';
+import { cellCategories, foundCount, type GameState } from './game';
 import type { Memberships } from './memberships';
 import { scoreGame, type Popularity } from './scoring';
-import type { GridDate } from './date';
+import { gridNumber, isValidGridDate, type GridDate } from './date';
 
 /**
  * Persistence formats (ROADMAP phase 4). Pure: this module parses and serializes strings; reading
@@ -26,7 +26,8 @@ const gameBase = {
   errors: z.number().int().min(0).max(MAX_ERRORS),
   status: z.enum(['playing', 'won', 'lost', 'abandoned']),
 };
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+/** `YYYY-MM-DD` that is a real day: `2026-00-01` has the shape and must not get through (M3). */
+const isoDate = z.string().refine(isValidGridDate, 'not a calendar date');
 
 /** Version 1 (phases 4-6): the game only. */
 const storedGameV1 = z.object({ version: z.literal(1), ...gameBase });
@@ -100,9 +101,15 @@ export function parseStoredGame(
 
   const placed = state.cells.filter((id): id is number => id !== null);
   if (new Set(placed).size !== placed.length) return null;
+  // A finished version 2 game is history: its score is frozen and the data may have moved on since
+  // (a rebuilt Pokédex, a changed category). Only a game still in progress, or one that predates
+  // the frozen score, has to be consistent with the data it will be played against.
+  const frozen = v2.success && state.status !== 'playing';
   for (const [cell, id] of state.cells.entries()) {
     if (id === null) continue;
+    // Even a frozen game must name Pokémon that exist: the board looks each one up.
     if (id < 1 || id > memberships.count) return null;
+    if (frozen) continue;
     const [row, col] = cellCategories(grid, cell);
     if (!memberships.isValid(id, row, col)) return null;
   }
@@ -179,33 +186,105 @@ export function parseSettings(raw: string | null): Settings {
  * One finished game, kept in `history` (today's grid only: archives never count, ROADMAP §3.5).
  * `score` is frozen at the end of the game, so later changes to the data never rewrite it.
  */
-const historyEntrySchema = z.object({
-  gridId: z.number().int(),
-  /** Paris date of the grid: the streak is computed from it. */
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  status: z.enum(['won', 'lost', 'abandoned']),
-  found: z.number().int().min(0).max(CELLS),
-  errors: z.number().int().min(0).max(MAX_ERRORS),
-  score: z.number().int().min(0).max(MAX_SCORE),
-});
+const historyEntrySchema = z
+  .object({
+    gridId: z.number().int(),
+    /** Paris date of the grid: the streak is computed from it. */
+    date: isoDate,
+    status: z.enum(['won', 'lost', 'abandoned']),
+    found: z.number().int().min(0).max(CELLS),
+    errors: z.number().int().min(0).max(MAX_ERRORS),
+    score: z.number().int().min(0).max(MAX_SCORE),
+  })
+  // The grid number is the date counted from the launch: an entry where they disagree was edited
+  // or corrupted, and would let one day count twice.
+  .refine(
+    (entry) => isValidGridDate(entry.date) && entry.gridId === gridNumber(entry.date),
+    'gridId does not match the date',
+  );
 export type HistoryEntry = z.infer<typeof historyEntrySchema>;
 
-const historySchema = z.object({
+const historyFileSchema = z.object({
   version: z.literal(HISTORY_STORAGE_VERSION),
-  entries: z.array(historyEntrySchema),
+  entries: z.array(z.unknown()),
 });
 
 /**
+ * The finished games saved, checked entry by entry: a bad entry is dropped, the good ones stay
+ * (one corrupt line must not wipe the whole history). At most one entry per grid and per date: if
+ * the file holds several, the first one is the game that was really played.
+ *
  * Migration: version 1 (phase 4) had no date and a placeholder score, and was written while the
  * game only had its demo grid. Those entries are not real games: they are dropped, not converted.
  */
 export function parseHistory(raw: string | null): HistoryEntry[] {
-  const parsed = historySchema.safeParse(parseJson(raw));
-  return parsed.success ? parsed.data.entries : [];
+  const file = historyFileSchema.safeParse(parseJson(raw));
+  if (!file.success) return [];
+  const kept: HistoryEntry[] = [];
+  const grids = new Set<number>();
+  const dates = new Set<GridDate>();
+  for (const candidate of file.data.entries) {
+    const entry = historyEntrySchema.safeParse(candidate);
+    if (!entry.success) continue;
+    if (grids.has(entry.data.gridId) || dates.has(entry.data.date)) continue;
+    grids.add(entry.data.gridId);
+    dates.add(entry.data.date);
+    kept.push(entry.data);
+  }
+  return kept;
 }
 
-/** Adds a finished game; one entry per grid (a later one replaces an earlier one). */
+/**
+ * Adds a finished game. One game per grid, and the first one wins: a finished game is never
+ * replaced (two tabs finishing the same grid: a win must not overwrite a loss that came first).
+ */
+export function mergeHistoryEntry(
+  entries: readonly HistoryEntry[],
+  entry: HistoryEntry,
+): HistoryEntry[] {
+  if (entries.some((e) => e.gridId === entry.gridId || e.date === entry.date)) return [...entries];
+  return [...entries, entry];
+}
+
 export function serializeHistory(entries: readonly HistoryEntry[], entry: HistoryEntry): string {
-  const kept = entries.filter((e) => e.gridId !== entry.gridId);
-  return JSON.stringify({ version: HISTORY_STORAGE_VERSION, entries: [...kept, entry] });
+  return JSON.stringify({
+    version: HISTORY_STORAGE_VERSION,
+    entries: mergeHistoryEntry(entries, entry),
+  });
+}
+
+/**
+ * Was this saved value written by a newer version of the game than the one that knows `known`?
+ * Then it must be left untouched: the page works in memory only, and a visit from the newer
+ * version later finds its data intact instead of overwritten by an older format.
+ */
+export function isFromNewerVersion(raw: string | null, known: number): boolean {
+  const json = parseJson(raw);
+  if (typeof json !== 'object' || json === null || !('version' in json)) return false;
+  return typeof json.version === 'number' && json.version > known;
+}
+
+/**
+ * Progress of a game: answers found plus errors made. Both only ever grow, so of two saves of the
+ * same game, the one with the higher number is the later one.
+ */
+export function gameProgress(state: GameState): number {
+  return foundCount(state) + state.errors;
+}
+
+/**
+ * Should a game in memory give way to the same game as saved by another tab? Yes when the saved
+ * one is over (a game finished anywhere is final) or has gone further. A game that is over in
+ * memory is never replaced, and equal progress keeps what is on screen.
+ */
+export function shouldAdoptSaved(current: GameState, saved: GameState): boolean {
+  if (saved.gridId !== current.gridId) return false;
+  if (current.status !== 'playing') return false;
+  if (saved.status !== 'playing') return true;
+  return gameProgress(saved) > gameProgress(current);
+}
+
+/** Is this a `localStorage` key that belongs to the game? (To clear everything it saved.) */
+export function isGameDataKey(key: string): boolean {
+  return key.startsWith(STORAGE_PREFIX);
 }

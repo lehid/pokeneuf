@@ -34,7 +34,24 @@ describe('currentStreak', () => {
       game('2026-11-02', 'lost', 60),
       game('2026-11-03', 'abandoned', 0),
     ];
-    expect(currentStreak(history, '2026-11-03')).toBe(2);
+    expect(currentStreak(history, '2026-11-02')).toBe(2);
+    expect(currentStreak(history, '2026-11-04')).toBe(0); // the abandoned 3rd broke the chain
+  });
+
+  it('drops to 0 as soon as today is abandoned, not tomorrow (showing 2 would lie)', () => {
+    const history = [
+      game('2026-11-01'),
+      game('2026-11-02'),
+      game('2026-11-03', 'abandoned', 0, 0, 0),
+    ];
+    expect(currentStreak(history, '2026-11-03')).toBe(0);
+    // Before the abandon, the same chain was alive at 2.
+    expect(currentStreak(history.slice(0, 2), '2026-11-03')).toBe(2);
+  });
+
+  it('is not hidden by an abandoned game of the past', () => {
+    const history = [game('2026-11-01', 'abandoned', 0, 0, 0), game('2026-11-02')];
+    expect(currentStreak(history, '2026-11-02')).toBe(1);
   });
 
   it('crosses month and year ends', () => {
