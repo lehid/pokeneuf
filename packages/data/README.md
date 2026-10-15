@@ -38,7 +38,7 @@ vérifié à la compilation comme identique à ces types.
    `data/manual/`.
 2. Ajoute le **golden fact** correspondant dans `src/golden-facts.ts`.
 3. `pnpm data:build`, puis `pnpm test`.
-4. Entrée de changelog (la skill `fix-data` automatisera ça en phase 9).
+4. Entrée de changelog si la correction est visible. Pas à pas complet : [docs/fix-data.md](../../docs/fix-data.md).
 
 ## Changer de version des sources
 
