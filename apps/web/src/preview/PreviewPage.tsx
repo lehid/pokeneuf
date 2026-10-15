@@ -20,6 +20,7 @@ import {
   type ReviewFilterKind,
 } from '@pokeneuf/core';
 import { useEffect, useId, useMemo, useState } from 'react';
+import { PageHeading } from '../components/PageHeading';
 import { RarityChip } from '../components/RarityChip';
 import { memberships, pokemonById, popularity } from '../data';
 import { formatNumber } from '../format';
@@ -407,7 +408,9 @@ export function PreviewPage({
       data-preview={PREVIEW_MARKER}
     >
       <header className="panel p-3">
-        <h1 className="title-pixel text-base sm:text-xl">{t.title}</h1>
+        <PageHeading as="h1" className="title-pixel text-base sm:text-xl">
+          {t.title}
+        </PageHeading>
         <p className="mt-2 text-xs font-bold text-lcd-danger" data-testid="dev-only">
           {t.devOnly}
         </p>

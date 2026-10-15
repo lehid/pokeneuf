@@ -20,6 +20,13 @@ describe('parseInline', () => {
     }
   });
 
+  it('refuses a backslash: browsers read it as a slash, so /\\evil.test is //evil.test', () => {
+    const hrefs = ['/\\evil.test', '\\\\evil.test', './\\x', 'https://a.test\\@evil.test', '#/\\x'];
+    for (const href of hrefs) {
+      expect(parseInline(`[click](${href})`), href).toEqual([{ type: 'text', text: 'click' }]);
+    }
+  });
+
   it('accepts web, mail and site links', () => {
     for (const href of ['https://a.test/x', 'http://a.test', 'mailto:a@b.test', '/x', './x']) {
       expect(parseInline(`[l](${href})`)).toEqual([{ type: 'link', text: 'l', href }]);
@@ -61,6 +68,37 @@ describe('parseMarkdown', () => {
           ],
         ],
       },
+    ]);
+  });
+
+  it('cuts the closing hashes of a heading, and only those after a space', () => {
+    const first = (line: string) => parseMarkdown(line)[0];
+    expect(first('## Titre ##')).toEqual({
+      type: 'heading',
+      level: 2,
+      children: [{ type: 'text', text: 'Titre' }],
+    });
+    expect(first('# C#')).toEqual({
+      type: 'heading',
+      level: 1,
+      children: [{ type: 'text', text: 'C#' }],
+    });
+    expect(first('####  quatre')?.type).toBe('paragraph');
+    expect(first('#   ')?.type).toBe('paragraph'); // a hash and nothing to title
+  });
+
+  it('reads a heading in linear time, whatever the run of spaces (was 4 s for 2000 spaces)', () => {
+    const lines = [
+      `# ${' '.repeat(20_000)}x${' '.repeat(20_000)}`,
+      `#${' '.repeat(20_000)}`,
+      `# a${' '.repeat(20_000)}#`,
+      `## ${'#'.repeat(20_000)}`,
+    ];
+    const start = performance.now();
+    for (const line of lines) parseMarkdown(line);
+    expect(performance.now() - start).toBeLessThan(250);
+    expect(parseMarkdown(`# ${' '.repeat(5000)}x${' '.repeat(5000)}`)).toEqual([
+      { type: 'heading', level: 1, children: [{ type: 'text', text: 'x' }] },
     ]);
   });
 

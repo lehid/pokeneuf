@@ -1,4 +1,4 @@
-import type { GridDate } from './date';
+import { isValidGridDate, type GridDate } from './date';
 
 /**
  * The pages of the app. The site is static (GitHub Pages: no server to answer `/archives`), so a
@@ -20,10 +20,15 @@ function isInfoPage(path: string | undefined): path is `#/${InfoPage}` {
 
 const ARCHIVE_DATE = /^#\/archive\/(\d{4}-\d{2}-\d{2})$/;
 
-/** The route of a `location.hash`. Anything unknown is the page of the day. */
+/**
+ * The route of a `location.hash`. Anything unknown is the page of the day, and so is a date that
+ * only has the shape of one (`#/archive/2026-11-99`): it can never name a grid.
+ */
 export function parseRoute(hash: string): Route {
   const archive = ARCHIVE_DATE.exec(hash);
-  if (archive?.[1] !== undefined) return { kind: 'archive', date: archive[1] };
+  if (archive?.[1] !== undefined && isValidGridDate(archive[1])) {
+    return { kind: 'archive', date: archive[1] };
+  }
 
   const [path, query = ''] = hash.split('?', 2);
   if (path === '#/archives') {

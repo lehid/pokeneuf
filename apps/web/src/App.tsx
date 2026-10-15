@@ -3,15 +3,18 @@ import {
   archiveDates,
   gridDateFor,
   hasNewGrid,
+  isGameDataKey,
   isOver,
   LAUNCH_DATE,
   livesLeft,
   MAX_ERRORS,
   MAX_SCORE,
+  msUntilNextGridDate,
   parsePreviewRoute,
   parseRoute,
   RARITY_TIERS,
   type GridDate,
+  type Route,
 } from '@pokeneuf/core';
 import {
   lazy,
@@ -32,6 +35,7 @@ import {
   SolutionsDialog,
   StatsDialog,
 } from './components/Dialogs';
+import { PAGE_HEADING_ATTRIBUTE, PageHeading } from './components/PageHeading';
 import { Toast } from './components/Toast';
 import { RarityChip } from './components/RarityChip';
 import { useScore, useStats } from './hooks';
@@ -46,6 +50,7 @@ import { loadGrid, type GridLoad } from './gridLoader';
 import { GameStoreContext, useGame } from './GameContext';
 import { fr } from './i18n/fr';
 import { browserStorage, demoStorage, type KeyValueStorage } from './storage';
+import { requestRouteFocus, takeRouteFocus } from './routeFocus';
 import { createGameStore } from './store';
 
 function Lives() {
@@ -119,7 +124,9 @@ function Game({ kind }: { kind: GameKind }) {
     <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col gap-4 px-3 py-4 sm:max-w-2xl sm:px-6 sm:py-8">
       <header className="panel flex flex-wrap items-center justify-between gap-3 p-3">
         <div>
-          <h1 className="title-pixel text-base sm:text-xl">{APP_NAME}</h1>
+          <PageHeading as="h1" className="title-pixel text-base sm:text-xl">
+            {APP_NAME}
+          </PageHeading>
           <p className="mt-1 text-xs text-lcd-soft">
             {fr.gridTitle(grid.id)} ·{' '}
             {kind === 'demo'
@@ -204,7 +211,7 @@ function Game({ kind }: { kind: GameKind }) {
       {dialog === 'end' && <EndDialog />}
       {dialog === 'stats' && <StatsDialog />}
       <SolutionsDialog />
-      <Toast />
+      <Toast owner={null} />
     </main>
   );
 }
@@ -213,6 +220,8 @@ const systemNow = () => new Date();
 
 const RETRY_EVERY_MS = 60_000;
 const RETRY_LIMIT = 60;
+/** A timer may fire a few milliseconds early: look just after midnight, not just before. */
+const MIDNIGHT_MARGIN_MS = 250;
 
 export interface AppProps {
   storage?: KeyValueStorage;
@@ -269,22 +278,49 @@ function useDailyGrid(
     return () => window.clearInterval(timer);
   }, [enabled, waiting, date]);
 
-  const ready = load?.kind === 'ready';
+  // Read by the listeners below through a ref: a listener registered while the grid was still
+  // loading must not keep believing there is nothing on screen to lose.
+  const readyRef = useRef(false);
+  readyRef.current = load?.kind === 'ready';
+  // "Plus tard" is remembered, in memory, for the date it was said about: the dialog does not come
+  // back at every focus, only for the next new day.
+  const dismissed = useRef<GridDate | null>(null);
+
   useEffect(() => {
     if (!enabled) return;
     const check = () => {
-      if (document.visibilityState !== 'visible' || !hasNewGrid(date, now())) return;
+      if (!hasNewGrid(date, now())) return;
+      const current = gridDateFor(now());
       // A game may be in progress: offer. With nothing on screen to lose, just move on.
-      if (ready) setOffer(true);
-      else setDate(gridDateFor(now()));
+      if (readyRef.current) {
+        if (dismissed.current !== current) setOffer(true);
+      } else setDate(current);
     };
-    document.addEventListener('visibilitychange', check);
-    window.addEventListener('focus', check);
+    const checkWhenVisible = () => {
+      if (document.visibilityState === 'visible') check();
+    };
+    document.addEventListener('visibilitychange', checkWhenVisible);
+    window.addEventListener('focus', checkWhenVisible);
+
+    // A tab that stays visible past Paris midnight gets no focus event: a timer to the next
+    // midnight makes sure a game begun at 23:55 does not silently turn into an archive at 00:00.
+    let timer: number | undefined;
+    const arm = () => {
+      timer = window.setTimeout(
+        () => {
+          check();
+          arm();
+        },
+        msUntilNextGridDate(now()) + MIDNIGHT_MARGIN_MS,
+      );
+    };
+    arm();
     return () => {
-      document.removeEventListener('visibilitychange', check);
-      window.removeEventListener('focus', check);
+      document.removeEventListener('visibilitychange', checkWhenVisible);
+      window.removeEventListener('focus', checkWhenVisible);
+      window.clearTimeout(timer);
     };
-  }, [date, ready, now, enabled]);
+  }, [date, now, enabled]);
 
   return {
     load,
@@ -294,7 +330,10 @@ function useDailyGrid(
       setOffer(false);
       setDate(gridDateFor(now()));
     }, [now]),
-    later: () => setOffer(false),
+    later: () => {
+      dismissed.current = gridDateFor(now());
+      setOffer(false);
+    },
   };
 }
 
@@ -318,7 +357,7 @@ function DailyApp({
   if (load.kind === 'missing') {
     return (
       <Shell>
-        <Notice title={fr.noGridTitle}>
+        <Notice title={fr.noGridTitle} page>
           <p data-testid="no-grid">
             {load.beforeLaunch ? fr.notLaunched(fr.launchDate(LAUNCH_DATE)) : fr.noGrid}
           </p>
@@ -335,7 +374,7 @@ function DailyApp({
   if (load.kind === 'error') {
     return (
       <Shell>
-        <Notice title={fr.noGridTitle}>
+        <Notice title={fr.noGridTitle} page>
           <p data-testid="load-error">{fr.loadError}</p>
           <button type="button" className="btn btn-primary" onClick={retry}>
             {fr.retry}
@@ -394,7 +433,7 @@ function ArchiveGame({
   if (!allowed || load?.kind === 'missing') {
     return (
       <Shell>
-        <Notice title={fr.gridUnavailableTitle}>
+        <Notice title={fr.gridUnavailableTitle} page>
           <p data-testid="grid-unavailable">{fr.gridUnavailable}</p>
           <a className="btn btn-primary" href="#/archives">
             {fr.backToArchives}
@@ -415,7 +454,7 @@ function ArchiveGame({
   if (load.kind === 'error') {
     return (
       <Shell>
-        <Notice title={fr.gridUnavailableTitle}>
+        <Notice title={fr.gridUnavailableTitle} page>
           <p data-testid="load-error">{fr.loadError}</p>
           <button
             type="button"
@@ -448,6 +487,14 @@ export function GameSession({
     () => createGameStore({ grid, memberships, popularity, storage, now }),
     [grid, storage, now],
   );
+  // Another tab of the same browser plays the same grid: when it saves, bring this one up to date.
+  useEffect(() => {
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === null || isGameDataKey(event.key)) store.getState().syncFromStorage();
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [store]);
   return (
     <GameStoreContext.Provider value={store}>
       <Game kind={kind} />
@@ -463,15 +510,30 @@ export function GameSession({
  */
 const PreviewRoute = import.meta.env.DEV ? lazy(() => import('./preview/PreviewPage')) : null;
 
-/** The URL hash; follows the back button and the links. */
-function useHash(): string {
+/** The URL hash and its route; they follow the back button and the links. */
+function useRoute(): { hash: string; route: Route } {
   const [hash, setHash] = useState(() => window.location.hash);
+  const route = useMemo(() => parseRoute(hash), [hash]);
   useEffect(() => {
-    const update = () => setHash(window.location.hash);
+    const update = () => {
+      // A new page starts at the top, with the focus on its heading (not on the first load).
+      requestRouteFocus();
+      window.scrollTo(0, 0);
+      setHash(window.location.hash);
+    };
     window.addEventListener('hashchange', update);
     return () => window.removeEventListener('hashchange', update);
   }, []);
-  return hash;
+  // A page that stays mounted across the change (page 2 of the archives) never mounts a new
+  // heading: focus the one it has. If the heading is not there yet (the grid is loading), the
+  // request stays pending for the heading that appears.
+  useEffect(() => {
+    if (!takeRouteFocus()) return;
+    const heading = document.querySelector<HTMLElement>(`[${PAGE_HEADING_ATTRIBUTE}]`);
+    if (heading) heading.focus({ preventScroll: true });
+    else requestRouteFocus();
+  }, [route]);
+  return { hash, route };
 }
 
 export function App({
@@ -482,8 +544,7 @@ export function App({
   demo = new URLSearchParams(window.location.search).has('demo'),
 }: AppProps) {
   const demoStore = useMemo(() => demoStorage(storage), [storage]);
-  const hash = useHash();
-  const route = useMemo(() => parseRoute(hash), [hash]);
+  const { hash, route } = useRoute();
   const preview = PreviewRoute ? parsePreviewRoute(hash) : null;
   if (PreviewRoute && preview) {
     return (
@@ -509,7 +570,8 @@ export function App({
   if (route.kind === 'faq') return <FaqPage />;
   if (route.kind === 'changelog') return <ChangelogPage />;
   if (route.kind === 'legal') return <LegalPage />;
-  if (demo) return <GameSession grid={demoGrid} storage={demoStore} now={now} kind="demo" />;
+  // The info pages and the archives win over the demo: the footer links of the demo grid lead to
+  // them, and `?demo` stays in the URL, so the way back (`#/`) lands on the demo again.
   if (route.kind === 'archives') {
     return (
       <ArchivesPage
@@ -533,5 +595,6 @@ export function App({
       />
     );
   }
+  if (demo) return <GameSession grid={demoGrid} storage={demoStore} now={now} kind="demo" />;
   return <DailyApp storage={storage} now={now} baseUrl={baseUrl} fetchImpl={fetchImpl} />;
 }

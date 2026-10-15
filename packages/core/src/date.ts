@@ -22,15 +22,21 @@ export function gridDateFor(now: Date): GridDate {
   return parisFormatter.format(now);
 }
 
-function toUtcDay(date: GridDate): number {
-  if (!ISO_DATE.test(date)) {
-    throw new Error(`Invalid grid date: ${date}`);
-  }
+/**
+ * Is this a real calendar date, written `YYYY-MM-DD`? The shape alone is not enough ("2026-00-01",
+ * "2026-11-99" have it): the date must survive a round trip through the real date arithmetic.
+ */
+export function isValidGridDate(date: string): boolean {
+  if (!ISO_DATE.test(date)) return false;
   const ms = Date.parse(`${date}T00:00:00Z`);
-  if (Number.isNaN(ms)) {
+  return !Number.isNaN(ms) && new Date(ms).toISOString().slice(0, 10) === date;
+}
+
+function toUtcDay(date: GridDate): number {
+  if (!isValidGridDate(date)) {
     throw new Error(`Invalid grid date: ${date}`);
   }
-  return Math.round(ms / DAY_MS);
+  return Math.round(Date.parse(`${date}T00:00:00Z`) / DAY_MS);
 }
 
 /** Number of calendar days from `from` to `to` (can be negative). */
@@ -51,6 +57,25 @@ export function addDays(date: GridDate, days: number): GridDate {
 /** Has a new grid date started since `loadedDate` was loaded? (The tab stayed open past Paris midnight.) */
 export function hasNewGrid(loadedDate: GridDate, now: Date): boolean {
   return gridDateFor(now) !== loadedDate;
+}
+
+/**
+ * Milliseconds from `now` until the grid date changes (the next midnight in Paris). Found by
+ * searching the instant itself rather than adding "24 hours", so it stays right on the two days a
+ * year when the clocks change and the day lasts 23 or 25 hours.
+ */
+export function msUntilNextGridDate(now: Date): number {
+  const today = gridDateFor(now);
+  const start = now.getTime();
+  // The longest Paris day is 25 hours: the date has certainly changed 26 hours from now.
+  let low = 0; // still `today` at start + low
+  let high = 26 * 3_600_000; // already the next date at start + high
+  while (high - low > 1) {
+    const middle = Math.floor((low + high) / 2);
+    if (gridDateFor(new Date(start + middle)) === today) low = middle;
+    else high = middle;
+  }
+  return high;
 }
 
 /** Is there no grid yet for this date, because the game has not launched? */

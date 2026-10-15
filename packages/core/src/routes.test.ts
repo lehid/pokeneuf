@@ -35,6 +35,10 @@ describe('parseRoute', () => {
       '#/archive/demain',
       '#/archive/2026-11-05/x',
       '#archives',
+      // Shaped like a date, not a day of the calendar: no grid can be named by it (M3).
+      '#/archive/2026-11-99',
+      '#/archive/2026-00-01',
+      '#/archive/2027-02-29',
     ]) {
       expect(parseRoute(hash), hash).toEqual({ kind: 'today' });
     }

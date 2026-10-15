@@ -7,21 +7,37 @@ const grid = gridOn(DAY);
 const solution = findSolution(grid, memberships) ?? [];
 const cellId = (cell: number): string => `cell-${Math.floor(cell / 3)}-${cell % 3}`;
 
-function wrongFor(cell: number): Pokemon {
-  const ok = new Set(solutionsFor(grid, memberships, cell));
+/** A Pokémon that fits neither the row nor the column of the cell, in the grid of that day. */
+function wrongFor(day: string, cell: number): Pokemon {
+  const ok = new Set(solutionsFor(gridOn(day), memberships, cell));
   const found = [1, 25, 133, 150, 151, 249].map(pokemonById).find((p) => !ok.has(p.id));
   if (!found) throw new Error('no wrong Pokémon');
   return found;
 }
 
+/**
+ * Plays one answer and waits until the game has taken it into account: the suggestion it will play
+ * is on screen before Enter, and the sheet is gone before the caller moves on. Clicking the next
+ * cell while the previous sheet is still closing (or pressing Enter before the suggestions caught
+ * up with the typed text) is what made the longer scenarios below fail now and then.
+ */
 async function play(page: Page, cell: number, name: string): Promise<void> {
   await page.getByTestId(cellId(cell)).click();
-  await page.getByTestId('guess-input').fill(name);
-  await page.getByTestId('guess-input').press('Enter');
+  const input = page.getByTestId('guess-input');
+  await input.fill(name);
+  await expect(page.getByTestId('suggestions').locator('li').first()).toBeVisible();
+  await input.press('Enter');
+  await expect(page.getByTestId('guess-sheet')).toBeHidden();
 }
 
-async function lose(page: Page): Promise<void> {
-  for (let i = 0; i < 3; i++) await play(page, 0, wrongFor(0).nameFr);
+/** Three wrong answers in a row, each one checked on the lives before the next click. */
+async function lose(page: Page, day = DAY): Promise<void> {
+  const wrong = wrongFor(day, 0).nameFr;
+  for (let lives = 3; lives > 0; lives--) {
+    await expect(page.getByTestId('lives')).toHaveAttribute('data-left', String(lives));
+    await play(page, 0, wrong);
+  }
+  await expect(page.getByTestId('lives')).toHaveAttribute('data-left', '0');
   await expect(page.getByTestId('end-dialog')).toBeVisible();
 }
 
@@ -86,7 +102,7 @@ test('sharing copies a spoiler-free text and says so', async ({ page, context, b
   expect(lines[0]).toMatch(/^PokéNeuf #5 — 0\/900 🔥 1$/);
   expect(lines.slice(1, 4)).toEqual(['❌❌❌', '❌❌❌', '❌❌❌']);
   expect(lines[4]).toMatch(/^http/);
-  expect(text).not.toMatch(new RegExp(pokemonById(wrongFor(0).id).nameFr, 'i'));
+  expect(text).not.toMatch(new RegExp(pokemonById(wrongFor(DAY, 0).id).nameFr, 'i'));
 });
 
 test('the streak and the stats grow day after day, and an empty day breaks the streak', async ({
@@ -99,7 +115,7 @@ test('the streak and the stats grow day after day, and an empty day breaks the s
   await page.goto('./');
   await expect(page.getByText('Grille n° 6')).toBeVisible();
   await expect(page.getByTestId('streak')).toContainText('1 jour');
-  await lose(page);
+  await lose(page, '2026-11-06');
   await expect(page.getByTestId('streak')).toContainText('2 jours');
 
   await page.getByTestId('open-stats-end').click();
