@@ -50,6 +50,35 @@ Réglage unique : *Settings › Pages › Source : GitHub Actions*.
   renomme ou supprime une grille datée d'aujourd'hui ou avant. Pour que ce soit bloquant, l'étape
   *Published grids are untouched* doit être une vérification requise (protection de branche).
 
+## Signalements d'erreurs de données
+
+Le jeu propose « Signaler une erreur » dans la définition d'une catégorie, dans la liste des réponses
+d'une case et dans la FAQ. C'est un simple lien vers le formulaire d'issue GitHub
+`.github/ISSUE_TEMPLATE/erreur-donnee.yml`, prérempli avec la grille, la case et le Pokémon : le site
+n'envoie rien, ne contient aucun traceur, et la personne décide sur GitHub d'envoyer ou non. Le
+formulaire pose le label `data-error` (à créer une fois dans *Issues › Labels* s'il n'existe pas).
+
+**Traiter une issue `data-error`** (pas à pas : [docs/fix-data.md](docs/fix-data.md)) :
+
+1. Vérifier dans une source indépendante (les conventions du jeu, comme les types actuels et les
+   évolutions relatives à la Gén 1–4, ne sont pas des erreurs).
+2. Corriger dans `packages/data/data/overrides.json` ou `packages/data/data/manual/*.json` (jamais
+   dans `dist/`), **et** ajouter le golden fact dans `packages/data/src/golden-facts.ts`.
+3. `pnpm data:build`, puis `pnpm lint && pnpm typecheck && pnpm test`, puis `pnpm grids:report`.
+4. PR avec `Closes #N` ; entrée de changelog si la correction se voit.
+
+**Grilles déjà publiées.** Une grille datée d'aujourd'hui ou avant ne change jamais (CLAUDE.md,
+`pnpm grids:immutable`) : on ne régénère pas, on ne modifie pas, on n'utilise pas `--allow-past`. Son
+fichier ne contient que des ids de catégories, donc la correction se répercute sur les réponses
+acceptées (archives comprises) mais jamais sur la grille elle-même. `grids:report` ne tolère que des
+avertissements de dérive de taille ; s'il échoue (case publiée sous 3 réponses, moins de 9 Pokémon
+possibles), la correction n'est pas fusionnée telle quelle (voir [docs/fix-data.md](docs/fix-data.md)).
+**Grilles à venir.** Si une correction change sensiblement leurs réponses, les régénérer avec
+`pnpm grids:generate --from <après-demain> --days N --force`, uniquement pour des dates > aujourd'hui
+(demain est déjà en ligne), jusqu'à la fin du stock, puis `pnpm grids:report`.
+
+Autres checklists : [docs/add-category.md](docs/add-category.md) (ajouter ou modifier une catégorie).
+
 ## Contenu et mentions légales
 
 - **À faire avant le lancement : compléter `apps/web/src/content/legal.ts`** (éditeur, statut, adresse, directeur de la publication, contact). Chaque champ `null` s'affiche en rouge « À compléter » sur la page `#/legal`.

@@ -3,25 +3,25 @@
   "id": 19,
   "date": "2026-11-19",
   "rows": [
-    "form-mega",
-    "type-ground",
+    "status-starter",
+    "stat-total-500",
     "type-fire"
   ],
   "cols": [
-    "color-yellow",
-    "stat-speed-100",
-    "size-height-2m"
+    "color-brown",
+    "type-fighting",
+    "name-double-letter"
   ],
   "cellSizes": [
+    3,
     4,
-    18,
+    10,
     12,
-    3,
-    3,
+    7,
+    21,
     9,
-    8,
-    6,
-    3
+    4,
+    5
   ],
-  "difficulty": 79
+  "difficulty": 74
 }

@@ -19,6 +19,7 @@ import { FamilyIcon } from './FamilyIcon';
 import { Markdown } from './Markdown';
 import { PageHeading } from './PageHeading';
 import { RarityChip } from './RarityChip';
+import { ReportLink } from './ReportLink';
 import { Shell } from './Shell';
 
 /** Names the page in the tab and in the history; the game's own title comes back when it closes. */
@@ -171,6 +172,10 @@ export function FaqPage() {
         </Section>
         <Section id="data" title={s.data.title}>
           <Paragraphs items={s.data.paragraphs} />
+          <p>
+            <ReportLink testId="report-faq" context={{ kind: 'other' }} />
+          </p>
+          <p className="text-sm text-lcd-soft">{fr.report.faqNote}</p>
         </Section>
         <Section id="generations" title={s.generations.title}>
           <p>{s.generations.text(pokedex.meta.count)}</p>

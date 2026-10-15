@@ -18,6 +18,7 @@ import { memberships, pokemonById, popularity } from '../data';
 import { useScore, useStats } from '../hooks';
 import { browserShareEnv, shareResult } from '../share';
 import { RarityChip } from './RarityChip';
+import { ReportLink } from './ReportLink';
 import { formatNumber } from '../format';
 import { useGame } from '../GameContext';
 import { fr } from '../i18n/fr';
@@ -304,6 +305,20 @@ export function SolutionsDialog() {
       <button type="button" className="btn btn-primary w-full" onClick={closeSolutions}>
         {fr.close}
       </button>
+      <p className="mt-2 text-center text-sm">
+        <ReportLink
+          testId="report-answer"
+          context={{
+            kind: 'answer',
+            gridId: grid.id,
+            gridDate: grid.date,
+            row: Math.floor(cell / 3),
+            col: cell % 3,
+            rowCategoryId: grid.rows[Math.floor(cell / 3)] ?? '',
+            colCategoryId: grid.cols[cell % 3] ?? '',
+          }}
+        />
+      </p>
     </Modal>
   );
 }

@@ -13,7 +13,14 @@ import {
 } from '@pokeneuf/core';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { loadConfig, type GeneratorConfig } from './config';
-import { createGenerator, dateRange, GenerationError, seedFromDate, weekdayOf } from './generate';
+import {
+  acceptedLevels,
+  createGenerator,
+  dateRange,
+  GenerationError,
+  seedFromDate,
+  weekdayOf,
+} from './generate';
 import { cooldownFindings } from './report';
 import { realWorld } from './test-world';
 
@@ -104,7 +111,7 @@ describe(`${DAYS} consecutive grids on the real data`, () => {
 
   it('follow the difficulty levels accepted on their weekday', () => {
     for (const g of grids) {
-      const accepted = config.weekdayLevels[weekdayOf(g.date)];
+      const accepted = acceptedLevels(config, g.date);
       if (!accepted) continue;
       const { level } = gridDifficulty(g, memberships, popularity);
       expect(accepted, `${g.date} (${weekdayOf(g.date)}) is ${level}`).toContain(level);
@@ -277,5 +284,53 @@ describe('weekdayOf', () => {
     expect(weekdayOf('2026-11-02')).toBe('mon');
     expect(weekdayOf('2026-10-25')).toBe('sun'); // the day the clocks change in Paris
     expect(weekdayOf('2028-02-29')).toBe('tue');
+  });
+});
+
+describe('a day with its own rules', () => {
+  const pin: { rows: [string, string, string]; cols: [string, string, string] } = {
+    rows: ['type-grass', 'type-flying', 'color-red'],
+    cols: ['gen-1', 'gen-3', 'evo-base'],
+  };
+  const sunday = '2026-11-01';
+
+  it('takes the levels of its date over the ones of its weekday', () => {
+    expect(weekdayOf(sunday)).toBe('sun');
+    expect(acceptedLevels({ ...config, dateLevels: {} }, sunday)).toEqual(['veryHard']);
+    expect(acceptedLevels({ ...config, dateLevels: { [sunday]: ['easy'] } }, sunday)).toEqual([
+      'easy',
+    ]);
+    expect(acceptedLevels({ ...config, dateLevels: { [sunday]: ['easy'] } }, '2026-11-08')).toEqual(
+      ['veryHard'],
+    );
+  });
+
+  it('plays a pinned grid as it is, whatever the history and the weekday', () => {
+    const pinned = createGenerator({
+      memberships,
+      popularity,
+      config: { ...config, pinnedGrids: { [sunday]: pin } },
+    });
+    const { grid } = pinned({ date: sunday, history: [] });
+    expect(grid.rows).toEqual(pin.rows);
+    expect(grid.cols).toEqual(pin.cols);
+    expect(checkGrid(grid, memberships)).toEqual([]);
+    expect(Math.min(...grid.cellSizes)).toBeGreaterThanOrEqual(GRID_RULES.minAnswers);
+    expect(pinned({ date: sunday, history: [] }).grid).toEqual(grid);
+  });
+
+  it('refuses a pinned grid that is not valid, or that uses an unknown category', () => {
+    const bad = (rows: [string, string, string]) =>
+      createGenerator({
+        memberships,
+        popularity,
+        config: { ...config, pinnedGrids: { [sunday]: { rows, cols: pin.cols } } },
+      });
+    expect(() =>
+      bad(['type-grass', 'type-grass', 'color-red'])({ date: sunday, history: [] }),
+    ).toThrow(/not valid/);
+    expect(() => bad(['type-grass', 'nope', 'color-red'])({ date: sunday, history: [] })).toThrow(
+      /unknown category/,
+    );
   });
 });

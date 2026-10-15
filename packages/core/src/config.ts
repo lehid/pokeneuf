@@ -18,3 +18,7 @@ export const MAX_ERRORS = 3;
 
 /** Max score per game. */
 export const MAX_SCORE = 900;
+
+/** Public repository: source code and issue tracker (the contact channel that needs no address). */
+export const REPO_URL = 'https://github.com/lehid/pokeneuf';
+export const ISSUES_URL = `${REPO_URL}/issues`;

@@ -3,25 +3,25 @@
   "id": 13,
   "date": "2026-11-13",
   "rows": [
-    "type-ice",
-    "color-yellow",
-    "size-height-2m"
+    "status-starter",
+    "evo-trade",
+    "evo-stone"
   ],
   "cols": [
-    "stat-total-500",
-    "evo-gen4",
-    "evo-base"
+    "type-dual",
+    "type-water",
+    "color-blue"
   ],
   "cellSizes": [
-    8,
-    5,
+    12,
+    12,
+    12,
     6,
-    14,
+    5,
     3,
-    13,
-    36,
-    10,
+    11,
+    4,
     3
   ],
-  "difficulty": 70
+  "difficulty": 76
 }
