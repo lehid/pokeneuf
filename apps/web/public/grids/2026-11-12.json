@@ -3,25 +3,25 @@
   "id": 12,
   "date": "2026-11-12",
   "rows": [
-    "type-water",
-    "type-bug",
-    "form-mega"
+    "status-legendary",
+    "stat-total-500",
+    "evo-stage-3"
   ],
   "cols": [
-    "evo-none",
-    "color-green",
-    "color-red"
+    "type-steel",
+    "type-flying",
+    "name-starts-c"
   ],
   "cellSizes": [
-    10,
-    4,
-    9,
-    5,
-    8,
-    10,
-    14,
+    3,
     6,
-    6
+    4,
+    13,
+    17,
+    11,
+    4,
+    10,
+    3
   ],
-  "difficulty": 72
+  "difficulty": 76
 }

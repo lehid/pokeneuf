@@ -3,25 +3,25 @@
   "id": 9,
   "date": "2026-11-09",
   "rows": [
-    "stat-total-300",
-    "status-legendary",
-    "type-psychic"
+    "evo-final",
+    "gen-2",
+    "type-mono"
   ],
   "cols": [
-    "gen-2",
-    "type-flying",
-    "shape-upright"
+    "type-normal",
+    "name-has-ou",
+    "color-brown"
   ],
   "cellSizes": [
-    21,
+    23,
     10,
-    27,
-    5,
-    6,
+    30,
+    15,
     10,
-    10,
-    3,
-    28
+    12,
+    49,
+    25,
+    48
   ],
-  "difficulty": 62
+  "difficulty": 41
 }

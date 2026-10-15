@@ -3,25 +3,25 @@
   "id": 27,
   "date": "2026-11-27",
   "rows": [
-    "evo-middle",
-    "evo-base",
-    "stat-total-500"
-  ],
-  "cols": [
-    "color-red",
-    "type-electric",
+    "stat-speed-100",
+    "shape-upright",
     "type-rock"
   ],
-  "cellSizes": [
-    4,
-    5,
-    4,
-    15,
-    8,
-    13,
-    11,
-    7,
-    7
+  "cols": [
+    "color-brown",
+    "evo-trade",
+    "type-ground"
   ],
-  "difficulty": 72
+  "cellSizes": [
+    13,
+    3,
+    3,
+    31,
+    8,
+    18,
+    8,
+    3,
+    9
+  ],
+  "difficulty": 71
 }

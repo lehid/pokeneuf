@@ -23,7 +23,7 @@ import {
   type Popularity,
 } from '@pokeneuf/core';
 import { WEEKDAYS, type GeneratorConfig } from './config';
-import { weekdayOf } from './generate';
+import { acceptedLevels, weekdayOf } from './generate';
 import { buildIndex, type GridIndex } from './files';
 
 export interface CooldownFinding {
@@ -259,10 +259,12 @@ export function analyzeGrids(
         (level) => ofDay.filter((g) => levels.get(g.date) === level).length,
       );
       const accepted = config.weekdayLevels[day];
+      // A date with its own entry (`dateLevels`) is judged by it, not by its weekday.
       const outsideOf = (list: readonly Grid[]) =>
-        accepted
-          ? list.filter((g) => !accepted.includes(levels.get(g.date) as DifficultyLevel)).length
-          : 0;
+        list.filter((g) => {
+          const own = acceptedLevels(config, g.date);
+          return own !== undefined && !own.includes(levels.get(g.date) as DifficultyLevel);
+        }).length;
       for (const [list, into] of [
         [ofDay.filter((g) => isFrozen(g.date)), warnings],
         [ofDay.filter((g) => !isFrozen(g.date)), problems],

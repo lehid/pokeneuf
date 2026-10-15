@@ -3,25 +3,25 @@
   "id": 20,
   "date": "2026-11-20",
   "rows": [
-    "color-red",
-    "evo-base",
-    "stat-total-500"
+    "size-height-2m",
+    "type-ice",
+    "color-purple"
   ],
   "cols": [
-    "name-has-ou",
-    "type-fighting",
-    "type-flying"
+    "stat-speed-100",
+    "type-water",
+    "evo-base"
   ],
   "cellSizes": [
+    9,
+    11,
     3,
     3,
     6,
-    21,
-    7,
-    19,
-    4,
+    6,
+    9,
     7,
     17
   ],
-  "difficulty": 72
+  "difficulty": 75
 }
