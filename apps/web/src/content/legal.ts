@@ -22,9 +22,8 @@ export const LEGAL = {
 
 export type LegalField = keyof typeof LEGAL;
 
-/** Public repository: source code and issue tracker (the contact channel that needs no address). */
-export const REPO_URL = 'https://github.com/lehid/pokeneuf';
-export const ISSUES_URL = `${REPO_URL}/issues`;
+// The repository constants live in `@pokeneuf/core` (the report-an-error link builder needs them too).
+export { ISSUES_URL, REPO_URL } from '@pokeneuf/core';
 
 /** The facts still to provide. Empty once the site is ready to launch. */
 export function missingLegalFields(legal: Record<LegalField, string | null> = LEGAL): LegalField[] {
