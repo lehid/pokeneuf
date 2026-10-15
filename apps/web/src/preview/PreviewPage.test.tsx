@@ -151,12 +151,15 @@ describe('PreviewPage', () => {
   it('flags cells with few answers, and says so on the cell', async () => {
     show();
     await ready();
-    const item = screen.getByTestId('preview-grid-2026-11-01');
+    // Not a fixed date: the launch grid is hand-picked with generous cells, so it has none.
+    const index = reviews.findIndex((r) => r.cells.some((c) => c.flags.includes('few')));
+    expect(index).toBeGreaterThanOrEqual(0);
+    const item = screen.getByTestId(`preview-grid-${grids[index]?.date}`);
     fireEvent.click(within(item).getByTestId('toggle-detail'));
     const flagged = within(item)
       .getAllByTestId(/^cell-\d$/)
       .filter((cell) => (cell.getAttribute('data-flags') ?? '').includes('few'));
-    const expected = reviewAt(0).cells.filter((c) => c.flags.includes('few')).length;
+    const expected = reviewAt(index).cells.filter((c) => c.flags.includes('few')).length;
     expect(expected).toBeGreaterThan(0);
     expect(flagged).toHaveLength(expected);
     expect(flagged[0]?.textContent).toContain(t.cellFlagShort.few);
