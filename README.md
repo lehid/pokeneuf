@@ -20,6 +20,10 @@ pnpm assets:build # redessine les icônes et l'image de partage dans apps/web/pu
 
 Node 22 et pnpm 10 (`corepack enable`).
 
+### Revue des grilles (développement uniquement)
+
+Pour relire à l'œil les grilles déjà générées avant qu'elles ne deviennent publiques : `pnpm dev`, puis ouvrir `/#/preview` (ou `/#/preview/YYYY-MM-DD` pour ouvrir une grille précise). La page liste les grilles de `apps/web/public/grids/` avec la taille des cases, les réponses classées de la mieux connue à la plus rare, des drapeaux (cases à peu de réponses, rareté uniforme, case triviale, définitions surprenantes) et une case « relue » par grille (enregistrée dans le navigateur, clés `pokeneuf:v1:preview:`), avec export Markdown. Cette page n'existe pas dans le site publié (`pnpm build` ne l'embarque pas).
+
 ## Mise en ligne
 
 GitHub Pages, déployé automatiquement à chaque push sur `main` (`.github/workflows/deploy.yml`).

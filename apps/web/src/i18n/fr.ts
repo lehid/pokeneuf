@@ -314,3 +314,118 @@ export const fr = {
     intro: 'Ce qui change dans le jeu, version après version.',
   },
 } as const;
+
+/**
+ * Page /preview (développement uniquement) : revue humaine des grilles à venir. Un export à part,
+ * pour que le site publié n'embarque pas ces textes (l'export inutilisé est élagué du build).
+ */
+export const frPreview = {
+  title: 'Revue des grilles',
+  devOnly: 'Page de développement : elle n’existe pas dans le site publié.',
+  intro:
+    'Relisez à l’œil les grilles déjà générées avant qu’elles ne deviennent publiques. Les drapeaux signalent ce qui mérite un second regard ; ils ne disent pas qu’une grille est fausse.',
+  backToGame: '← Retour au jeu',
+  loading: 'Chargement des grilles…',
+  loadError: 'Impossible de lire les grilles (grids/index.json).',
+  failedGrids: (dates: string) => `Fichiers illisibles : ${dates}.`,
+  retry: 'Réessayer',
+  noGrids: 'Aucune grille ne correspond aux filtres.',
+  summaryTitle: 'Résumé',
+  gridsCount: (shown: number, total: number) =>
+    `${shown} grille${shown > 1 ? 's' : ''} affichée${shown > 1 ? 's' : ''} sur ${total}`,
+  reviewedCount: (done: number, total: number) =>
+    `${done} relue${done > 1 ? 's' : ''} sur ${total}`,
+  flaggedGrids: (flagged: number, total: number) =>
+    `${flagged} grille${flagged > 1 ? 's' : ''} à regarder de près sur ${total}`,
+  meanCellSize: (size: string) => `Taille moyenne d’une case : ${size} réponses`,
+  flagsTitle: 'Drapeaux',
+  flagsCells: (cells: number, grids: number) =>
+    `${cells} case${cells > 1 ? 's' : ''} dans ${grids} grille${grids > 1 ? 's' : ''}`,
+  flagsGrids: (grids: number) => `${grids} grille${grids > 1 ? 's' : ''}`,
+  flag: {
+    few: (max: number) => `${max} réponses ou moins`,
+    uniformRarity: 'Une seule rareté pour toutes les réponses',
+    obvious: 'Une star donne la case',
+    redundant: 'Une catégorie implique presque l’autre',
+    surprise: 'Définition possiblement surprenante',
+    problem: 'Règle de grille non respectée',
+  },
+  flagHelp: {
+    few: (max: number) => `La case a ${max} réponses ou moins : peu de marge pour un joueur.`,
+    uniformRarity:
+      'Toutes les réponses tombent dans le même palier de rareté estimée : la popularité ne les départage pas.',
+    obvious: (pop: number, max: number) =>
+      `La réponse la plus connue a une popularité d’au moins ${pop} et la case a ${max} réponses ou moins : elle a l’air triviale.`,
+    redundant: (share: number) =>
+      `La case contient au moins ${share} % des membres de la plus petite de ses deux catégories : croiser les deux n’apprend presque rien.`,
+    surprise: 'Une ligne ou une colonne dont la définition peut surprendre (voir ci-dessous).',
+    problem: 'Ce que la vérification de grille du jeu (checkGrid) refuse.',
+  },
+  cellFlagShort: {
+    few: 'Peu de réponses',
+    uniformRarity: 'Rareté uniforme',
+    obvious: 'Évidente',
+    redundant: 'Redondante',
+  },
+  surprise: {
+    language: 'Dépend de la langue : orthographe du nom français.',
+    pokedexColor: 'Couleur du Pokédex, pas la couleur « intuitive » du Pokémon.',
+    pokedexShape: 'Silhouette du Pokédex, parfois inattendue.',
+    evolutionScope: 'Évolution comptée parmi les Pokémon du jeu (Gén 1 à 4) seulement.',
+    curatedList: 'Liste établie à la main (statut ou forme).',
+    tiny: 'Catégorie très rare par nature (moins de 20 membres).',
+  },
+  familyMixTitle: 'Familles de catégories',
+  familyCount: (name: string, count: number, percent: string) =>
+    `${name} : ${count} (${percent} %)`,
+  family: {
+    type: 'Type',
+    generation: 'Génération',
+    evolution: 'Évolution',
+    status: 'Statut',
+    form: 'Forme',
+    stats: 'Stats',
+    color: 'Couleur',
+    shape: 'Silhouette',
+    size: 'Taille',
+    name: 'Nom',
+  },
+  nameShare: (percent: string, grids: number) =>
+    `Catégories de nom : ${percent} % des lignes et colonnes, dans ${grids} grille${grids > 1 ? 's' : ''}`,
+  surprisingLines: (n: number) =>
+    `${n} ligne${n > 1 ? 's' : ''} ou colonne${n > 1 ? 's' : ''} à la définition possiblement surprenante`,
+  filtersTitle: 'Filtres',
+  onlyFlagged: 'Seulement les grilles avec drapeaux',
+  hideReviewed: 'Masquer les grilles relues',
+  flagFilter: 'Type de drapeau',
+  anyFlag: 'À regarder de près (tous types)',
+  onlyFlaggedHelp: (fewCells: number, fewMax: number) =>
+    `« À regarder de près » : une règle non respectée, une case à rareté uniforme, évidente ou redondante, ou ${fewCells} cases à ${fewMax} réponses ou moins. Choisir un type de drapeau montre toutes les grilles qui le portent.`,
+  exportButton: 'Copier la liste (Markdown)',
+  exportCopied: 'Liste copiée dans le presse-papiers.',
+  exportFailed: 'Copie impossible : sélectionnez le texte ci-dessous.',
+  exportLabel: 'Liste Markdown des grilles relues et à relire',
+  exportTitle: 'Revue des grilles',
+  exportReviewed: (done: number, total: number) => `Relues (${done}/${total})`,
+  exportPending: (todo: number, total: number) => `À relire (${todo}/${total})`,
+  exportEntry: (n: number, date: string) => `${date} (n° ${n})`,
+  gridsTitle: 'Grilles',
+  gridHeading: (n: number, date: string) => `Grille n° ${n} · ${date}`,
+  difficulty: (level: string, score: number) => `${level} (${score}/100)`,
+  flaggedCells: (n: number) => `${n} case${n > 1 ? 's' : ''} signalée${n > 1 ? 's' : ''}`,
+  noFlag: 'Aucun drapeau',
+  problemsTitle: 'Règles non respectées',
+  markReviewed: 'Marquer comme relue',
+  expand: 'Voir le détail',
+  collapse: 'Masquer le détail',
+  linesTitle: 'Lignes et colonnes',
+  row: (n: number) => `Ligne ${n}`,
+  col: (n: number) => `Colonne ${n}`,
+  members: (n: number) => `${n} Pokémon dans la catégorie`,
+  definition: 'Définition',
+  cellsTitle: 'Cases',
+  cellHeading: (n: number, row: string, col: string) => `Case ${n} : ${row} × ${col}`,
+  cellAnswers: (n: number) => `${n} réponse${n > 1 ? 's' : ''}`,
+  answersLabel: 'Réponses, de la mieux connue à la plus rare',
+  popularity: (pop: string) => `popularité estimée ${pop}`,
+} as const;

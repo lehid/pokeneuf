@@ -9,6 +9,7 @@ export * from './markdown';
 export * from './matching';
 export * from './memberships';
 export * from './pokedex';
+export * from './review';
 export * from './routes';
 export * from './scoring';
 export * from './search';

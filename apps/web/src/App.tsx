@@ -8,12 +8,21 @@ import {
   livesLeft,
   MAX_ERRORS,
   MAX_SCORE,
+  parsePreviewRoute,
   parseRoute,
   RARITY_TIERS,
   type GridDate,
-  type Route,
 } from '@pokeneuf/core';
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { Board } from './components/Board';
 import { DifficultyBadge } from './components/DifficultyBadge';
 import {
@@ -447,15 +456,22 @@ export function GameSession({
   );
 }
 
-/** The route of the page, from the URL hash; follows the back button and the links. */
-function useRoute(): Route {
-  const [route, setRoute] = useState<Route>(() => parseRoute(window.location.hash));
+/**
+ * The grid review page (`#/preview`) exists in development only. `import.meta.env.DEV` is replaced
+ * by `false` when building, so this branch, the dynamic import and the whole `preview/` module are
+ * dropped from the published site (checked by `preview.build.test.ts`).
+ */
+const PreviewRoute = import.meta.env.DEV ? lazy(() => import('./preview/PreviewPage')) : null;
+
+/** The URL hash; follows the back button and the links. */
+function useHash(): string {
+  const [hash, setHash] = useState(() => window.location.hash);
   useEffect(() => {
-    const update = () => setRoute(parseRoute(window.location.hash));
+    const update = () => setHash(window.location.hash);
     window.addEventListener('hashchange', update);
     return () => window.removeEventListener('hashchange', update);
   }, []);
-  return route;
+  return hash;
 }
 
 export function App({
@@ -466,7 +482,30 @@ export function App({
   demo = new URLSearchParams(window.location.search).has('demo'),
 }: AppProps) {
   const demoStore = useMemo(() => demoStorage(storage), [storage]);
-  const route = useRoute();
+  const hash = useHash();
+  const route = useMemo(() => parseRoute(hash), [hash]);
+  const preview = PreviewRoute ? parsePreviewRoute(hash) : null;
+  if (PreviewRoute && preview) {
+    return (
+      <Suspense
+        fallback={
+          <Shell>
+            <Notice title={fr.loading}>
+              <span className="sr-only">{fr.loading}</span>
+            </Notice>
+          </Shell>
+        }
+      >
+        <PreviewRoute
+          key={preview.date ?? ''}
+          date={preview.date}
+          storage={storage}
+          baseUrl={baseUrl}
+          fetchImpl={fetchImpl}
+        />
+      </Suspense>
+    );
+  }
   if (route.kind === 'faq') return <FaqPage />;
   if (route.kind === 'changelog') return <ChangelogPage />;
   if (route.kind === 'legal') return <LegalPage />;
