@@ -3,25 +3,25 @@
   "id": 65,
   "date": "2027-01-04",
   "rows": [
-    "form-mega",
-    "name-short",
-    "evo-none"
+    "gen-4",
+    "gen-2",
+    "type-fighting"
   ],
   "cols": [
-    "type-psychic",
     "stat-total-500",
-    "type-mono"
+    "color-blue",
+    "type-psychic"
   ],
   "cellSizes": [
-    11,
-    34,
-    18,
-    8,
-    5,
-    21,
-    16,
-    39,
-    44
+    41,
+    23,
+    9,
+    25,
+    15,
+    10,
+    7,
+    7,
+    3
   ],
-  "difficulty": 46
+  "difficulty": 58
 }

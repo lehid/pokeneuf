@@ -1,5 +1,7 @@
 import {
   addDays,
+  blockingFlaws,
+  reviewCell,
   canCrossCategories,
   CATEGORIES,
   checkGrid,
@@ -327,6 +329,26 @@ export function createGenerator(context: GeneratorContext): (input: GenerateInpu
         const grid = candidate(rows, cols, cellSizes, difficulty);
         if (!distinctRepresentatives(cellAnswers(grid, memberships))) {
           reject('no 9 different Pokémon');
+          continue;
+        }
+        // What the human review would refuse anyway (see `blockingFlaws`).
+        const flaws = blockingFlaws(
+          rows.flatMap((r, ri) =>
+            cols.map((c, ci) =>
+              reviewCell(
+                ri * GRID_SIZE + ci,
+                {
+                  answers: memberships.answersFor(r, c),
+                  rowSize: memberships.size(r),
+                  colSize: memberships.size(c),
+                },
+                popularity,
+              ),
+            ),
+          ),
+        );
+        if (flaws.length > 0) {
+          for (const flaw of flaws) reject(flaw);
           continue;
         }
         return { grid, attempts, categoryCooldownDays: cooldown };

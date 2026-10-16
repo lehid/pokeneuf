@@ -3,25 +3,25 @@
   "id": 31,
   "date": "2026-12-01",
   "rows": [
-    "size-height-2m",
+    "stat-speed-100",
     "stat-attack-100",
-    "size-height-50cm"
+    "evo-final"
   ],
   "cols": [
-    "type-normal",
-    "name-short",
+    "type-flying",
+    "type-dark",
     "color-green"
   ],
   "cellSizes": [
+    14,
+    3,
     5,
-    7,
-    6,
-    10,
-    5,
+    11,
+    8,
     12,
-    19,
-    10,
-    15
+    28,
+    12,
+    20
   ],
-  "difficulty": 67
+  "difficulty": 62
 }

@@ -3,25 +3,25 @@
   "id": 84,
   "date": "2027-01-23",
   "rows": [
-    "stat-total-300",
-    "type-mono",
-    "color-green"
+    "type-fairy",
+    "evo-baby",
+    "color-yellow"
   ],
   "cols": [
-    "evo-stone",
-    "gen-3",
-    "type-dragon"
+    "type-dual",
+    "stat-total-300",
+    "name-double-letter"
   ],
   "cellSizes": [
+    14,
+    9,
+    7,
     6,
-    33,
+    12,
     3,
-    15,
-    69,
-    4,
-    3,
-    19,
-    3
+    16,
+    8,
+    7
   ],
-  "difficulty": 66
+  "difficulty": 69
 }

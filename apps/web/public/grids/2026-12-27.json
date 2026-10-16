@@ -3,25 +3,25 @@
   "id": 57,
   "date": "2026-12-27",
   "rows": [
-    "type-electric",
-    "type-bug",
-    "status-starter"
+    "color-blue",
+    "gen-3",
+    "gen-1"
   ],
   "cols": [
-    "gen-2",
-    "form-mega",
-    "color-blue"
+    "status-fossil",
+    "type-normal",
+    "type-electric"
   ],
   "cellSizes": [
-    8,
-    3,
-    5,
-    10,
     4,
-    3,
-    9,
-    8,
-    12
+    6,
+    5,
+    4,
+    18,
+    4,
+    5,
+    22,
+    9
   ],
-  "difficulty": 78
+  "difficulty": 75
 }

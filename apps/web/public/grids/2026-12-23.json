@@ -3,25 +3,25 @@
   "id": 53,
   "date": "2026-12-23",
   "rows": [
-    "size-height-50cm",
-    "stat-total-300",
-    "gen-4"
+    "shape-upright",
+    "color-purple",
+    "type-water"
   ],
   "cols": [
-    "type-flying",
-    "type-dual",
-    "color-brown"
+    "type-poison",
+    "evo-gen4",
+    "name-has-k"
   ],
   "cellSizes": [
-    11,
-    45,
-    20,
-    10,
-    38,
-    20,
-    14,
-    53,
-    17
+    12,
+    26,
+    35,
+    22,
+    9,
+    5,
+    3,
+    7,
+    16
   ],
-  "difficulty": 40
+  "difficulty": 59
 }

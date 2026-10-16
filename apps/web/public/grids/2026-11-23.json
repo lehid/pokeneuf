@@ -3,25 +3,25 @@
   "id": 23,
   "date": "2026-11-23",
   "rows": [
-    "stat-total-300",
-    "type-electric",
-    "shape-upright"
+    "type-dragon",
+    "evo-none",
+    "evo-base"
   ],
   "cols": [
-    "gen-2",
-    "color-red",
-    "type-dual"
+    "gen-1",
+    "color-green",
+    "name-ends-a"
   ],
   "cellSizes": [
-    21,
-    6,
-    38,
-    8,
     3,
-    7,
-    39,
-    14,
-    74
+    3,
+    5,
+    12,
+    6,
+    10,
+    56,
+    17,
+    15
   ],
-  "difficulty": 52
+  "difficulty": 66
 }

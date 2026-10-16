@@ -3,25 +3,25 @@
   "id": 24,
   "date": "2026-11-24",
   "rows": [
-    "evo-stage-3",
-    "form-mega",
-    "size-height-50cm"
+    "type-ghost",
+    "type-ice",
+    "stat-attack-100"
   ],
   "cols": [
-    "stat-attack-100",
-    "type-bug",
-    "shape-quadruped"
+    "stat-speed-100",
+    "evo-final",
+    "shape-upright"
   ],
   "cellSizes": [
-    25,
-    4,
-    8,
-    24,
-    4,
-    8,
+    3,
     7,
-    11,
-    23
+    4,
+    3,
+    10,
+    8,
+    27,
+    64,
+    54
   ],
-  "difficulty": 63
+  "difficulty": 61
 }

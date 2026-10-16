@@ -3,25 +3,25 @@
   "id": 56,
   "date": "2026-12-26",
   "rows": [
-    "gen-3",
-    "evo-middle",
-    "status-legendary"
+    "evo-stage-3",
+    "stat-total-300",
+    "evo-none"
   ],
   "cols": [
-    "type-dragon",
     "type-psychic",
-    "shape-wings"
+    "shape-wings",
+    "name-ends-a"
   ],
   "cellSizes": [
+    4,
     9,
-    20,
-    14,
-    4,
     3,
-    4,
-    6,
     8,
-    7
+    8,
+    7,
+    16,
+    12,
+    10
   ],
-  "difficulty": 74
+  "difficulty": 71
 }

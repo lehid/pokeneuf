@@ -3,25 +3,25 @@
   "id": 70,
   "date": "2027-01-09",
   "rows": [
-    "evo-middle",
-    "gen-2",
-    "stat-total-300"
+    "type-bug",
+    "gen-3",
+    "type-poison"
   ],
   "cols": [
-    "color-green",
-    "type-normal",
-    "type-ground"
+    "evo-middle",
+    "form-mega",
+    "name-long"
   ],
   "cellSizes": [
-    10,
-    7,
-    7,
-    12,
-    15,
-    10,
-    10,
-    19,
-    11
+    4,
+    4,
+    9,
+    17,
+    21,
+    8,
+    9,
+    4,
+    12
   ],
-  "difficulty": 61
+  "difficulty": 69
 }

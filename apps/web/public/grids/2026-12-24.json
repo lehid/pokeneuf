@@ -3,25 +3,25 @@
   "id": 54,
   "date": "2026-12-24",
   "rows": [
-    "shape-quadruped",
-    "evo-none",
-    "evo-stone"
+    "status-mythical",
+    "form-gmax",
+    "type-bug"
   ],
   "cols": [
-    "type-water",
-    "type-normal",
-    "name-has-ou"
+    "stat-attack-100",
+    "size-height-50cm",
+    "type-mono"
   ],
   "cellSizes": [
     7,
-    19,
-    12,
-    10,
-    16,
     5,
-    4,
+    7,
     3,
-    4
+    3,
+    7,
+    5,
+    11,
+    12
   ],
-  "difficulty": 73
+  "difficulty": 79
 }

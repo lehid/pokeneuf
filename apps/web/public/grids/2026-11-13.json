@@ -3,25 +3,25 @@
   "id": 13,
   "date": "2026-11-13",
   "rows": [
-    "status-starter",
-    "evo-trade",
-    "evo-stone"
+    "evo-stage-3",
+    "form-mega",
+    "shape-wings"
   ],
   "cols": [
-    "type-dual",
-    "type-water",
+    "type-dragon",
+    "name-has-y",
     "color-blue"
   ],
   "cellSizes": [
-    12,
-    12,
-    12,
-    6,
     5,
-    3,
-    11,
+    5,
+    15,
+    7,
     4,
-    3
+    13,
+    5,
+    6,
+    8
   ],
-  "difficulty": 76
+  "difficulty": 75
 }

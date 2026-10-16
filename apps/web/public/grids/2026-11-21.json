@@ -3,25 +3,25 @@
   "id": 21,
   "date": "2026-11-21",
   "rows": [
-    "evo-middle",
-    "evo-gen4",
-    "gen-4"
+    "shape-quadruped",
+    "type-rock",
+    "evo-gen4"
   ],
   "cols": [
+    "form-mega",
     "color-blue",
-    "type-flying",
     "type-ground"
   ],
   "cellSizes": [
-    15,
-    5,
-    7,
-    13,
-    10,
     8,
-    23,
-    14,
-    10
+    12,
+    11,
+    3,
+    4,
+    9,
+    8,
+    13,
+    8
   ],
-  "difficulty": 61
+  "difficulty": 71
 }

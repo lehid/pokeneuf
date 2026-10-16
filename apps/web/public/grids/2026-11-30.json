@@ -3,25 +3,25 @@
   "id": 30,
   "date": "2026-11-30",
   "rows": [
-    "type-electric",
-    "form-mega",
-    "stat-total-500"
+    "type-fire",
+    "color-brown",
+    "type-fighting"
   ],
   "cols": [
-    "evo-stage-3",
-    "type-mono",
-    "stat-speed-100"
+    "evo-gen4",
+    "evo-base",
+    "gen-1"
   ],
   "cellSizes": [
+    3,
+    11,
+    12,
+    10,
+    32,
+    35,
     5,
-    21,
-    8,
-    25,
-    18,
-    18,
-    44,
-    58,
-    38
+    7,
+    8
   ],
-  "difficulty": 41
+  "difficulty": 63
 }

@@ -3,25 +3,25 @@
   "id": 14,
   "date": "2026-11-14",
   "rows": [
-    "status-fossil",
-    "stat-speed-100",
-    "type-ground"
+    "evo-gen4",
+    "evo-middle",
+    "color-green"
   ],
   "cols": [
-    "gen-1",
-    "gen-3",
-    "evo-base"
+    "type-water",
+    "type-poison",
+    "shape-quadruped"
   ],
   "cellSizes": [
+    7,
     5,
-    4,
-    6,
-    24,
     12,
-    3,
-    14,
-    13,
-    18
+    9,
+    9,
+    11,
+    4,
+    12,
+    13
   ],
-  "difficulty": 67
+  "difficulty": 68
 }

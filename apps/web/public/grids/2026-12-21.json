@@ -3,25 +3,25 @@
   "id": 51,
   "date": "2026-12-21",
   "rows": [
-    "type-grass",
-    "stat-speed-100",
-    "name-same-ends"
+    "color-blue",
+    "status-legendary",
+    "gen-1"
   ],
   "cols": [
-    "gen-1",
-    "type-mono",
-    "color-red"
+    "size-height-2m",
+    "type-flying",
+    "form-mega"
   ],
   "cellSizes": [
-    14,
-    21,
-    3,
-    24,
-    35,
-    5,
-    8,
     10,
-    3
+    10,
+    13,
+    14,
+    6,
+    5,
+    13,
+    19,
+    18
   ],
-  "difficulty": 64
+  "difficulty": 60
 }

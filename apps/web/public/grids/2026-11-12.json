@@ -3,25 +3,25 @@
   "id": 12,
   "date": "2026-11-12",
   "rows": [
-    "status-legendary",
-    "stat-total-500",
-    "evo-stage-3"
+    "size-height-50cm",
+    "gen-2",
+    "type-flying"
   ],
   "cols": [
-    "type-steel",
-    "type-flying",
-    "name-starts-c"
+    "stat-total-300",
+    "color-purple",
+    "type-bug"
   ],
   "cellSizes": [
-    3,
-    6,
-    4,
-    13,
-    17,
+    48,
+    9,
     11,
-    4,
+    21,
+    8,
     10,
-    3
+    10,
+    9,
+    12
   ],
-  "difficulty": 76
+  "difficulty": 56
 }

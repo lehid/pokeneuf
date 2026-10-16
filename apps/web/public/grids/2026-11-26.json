@@ -3,25 +3,25 @@
   "id": 26,
   "date": "2026-11-26",
   "rows": [
-    "evo-gen4",
-    "evo-none",
-    "gen-4"
+    "type-mono",
+    "type-dual",
+    "size-height-50cm"
   ],
   "cols": [
-    "size-height-2m",
-    "type-steel",
-    "type-grass"
+    "color-red",
+    "evo-friendship",
+    "name-has-x"
   ],
   "cellSizes": [
-    10,
-    6,
+    24,
     9,
-    19,
-    6,
-    4,
     13,
-    10,
-    14
+    22,
+    4,
+    11,
+    7,
+    9,
+    3
   ],
   "difficulty": 66
 }

@@ -44,7 +44,10 @@ taille des cases et difficulté cohérentes avec les données.
 2. Colonnes : seules les catégories qui font 3 à 80 réponses avec **chacune** des 3 lignes, qui
    peuvent se croiser et dont la paire n'est pas en cooldown.
 3. Contrôles : variété de familles, niveau de difficulté accepté ce jour-là, grille jamais publiée
-   (même retournée), puis couplage parfait.
+   (même retournée), puis couplage parfait, puis les défauts que la relecture refuserait de toute
+   façon (`blockingFlaws` dans `@pokeneuf/core`) : case redondante (un critère implique l'autre),
+   grosse case dont toutes les réponses ont la même rareté, grille d'au moins 6 petites cases
+   (≤ 5 réponses). Les autres signaux (`obvious`, quelques petites cases) restent à l'œil humain.
 4. Tant que ça échoue, nouveau tirage (400 par palier). Aucune grille invalide n'est jamais publiée :
    si rien ne marche, `GenerationError` liste les causes de rejet.
 

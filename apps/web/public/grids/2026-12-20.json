@@ -3,25 +3,25 @@
   "id": 50,
   "date": "2026-12-20",
   "rows": [
-    "type-steel",
-    "evo-middle",
-    "status-fossil"
+    "evo-baby",
+    "type-normal",
+    "evo-base"
   ],
   "cols": [
-    "shape-upright",
-    "stat-attack-100",
-    "gen-3"
+    "type-fairy",
+    "color-yellow",
+    "name-double-letter"
   ],
   "cellSizes": [
-    6,
-    6,
-    9,
-    31,
-    3,
-    17,
-    4,
     5,
-    4
+    3,
+    3,
+    4,
+    4,
+    17,
+    7,
+    13,
+    34
   ],
   "difficulty": 74
 }

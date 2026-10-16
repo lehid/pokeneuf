@@ -3,25 +3,25 @@
   "id": 87,
   "date": "2027-01-26",
   "rows": [
-    "evo-final",
+    "status-fossil",
     "stat-total-500",
-    "type-rock"
+    "status-legendary"
   ],
   "cols": [
-    "size-height-2m",
-    "color-blue",
-    "type-bug"
+    "type-water",
+    "gen-1",
+    "name-ends-a"
   ],
   "cellSizes": [
-    25,
-    37,
-    19,
-    36,
-    29,
-    6,
     4,
+    5,
+    3,
+    21,
+    33,
+    12,
+    3,
     4,
-    3
+    7
   ],
-  "difficulty": 58
+  "difficulty": 74
 }

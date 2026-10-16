@@ -3,25 +3,25 @@
   "id": 33,
   "date": "2026-12-03",
   "rows": [
-    "shape-wings",
-    "type-bug",
-    "type-psychic"
+    "type-psychic",
+    "size-height-50cm",
+    "status-legendary"
   ],
   "cols": [
-    "stat-total-500",
-    "evo-gen4",
-    "evo-base"
+    "shape-quadruped",
+    "type-water",
+    "color-yellow"
   ],
   "cellSizes": [
-    16,
-    10,
-    15,
-    6,
-    5,
-    17,
-    21,
+    3,
     4,
-    15
+    9,
+    23,
+    20,
+    11,
+    5,
+    3,
+    5
   ],
-  "difficulty": 62
+  "difficulty": 74
 }

@@ -3,25 +3,25 @@
   "id": 77,
   "date": "2027-01-16",
   "rows": [
-    "color-green",
-    "stat-total-300",
-    "evo-final"
+    "evo-none",
+    "evo-middle",
+    "status-legendary"
   ],
   "cols": [
-    "type-poison",
-    "shape-wings",
-    "name-short"
+    "color-yellow",
+    "type-dragon",
+    "name-starts-vowel"
   ],
   "cellSizes": [
     12,
-    7,
-    3,
-    10,
+    6,
     8,
-    9,
-    20,
-    27,
-    5
+    4,
+    4,
+    4,
+    5,
+    6,
+    3
   ],
-  "difficulty": 66
+  "difficulty": 83
 }

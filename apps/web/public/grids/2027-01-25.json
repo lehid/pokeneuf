@@ -3,25 +3,25 @@
   "id": 86,
   "date": "2027-01-25",
   "rows": [
-    "status-legendary",
-    "color-yellow",
-    "color-purple"
+    "type-grass",
+    "shape-wings",
+    "shape-quadruped"
   ],
   "cols": [
-    "stat-attack-100",
-    "name-ends-a",
-    "type-psychic"
+    "evo-stage-3",
+    "evo-final",
+    "color-green"
   ],
   "cellSizes": [
-    14,
+    11,
+    22,
+    33,
+    9,
+    27,
     7,
     8,
-    5,
-    5,
-    9,
-    7,
-    6,
-    4
+    33,
+    13
   ],
-  "difficulty": 75
+  "difficulty": 50
 }

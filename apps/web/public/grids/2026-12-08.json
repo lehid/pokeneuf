@@ -3,25 +3,25 @@
   "id": 38,
   "date": "2026-12-08",
   "rows": [
-    "gen-1",
-    "gen-3",
-    "stat-attack-100"
+    "evo-final",
+    "color-green",
+    "stat-speed-100"
   ],
   "cols": [
-    "type-flying",
-    "type-ghost",
-    "shape-quadruped"
+    "name-has-x",
+    "type-grass",
+    "shape-wings"
   ],
   "cellSizes": [
-    19,
+    10,
+    22,
+    27,
     3,
-    25,
-    12,
-    6,
-    20,
-    11,
+    33,
+    7,
     3,
-    19
+    4,
+    13
   ],
-  "difficulty": 62
+  "difficulty": 65
 }

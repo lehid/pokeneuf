@@ -3,25 +3,25 @@
   "id": 42,
   "date": "2026-12-12",
   "rows": [
-    "gen-2",
-    "evo-middle",
-    "status-legendary"
+    "evo-trade",
+    "stat-total-500",
+    "gen-1"
   ],
   "cols": [
-    "type-dual",
-    "type-steel",
-    "name-double-letter"
+    "type-rock",
+    "color-blue",
+    "type-ground"
   ],
   "cellSizes": [
-    49,
-    4,
-    16,
+    3,
+    3,
+    3,
+    7,
     29,
-    3,
-    6,
-    12,
-    3,
-    3
+    14,
+    11,
+    25,
+    14
   ],
-  "difficulty": 69
+  "difficulty": 67
 }

@@ -3,25 +3,25 @@
   "id": 18,
   "date": "2026-11-18",
   "rows": [
-    "stat-attack-100",
-    "type-bug",
-    "shape-quadruped"
+    "gen-4",
+    "status-starter",
+    "stat-attack-100"
   ],
   "cols": [
-    "color-yellow",
-    "type-grass",
-    "evo-final"
+    "type-fighting",
+    "size-height-2m",
+    "type-grass"
   ],
   "cellSizes": [
-    5,
-    10,
-    64,
-    8,
-    3,
-    19,
+    7,
+    13,
     14,
+    4,
+    3,
     12,
-    33
+    13,
+    28,
+    10
   ],
-  "difficulty": 56
+  "difficulty": 65
 }

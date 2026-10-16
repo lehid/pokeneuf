@@ -3,25 +3,25 @@
   "id": 68,
   "date": "2027-01-07",
   "rows": [
-    "type-bug",
     "evo-stone",
-    "size-height-50cm"
+    "size-height-50cm",
+    "evo-friendship"
   ],
   "cols": [
-    "type-poison",
-    "gen-1",
-    "name-has-k"
+    "type-fairy",
+    "type-normal",
+    "stat-total-300"
   ],
   "cellSizes": [
-    9,
-    12,
-    6,
-    5,
-    15,
     4,
-    10,
-    28,
-    12
+    3,
+    6,
+    7,
+    19,
+    48,
+    4,
+    6,
+    8
   ],
-  "difficulty": 65
+  "difficulty": 72
 }

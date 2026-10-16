@@ -3,25 +3,25 @@
   "id": 49,
   "date": "2026-12-19",
   "rows": [
-    "status-legendary",
-    "type-rock",
-    "type-fighting"
+    "stat-total-500",
+    "evo-stone",
+    "stat-total-300"
   ],
   "cols": [
-    "form-mega",
-    "gen-2",
-    "color-blue"
+    "type-grass",
+    "gen-3",
+    "color-green"
   ],
   "cellSizes": [
-    5,
-    5,
-    6,
-    3,
+    10,
+    23,
+    15,
     7,
-    4,
-    5,
+    7,
     3,
-    7
+    9,
+    33,
+    10
   ],
-  "difficulty": 86
+  "difficulty": 62
 }

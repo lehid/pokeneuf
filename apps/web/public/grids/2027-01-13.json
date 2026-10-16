@@ -4,24 +4,24 @@
   "date": "2027-01-13",
   "rows": [
     "size-height-2m",
-    "type-grass",
-    "type-psychic"
+    "name-starts-c",
+    "color-red"
   ],
   "cols": [
-    "gen-4",
-    "stat-speed-100",
-    "name-ends-a"
+    "type-grass",
+    "type-dual",
+    "evo-base"
   ],
   "cellSizes": [
-    13,
-    9,
-    10,
-    14,
-    4,
     6,
+    26,
+    3,
     9,
-    13,
-    8
+    30,
+    18,
+    3,
+    22,
+    15
   ],
-  "difficulty": 67
+  "difficulty": 61
 }

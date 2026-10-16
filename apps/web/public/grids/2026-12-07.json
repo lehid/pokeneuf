@@ -3,25 +3,25 @@
   "id": 37,
   "date": "2026-12-07",
   "rows": [
-    "evo-none",
-    "shape-upright",
-    "stat-total-300"
+    "stat-total-500",
+    "evo-trade",
+    "evo-stone"
   ],
   "cols": [
-    "type-dragon",
-    "color-purple",
-    "color-yellow"
+    "gen-1",
+    "type-dual",
+    "color-brown"
   ],
   "cellSizes": [
-    6,
-    7,
+    33,
+    64,
     12,
+    13,
     6,
-    12,
-    18,
     3,
-    7,
-    8
+    15,
+    11,
+    5
   ],
-  "difficulty": 71
+  "difficulty": 58
 }

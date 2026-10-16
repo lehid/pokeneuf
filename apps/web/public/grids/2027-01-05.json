@@ -3,25 +3,25 @@
   "id": 66,
   "date": "2027-01-05",
   "rows": [
-    "type-grass",
-    "color-red",
-    "shape-wings"
+    "gen-1",
+    "type-water",
+    "evo-base"
   ],
   "cols": [
-    "evo-stage-3",
-    "evo-base",
-    "type-flying"
+    "stat-speed-100",
+    "color-brown",
+    "type-grass"
   ],
   "cellSizes": [
-    11,
-    19,
-    4,
+    24,
+    35,
+    14,
     5,
-    15,
-    6,
-    9,
-    15,
-    49
+    7,
+    3,
+    3,
+    32,
+    19
   ],
-  "difficulty": 60
+  "difficulty": 61
 }

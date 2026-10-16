@@ -3,25 +3,25 @@
   "id": 71,
   "date": "2027-01-10",
   "rows": [
-    "evo-trade",
-    "gen-3",
-    "type-ice"
+    "gen-4",
+    "gen-2",
+    "shape-quadruped"
   ],
   "cols": [
-    "color-brown",
-    "color-blue",
-    "name-starts-vowel"
+    "type-rock",
+    "type-steel",
+    "color-purple"
   ],
   "cellSizes": [
-    3,
-    3,
-    3,
-    15,
-    32,
-    15,
-    3,
     7,
-    3
+    10,
+    14,
+    7,
+    4,
+    8,
+    5,
+    6,
+    7
   ],
-  "difficulty": 78
+  "difficulty": 74
 }

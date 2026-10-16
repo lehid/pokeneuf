@@ -3,25 +3,25 @@
   "id": 29,
   "date": "2026-11-29",
   "rows": [
-    "color-blue",
-    "stat-total-300",
-    "gen-2"
+    "shape-wings",
+    "type-steel",
+    "color-purple"
   ],
   "cols": [
-    "type-ice",
-    "type-poison",
-    "shape-quadruped"
+    "gen-3",
+    "evo-middle",
+    "name-starts-vowel"
   ],
   "cellSizes": [
-    7,
-    9,
-    12,
-    3,
-    10,
-    16,
-    5,
+    14,
     4,
-    22
+    10,
+    9,
+    3,
+    3,
+    7,
+    4,
+    5
   ],
-  "difficulty": 70
+  "difficulty": 80
 }

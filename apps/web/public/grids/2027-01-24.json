@@ -3,25 +3,25 @@
   "id": 85,
   "date": "2027-01-24",
   "rows": [
-    "shape-wings",
-    "type-dark",
-    "type-ghost"
+    "form-mega",
+    "type-bug",
+    "type-dark"
   ],
   "cols": [
-    "form-mega",
-    "evo-none",
+    "gen-4",
+    "gen-2",
     "evo-gen4"
   ],
   "cellSizes": [
     9,
-    12,
+    9,
+    8,
+    9,
     10,
+    5,
+    7,
     6,
-    4,
-    4,
-    4,
-    4,
     4
   ],
-  "difficulty": 80
+  "difficulty": 74
 }

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CATEGORIES } from './categories';
 import { cellAnswers } from './grid';
 import {
+  blockingFlaws,
   flaggedCellCount,
   hasFlag,
   parsePreviewRoute,
@@ -93,6 +94,46 @@ describe('reviewCell', () => {
   it('copes with an empty cell', () => {
     const review = reviewCell(4, cell([], 0, 0), byNumber);
     expect(review).toMatchObject({ index: 4, size: 0, answers: [], flags: ['few'] });
+  });
+});
+
+describe('blockingFlaws', () => {
+  const review = (answers: number[], rowSize = 100, colSize = 100, popularity = byNumber) =>
+    reviewCell(0, cell(answers, rowSize, colSize), popularity);
+  const small = review([1, 2, 3, 4, 5]);
+  const fine = review([10, 20, 30, 40, 50, 60, 70, 80]);
+
+  it('has nothing to say about plain cells, small or obvious', () => {
+    expect(blockingFlaws([fine, small, review([1, 2, 3])])).toEqual([]);
+  });
+
+  it('refuses a cell where one criterion implies the other', () => {
+    expect(
+      blockingFlaws([
+        fine,
+        review(
+          Array.from({ length: 9 }, (_, i) => i + 10),
+          10,
+          400,
+        ),
+      ]),
+    ).toEqual(['redundant cell']);
+  });
+
+  it(`refuses a uniform cell from ${REVIEW.uniformRarityMinSize} answers, not a tiny one`, () => {
+    const flat = () => 0.5;
+    expect(blockingFlaws([review([1, 2, 3, 4], 400, 400, flat)])).toEqual([]);
+    expect(
+      blockingFlaws([
+        review([1, 2, 3, 4, 5, 6].slice(0, REVIEW.uniformRarityMinSize), 400, 400, flat),
+      ]),
+    ).toEqual(['uniform rarity']);
+  });
+
+  it(`refuses a grid with ${REVIEW.maxFewCells} small cells or more`, () => {
+    const many = (n: number) => Array.from({ length: n }, () => small);
+    expect(blockingFlaws(many(REVIEW.maxFewCells - 1))).toEqual([]);
+    expect(blockingFlaws(many(REVIEW.maxFewCells))).toEqual(['too many small cells']);
   });
 });
 

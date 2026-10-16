@@ -3,25 +3,25 @@
   "id": 36,
   "date": "2026-12-06",
   "rows": [
-    "status-starter",
-    "color-blue",
-    "type-ice"
+    "evo-gen4",
+    "evo-base",
+    "gen-3"
   ],
   "cols": [
-    "size-height-2m",
-    "type-ground",
-    "name-starts-c"
+    "type-rock",
+    "color-red",
+    "size-height-2m"
   ],
   "cellSizes": [
+    5,
     3,
-    3,
-    4,
     10,
-    10,
-    11,
+    13,
+    15,
     3,
-    3,
-    3
+    12,
+    13,
+    13
   ],
-  "difficulty": 86
+  "difficulty": 69
 }
