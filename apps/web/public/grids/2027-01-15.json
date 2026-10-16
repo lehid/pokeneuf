@@ -3,25 +3,25 @@
   "id": 76,
   "date": "2027-01-15",
   "rows": [
-    "status-legendary",
-    "gen-2",
-    "evo-middle"
+    "type-ghost",
+    "type-fire",
+    "stat-attack-100"
   ],
   "cols": [
-    "shape-quadruped",
-    "type-flying",
-    "type-fire"
+    "form-mega",
+    "size-height-50cm",
+    "gen-3"
   ],
   "cellSizes": [
-    5,
-    6,
     4,
-    22,
-    19,
-    10,
-    11,
+    3,
+    6,
     5,
-    5
+    4,
+    6,
+    24,
+    7,
+    27
   ],
-  "difficulty": 70
+  "difficulty": 74
 }

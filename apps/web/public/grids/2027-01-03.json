@@ -3,25 +3,25 @@
   "id": 64,
   "date": "2027-01-03",
   "rows": [
-    "evo-trade",
-    "type-ice",
-    "type-dark"
+    "form-mega",
+    "gen-3",
+    "type-ground"
   ],
   "cols": [
-    "stat-attack-100",
-    "gen-3",
-    "shape-upright"
+    "type-ice",
+    "shape-quadruped",
+    "shape-wings"
   ],
   "cellSizes": [
     3,
-    3,
     8,
-    3,
+    9,
     6,
-    8,
-    8,
-    10,
-    8
+    20,
+    14,
+    3,
+    11,
+    4
   ],
-  "difficulty": 80
+  "difficulty": 74
 }

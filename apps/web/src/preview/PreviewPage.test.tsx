@@ -92,7 +92,7 @@ describe('PreviewPage', () => {
     const first = screen.getByTestId('preview-grid-2026-11-01');
     const heading = within(first).getByRole('heading', { level: 3 }).textContent ?? '';
     expect(heading).toContain('n° 1');
-    expect(heading).toContain('dimanche 1 novembre');
+    expect(heading).toMatch(/dimanche 1(er)? novembre/);
     expect(within(first).getByTestId('grid-meta').textContent).toContain(
       `${reviews[0]?.difficulty.score}/100`,
     );

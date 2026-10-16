@@ -3,25 +3,25 @@
   "id": 10,
   "date": "2026-11-10",
   "rows": [
-    "type-poison",
-    "shape-wings",
-    "stat-attack-100"
+    "size-height-2m",
+    "stat-total-500",
+    "name-has-k"
   ],
   "cols": [
-    "type-bug",
-    "size-height-2m",
-    "color-purple"
+    "form-gmax",
+    "type-ground",
+    "type-grass"
   ],
   "cellSizes": [
+    3,
     9,
-    4,
-    22,
-    16,
+    6,
     7,
-    8,
+    14,
+    10,
     5,
-    28,
-    7
+    6,
+    5
   ],
-  "difficulty": 65
+  "difficulty": 76
 }

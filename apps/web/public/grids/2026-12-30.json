@@ -3,25 +3,25 @@
   "id": 60,
   "date": "2026-12-30",
   "rows": [
-    "type-dual",
-    "size-height-50cm",
-    "gen-4"
+    "type-dark",
+    "shape-upright",
+    "color-green"
   ],
   "cols": [
-    "color-purple",
-    "stat-speed-100",
-    "evo-baby"
+    "evo-base",
+    "type-water",
+    "name-double-letter"
   ],
   "cellSizes": [
-    27,
-    28,
     6,
-    9,
-    7,
-    9,
-    14,
+    3,
+    5,
+    51,
+    27,
+    31,
     17,
+    4,
     8
   ],
-  "difficulty": 58
+  "difficulty": 61
 }

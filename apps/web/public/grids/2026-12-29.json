@@ -3,25 +3,25 @@
   "id": 59,
   "date": "2026-12-29",
   "rows": [
-    "evo-base",
-    "evo-stage-3",
-    "type-grass"
+    "size-height-2m",
+    "type-fire",
+    "status-legendary"
   ],
   "cols": [
-    "size-height-2m",
-    "type-poison",
-    "name-starts-vowel"
+    "gen-4",
+    "stat-speed-100",
+    "color-brown"
   ],
   "cellSizes": [
-    3,
-    19,
-    25,
-    11,
-    10,
+    13,
+    9,
     7,
+    5,
     6,
-    12,
+    9,
+    9,
+    10,
     3
   ],
-  "difficulty": 68
+  "difficulty": 73
 }

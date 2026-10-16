@@ -3,25 +3,25 @@
   "id": 25,
   "date": "2026-11-25",
   "rows": [
-    "color-green",
-    "color-yellow",
-    "type-ghost"
+    "type-water",
+    "status-starter",
+    "type-normal"
   ],
   "cols": [
-    "type-mono",
-    "evo-final",
-    "name-ends-a"
+    "stat-total-500",
+    "gen-4",
+    "form-gmax"
   ],
   "cellSizes": [
-    20,
-    20,
-    6,
-    32,
-    19,
-    5,
-    7,
-    7,
-    4
+    21,
+    14,
+    3,
+    12,
+    9,
+    3,
+    9,
+    17,
+    3
   ],
-  "difficulty": 62
+  "difficulty": 70
 }

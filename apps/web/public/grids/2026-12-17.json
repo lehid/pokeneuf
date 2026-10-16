@@ -3,25 +3,25 @@
   "id": 47,
   "date": "2026-12-17",
   "rows": [
-    "evo-gen4",
-    "stat-total-500",
-    "shape-quadruped"
+    "evo-middle",
+    "type-dark",
+    "evo-none"
   ],
   "cols": [
-    "status-starter",
-    "type-poison",
-    "type-dark"
+    "size-height-50cm",
+    "type-mono",
+    "name-starts-c"
   ],
   "cellSizes": [
-    6,
-    5,
     4,
-    12,
-    9,
+    30,
     7,
-    12,
-    9,
-    8
+    4,
+    5,
+    5,
+    19,
+    44,
+    11
   ],
-  "difficulty": 72
+  "difficulty": 64
 }

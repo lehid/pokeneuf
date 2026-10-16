@@ -3,25 +3,25 @@
   "id": 19,
   "date": "2026-11-19",
   "rows": [
-    "status-starter",
-    "stat-total-500",
-    "type-fire"
+    "gen-2",
+    "type-electric",
+    "status-legendary"
   ],
   "cols": [
-    "color-brown",
-    "type-fighting",
-    "name-double-letter"
+    "size-height-50cm",
+    "color-red",
+    "type-dual"
   ],
   "cellSizes": [
-    3,
-    4,
-    10,
+    19,
     12,
+    49,
+    10,
+    3,
     7,
-    21,
-    9,
-    4,
-    5
+    3,
+    3,
+    12
   ],
-  "difficulty": 74
+  "difficulty": 68
 }

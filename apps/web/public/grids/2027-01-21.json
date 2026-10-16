@@ -3,25 +3,25 @@
   "id": 82,
   "date": "2027-01-21",
   "rows": [
-    "gen-1",
-    "status-starter",
-    "evo-middle"
+    "type-mono",
+    "gen-3",
+    "size-height-50cm"
   ],
   "cols": [
-    "color-red",
-    "type-fighting",
-    "type-grass"
+    "color-brown",
+    "type-rock",
+    "color-red"
   ],
   "cellSizes": [
-    16,
-    8,
-    14,
+    48,
     6,
-    4,
+    24,
+    15,
     12,
-    4,
-    3,
-    10
+    13,
+    20,
+    6,
+    7
   ],
-  "difficulty": 73
+  "difficulty": 55
 }

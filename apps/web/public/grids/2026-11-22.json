@@ -3,25 +3,25 @@
   "id": 22,
   "date": "2026-11-22",
   "rows": [
-    "shape-wings",
-    "type-rock",
-    "evo-trade"
+    "gen-3",
+    "color-brown",
+    "color-yellow"
   ],
   "cols": [
-    "gen-3",
-    "gen-1",
-    "name-has-y"
+    "evo-middle",
+    "type-fire",
+    "type-bug"
   ],
   "cellSizes": [
-    14,
-    16,
+    17,
     6,
-    12,
-    11,
-    5,
+    14,
+    7,
+    9,
     3,
-    13,
-    3
+    4,
+    8,
+    8
   ],
-  "difficulty": 71
+  "difficulty": 72
 }

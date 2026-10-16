@@ -3,25 +3,25 @@
   "id": 40,
   "date": "2026-12-10",
   "rows": [
-    "stat-total-500",
-    "color-red",
-    "size-height-50cm"
+    "size-height-50cm",
+    "shape-quadruped",
+    "evo-none"
   ],
   "cols": [
-    "gen-4",
+    "stat-attack-100",
     "type-fire",
-    "evo-gen4"
+    "type-steel"
   ],
   "cellSizes": [
-    41,
-    14,
+    7,
+    4,
+    5,
+    19,
+    16,
+    6,
     29,
     5,
-    14,
-    3,
-    32,
-    4,
-    3
+    6
   ],
-  "difficulty": 62
+  "difficulty": 68
 }

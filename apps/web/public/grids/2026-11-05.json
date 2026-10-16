@@ -3,25 +3,25 @@
   "id": 5,
   "date": "2026-11-05",
   "rows": [
-    "evo-stage-3",
-    "stat-total-500",
-    "stat-total-300"
+    "evo-middle",
+    "evo-stone",
+    "type-normal"
   ],
   "cols": [
-    "color-blue",
-    "type-dragon",
-    "type-rock"
+    "size-height-50cm",
+    "stat-total-300",
+    "type-fairy"
   ],
   "cellSizes": [
-    15,
-    5,
     4,
-    29,
-    11,
     7,
-    18,
-    3,
-    3
+    5,
+    8,
+    6,
+    4,
+    19,
+    19,
+    4
   ],
-  "difficulty": 71
+  "difficulty": 74
 }

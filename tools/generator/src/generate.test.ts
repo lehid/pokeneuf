@@ -1,4 +1,5 @@
 import {
+  blockingFlaws,
   CATEGORIES,
   checkGrid,
   daysBetween,
@@ -7,6 +8,7 @@ import {
   gridNumber,
   GRID_RULES,
   LAUNCH_DATE,
+  reviewGrid,
   type Grid,
   type Memberships,
   type Popularity,
@@ -205,6 +207,18 @@ describe('determinism', () => {
     const withSelf = generate({ date, history: grids.slice(0, 21) }).grid;
     const without = generate({ date, history: grids.slice(0, 20) }).grid;
     expect(withSelf).toEqual(without);
+  });
+});
+
+describe('review flaws', () => {
+  it('never reach a grid: no redundant cell, no large uniform cell, no grid of tiny cells', () => {
+    const flawed = grids
+      .map((g) => ({
+        date: g.date,
+        flaws: blockingFlaws(reviewGrid(g, memberships, popularity).cells),
+      }))
+      .filter((g) => g.flaws.length > 0);
+    expect(flawed).toEqual([]);
   });
 });
 

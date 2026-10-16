@@ -3,25 +3,25 @@
   "id": 89,
   "date": "2027-01-28",
   "rows": [
-    "stat-speed-100",
-    "type-flying",
-    "status-starter"
+    "evo-none",
+    "stat-attack-100",
+    "stat-speed-100"
   ],
   "cols": [
-    "type-poison",
+    "type-normal",
     "color-brown",
-    "name-has-k"
+    "type-ice"
   ],
   "cellSizes": [
+    16,
+    10,
+    4,
+    10,
+    25,
     3,
+    15,
     13,
-    13,
-    3,
-    14,
-    7,
-    3,
-    3,
-    6
+    3
   ],
-  "difficulty": 80
+  "difficulty": 68
 }

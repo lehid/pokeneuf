@@ -3,25 +3,25 @@
   "id": 88,
   "date": "2027-01-27",
   "rows": [
-    "size-height-50cm",
-    "status-fossil",
-    "evo-stage-3"
+    "size-height-2m",
+    "status-starter",
+    "evo-base"
   ],
   "cols": [
-    "type-dual",
-    "gen-4",
-    "type-water"
+    "color-blue",
+    "type-poison",
+    "type-ground"
   ],
   "cellSizes": [
-    45,
-    32,
-    20,
-    11,
+    10,
     4,
-    4,
-    42,
-    16,
-    10
+    9,
+    12,
+    3,
+    3,
+    33,
+    19,
+    18
   ],
-  "difficulty": 51
+  "difficulty": 66
 }

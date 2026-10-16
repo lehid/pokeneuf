@@ -3,25 +3,25 @@
   "id": 2,
   "date": "2026-11-02",
   "rows": [
-    "type-ghost",
-    "evo-final",
-    "form-mega"
+    "evo-trade",
+    "size-height-2m",
+    "evo-stage-3"
   ],
   "cols": [
-    "color-purple",
-    "gen-4",
-    "type-poison"
+    "stat-speed-100",
+    "color-brown",
+    "shape-upright"
   ],
   "cellSizes": [
-    8,
-    8,
     3,
-    24,
-    49,
-    20,
-    5,
+    3,
+    8,
     9,
-    4
+    7,
+    16,
+    15,
+    9,
+    39
   ],
-  "difficulty": 64
+  "difficulty": 67
 }

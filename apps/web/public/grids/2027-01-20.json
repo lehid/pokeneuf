@@ -3,25 +3,25 @@
   "id": 81,
   "date": "2027-01-20",
   "rows": [
-    "shape-upright",
-    "type-electric",
-    "status-mythical"
+    "status-starter",
+    "type-psychic",
+    "type-flying"
   ],
   "cols": [
-    "stat-speed-100",
-    "gen-4",
-    "size-height-50cm"
+    "size-height-2m",
+    "evo-base",
+    "name-has-k"
   ],
   "cellSizes": [
-    26,
-    42,
-    31,
-    8,
-    7,
-    10,
-    8,
+    3,
+    12,
+    6,
     5,
-    5
+    15,
+    12,
+    9,
+    19,
+    7
   ],
-  "difficulty": 59
+  "difficulty": 68
 }

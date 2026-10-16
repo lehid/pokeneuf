@@ -34,6 +34,14 @@ export const REVIEW = {
   redundantShare: 0.8,
   /** A grid with this many `few` cells or more deserves a close look on that count alone. */
   manyFewCells: 4,
+  /** The generator refuses a grid with this many `few` cells or more: too little room to play. */
+  maxFewCells: 6,
+  /**
+   * The generator refuses a `uniformRarity` cell at this size or above. A cell of 3 to 5 answers
+   * is often uniform by nature; a large one where every answer sits in the same tier is a cell
+   * whose answers cannot be told apart by how well known they are.
+   */
+  uniformRarityMinSize: 6,
 } as const;
 
 export const CELL_FLAG_KINDS = ['few', 'uniformRarity', 'obvious', 'redundant'] as const;
@@ -111,6 +119,26 @@ export function reviewCell(index: number, input: CellInput, popularity: Populari
   const smaller = Math.min(rowSize, colSize);
   if (smaller > 0 && answers.length / smaller >= REVIEW.redundantShare) flags.push('redundant');
   return { index, size: answers.length, answers: ranked, flags };
+}
+
+/**
+ * What the generator refuses outright, among the things the review points at: a cell where one
+ * criterion implies the other, a large cell whose answers are all alike in rarity, and a grid
+ * made mostly of tiny cells. Everything else (`obvious`, a few small cells) is a matter of taste
+ * and only reaches the human reviewer. Empty = nothing to refuse.
+ */
+export function blockingFlaws(cells: readonly CellReview[]): string[] {
+  const flaws: string[] = [];
+  if (cells.some((c) => c.flags.includes('redundant'))) flaws.push('redundant cell');
+  if (
+    cells.some((c) => c.flags.includes('uniformRarity') && c.size >= REVIEW.uniformRarityMinSize)
+  ) {
+    flaws.push('uniform rarity');
+  }
+  if (cells.filter((c) => c.flags.includes('few')).length >= REVIEW.maxFewCells) {
+    flaws.push('too many small cells');
+  }
+  return flaws;
 }
 
 export interface LineReview {

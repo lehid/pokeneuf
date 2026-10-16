@@ -3,25 +3,25 @@
   "id": 4,
   "date": "2026-11-04",
   "rows": [
-    "type-steel",
-    "status-starter",
+    "type-psychic",
+    "type-fighting",
     "status-legendary"
   ],
   "cols": [
-    "shape-upright",
-    "size-height-50cm",
-    "shape-quadruped"
+    "gen-2",
+    "form-mega",
+    "color-blue"
   ],
   "cellSizes": [
-    6,
-    5,
-    6,
-    23,
-    8,
-    12,
     10,
+    11,
+    9,
     3,
-    5
+    5,
+    7,
+    5,
+    5,
+    6
   ],
-  "difficulty": 73
+  "difficulty": 77
 }

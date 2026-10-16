@@ -3,25 +3,25 @@
   "id": 58,
   "date": "2026-12-28",
   "rows": [
-    "status-mythical",
-    "type-rock",
-    "color-red"
+    "color-yellow",
+    "type-dragon",
+    "stat-total-500"
   ],
   "cols": [
-    "shape-upright",
-    "stat-attack-100",
-    "type-mono"
+    "type-flying",
+    "shape-quadruped",
+    "form-mega"
   ],
   "cellSizes": [
-    6,
-    7,
-    7,
+    8,
     14,
-    12,
-    6,
-    14,
-    11,
-    24
+    4,
+    4,
+    3,
+    7,
+    17,
+    28,
+    34
   ],
-  "difficulty": 63
+  "difficulty": 65
 }

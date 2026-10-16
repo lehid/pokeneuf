@@ -3,25 +3,25 @@
   "id": 90,
   "date": "2027-01-29",
   "rows": [
-    "stat-total-300",
-    "type-electric",
-    "gen-3"
+    "type-flying",
+    "size-height-50cm",
+    "evo-trade"
   ],
   "cols": [
-    "evo-middle",
+    "gen-3",
     "shape-upright",
-    "color-red"
+    "name-long"
   ],
   "cellSizes": [
-    7,
-    27,
+    12,
     6,
-    5,
-    8,
+    12,
+    29,
+    31,
+    13,
     3,
-    17,
-    51,
-    13
+    8,
+    3
   ],
-  "difficulty": 62
+  "difficulty": 64
 }

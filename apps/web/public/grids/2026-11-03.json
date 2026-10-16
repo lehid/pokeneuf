@@ -3,25 +3,25 @@
   "id": 3,
   "date": "2026-11-03",
   "rows": [
-    "shape-wings",
-    "size-height-2m",
-    "stat-attack-100"
+    "type-ground",
+    "stat-attack-100",
+    "stat-total-500"
   ],
   "cols": [
-    "color-brown",
-    "gen-2",
-    "type-ground"
+    "color-purple",
+    "type-dragon",
+    "gen-4"
   ],
   "cellSizes": [
-    11,
-    16,
     4,
+    5,
+    10,
     7,
-    9,
-    9,
-    25,
-    13,
-    17
+    8,
+    31,
+    12,
+    11,
+    41
   ],
   "difficulty": 61
 }

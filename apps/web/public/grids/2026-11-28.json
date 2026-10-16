@@ -3,25 +3,25 @@
   "id": 28,
   "date": "2026-11-28",
   "rows": [
-    "type-normal",
-    "type-water",
-    "status-starter"
+    "type-electric",
+    "size-height-2m",
+    "type-fairy"
   ],
   "cols": [
-    "form-gmax",
-    "evo-middle",
-    "name-starts-vowel"
+    "gen-2",
+    "evo-stage-3",
+    "form-mega"
   ],
   "cellSizes": [
-    3,
-    7,
-    10,
+    8,
+    5,
     3,
     9,
-    13,
-    3,
+    11,
     12,
+    8,
+    5,
     3
   ],
-  "difficulty": 80
+  "difficulty": 77
 }

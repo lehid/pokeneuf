@@ -3,25 +3,25 @@
   "id": 34,
   "date": "2026-12-04",
   "rows": [
-    "color-red",
-    "type-rock",
-    "status-fossil"
+    "gen-2",
+    "evo-stage-3",
+    "status-starter"
   ],
   "cols": [
-    "size-height-50cm",
-    "evo-final",
-    "type-dual"
+    "form-mega",
+    "type-ground",
+    "type-poison"
   ],
   "cellSizes": [
-    7,
-    20,
-    22,
-    6,
-    13,
-    31,
+    9,
+    10,
+    4,
+    25,
+    9,
+    10,
+    8,
     3,
-    6,
-    11
+    3
   ],
-  "difficulty": 62
+  "difficulty": 73
 }

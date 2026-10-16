@@ -3,25 +3,25 @@
   "id": 16,
   "date": "2026-11-16",
   "rows": [
-    "type-psychic",
-    "type-mono",
-    "evo-none"
+    "evo-none",
+    "evo-final",
+    "type-normal"
   ],
   "cols": [
-    "color-red",
-    "gen-2",
-    "name-short"
+    "stat-speed-100",
+    "color-yellow",
+    "color-brown"
   ],
   "cellSizes": [
-    5,
-    10,
-    8,
-    24,
-    51,
     21,
-    7,
-    18,
-    7
+    12,
+    10,
+    37,
+    19,
+    30,
+    15,
+    4,
+    30
   ],
-  "difficulty": 56
+  "difficulty": 48
 }

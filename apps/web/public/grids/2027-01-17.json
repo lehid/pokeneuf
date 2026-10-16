@@ -3,25 +3,25 @@
   "id": 78,
   "date": "2027-01-17",
   "rows": [
-    "type-ground",
-    "evo-none",
-    "gen-3"
+    "gen-2",
+    "gen-4",
+    "evo-gen4"
   ],
   "cols": [
-    "type-rock",
-    "color-purple",
-    "color-yellow"
+    "type-poison",
+    "type-fighting",
+    "shape-quadruped"
   ],
   "cellSizes": [
-    9,
     4,
     3,
+    22,
+    8,
     7,
-    7,
-    12,
-    12,
-    7,
-    10
+    25,
+    5,
+    5,
+    12
   ],
-  "difficulty": 73
+  "difficulty": 71
 }

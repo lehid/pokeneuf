@@ -3,25 +3,25 @@
   "id": 6,
   "date": "2026-11-06",
   "rows": [
-    "stat-speed-100",
-    "type-psychic",
-    "color-green"
+    "type-mono",
+    "type-rock",
+    "shape-wings"
   ],
   "cols": [
     "evo-none",
-    "type-water",
-    "name-has-k"
+    "evo-gen4",
+    "color-green"
   ],
   "cellSizes": [
-    21,
+    44,
+    26,
+    20,
+    7,
     5,
-    13,
-    16,
-    4,
+    3,
     12,
-    6,
-    4,
-    5
+    10,
+    7
   ],
-  "difficulty": 70
+  "difficulty": 61
 }

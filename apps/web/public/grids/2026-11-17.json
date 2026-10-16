@@ -3,25 +3,25 @@
   "id": 17,
   "date": "2026-11-17",
   "rows": [
-    "shape-upright",
-    "type-fairy",
-    "evo-friendship"
+    "type-dark",
+    "evo-baby",
+    "stat-total-500"
   ],
   "cols": [
-    "size-height-50cm",
-    "stat-total-300",
-    "type-normal"
+    "type-mono",
+    "shape-upright",
+    "name-double-letter"
   ],
   "cellSizes": [
-    31,
-    27,
-    29,
-    7,
-    9,
-    4,
-    9,
+    5,
     8,
-    6
+    5,
+    12,
+    14,
+    3,
+    58,
+    53,
+    21
   ],
-  "difficulty": 60
+  "difficulty": 57
 }

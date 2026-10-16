@@ -3,25 +3,25 @@
   "id": 11,
   "date": "2026-11-11",
   "rows": [
-    "evo-middle",
-    "type-dark",
-    "form-gmax"
+    "type-steel",
+    "status-legendary",
+    "color-red"
   ],
   "cols": [
-    "shape-upright",
-    "size-height-50cm",
-    "shape-quadruped"
+    "gen-4",
+    "type-psychic",
+    "stat-attack-100"
   ],
   "cellSizes": [
-    31,
-    4,
-    11,
+    10,
+    6,
+    6,
+    9,
     8,
-    4,
-    8,
+    14,
     5,
-    3,
-    4
+    5,
+    11
   ],
-  "difficulty": 76
+  "difficulty": 71
 }
